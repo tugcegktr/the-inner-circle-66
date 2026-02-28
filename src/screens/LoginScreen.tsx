@@ -47,7 +47,7 @@ export const LoginScreen = () => {
             THE CLUB
           </h1>
           <p className="text-muted-foreground text-xs tracking-[0.3em] uppercase font-sans">
-            Members Only · Est. 2025
+            Members Only
           </p>
         </div>
 
