@@ -12,6 +12,7 @@ import { ProfileScreen } from "@/screens/ProfileScreen";
 import { EditProfileScreen } from "@/screens/EditProfileScreen";
 import { PremiumScreen } from "@/screens/PremiumScreen";
 import { AdminScreen } from "@/screens/AdminScreen";
+import { PreLaunchScreen } from "@/screens/PreLaunchScreen";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const AppRouter = () => {
   if (screen === "login") return <LoginScreen />;
   if (screen === "onboarding-basic" || screen === "onboarding-photos" || screen === "onboarding-lifestyle" || screen === "onboarding-zodiac" || screen === "onboarding-social") return <OnboardingScreen />;
   if (screen === "waitlist") return <WaitlistScreen />;
+  if (screen === "pre-launch") return <PreLaunchScreen />;
   if (screen === "discovery") return <DiscoveryScreen />;
   if (screen === "matches") return <MatchesScreen />;
   if (screen === "profile") return <ProfileScreen />;

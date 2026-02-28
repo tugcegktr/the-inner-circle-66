@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useApp } from "@/context/AppContext";
 import { ZODIAC_SYMBOLS } from "@/data/mockData";
+import { StarRating } from "@/components/StarRating";
 
 const BottomNav = ({ active, onNavigate }: { active: string; onNavigate: (s: any) => void }) => {
   const tabs = [
-    { id: "discovery", icon: "✦", label: "Discover" },
-    { id: "matches", icon: "💬", label: "Matches" },
-    { id: "profile", icon: "👤", label: "Profile" },
+    { id: "discovery", icon: "✦", label: "Keşfet" },
+    { id: "matches", icon: "💬", label: "Eşleşmeler" },
+    { id: "profile", icon: "👤", label: "Profil" },
   ];
   return (
     <div className="glass border-t border-border">
@@ -26,6 +27,10 @@ const BottomNav = ({ active, onNavigate }: { active: string; onNavigate: (s: any
 export const ProfileScreen = () => {
   const { currentUser, setScreen } = useApp();
 
+  // Mock public rating data
+  const publicRating = currentUser.averageRating ?? 4.3;
+  const ratingCount = currentUser.ratingCount ?? 7;
+
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-sm mx-auto">
       <div className="flex-1 overflow-y-auto no-scrollbar pb-24">
@@ -42,7 +47,12 @@ export const ProfileScreen = () => {
                     <div className="verified-badge w-6 h-6 rounded-full flex items-center justify-center text-xs text-primary-foreground font-bold">✓</div>
                   )}
                 </div>
-                <p className="text-muted-foreground text-sm">{currentUser.age} · {currentUser.city} · {currentUser.height}</p>
+                <p className="text-muted-foreground text-sm">{currentUser.age} · {currentUser.height}</p>
+                {/* Location prominently */}
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span className="text-base">📍</span>
+                  <span className="text-foreground text-sm font-medium">{currentUser.city}</span>
+                </div>
               </div>
               {currentUser.isPremium && (
                 <div className="glass-gold px-3 py-1.5 rounded-full">
@@ -54,6 +64,15 @@ export const ProfileScreen = () => {
         </div>
 
         <div className="px-6 space-y-6 pt-6">
+          {/* Public Star Rating */}
+          <div className="glass-gold rounded-xl p-4 flex items-center gap-5">
+            <StarRating value={publicRating} size="md" />
+            <div>
+              <p className="text-sm text-foreground font-medium">{publicRating.toFixed(1)} / 5.0</p>
+              <p className="text-xs text-muted-foreground">{ratingCount} değerlendirme · Herkese açık</p>
+            </div>
+          </div>
+
           {/* Bio */}
           <div>
             <p className="text-foreground text-sm leading-relaxed italic font-serif text-lg">"{currentUser.bio}"</p>
@@ -66,7 +85,7 @@ export const ProfileScreen = () => {
             <div className="glass-gold rounded-xl px-4 py-3 flex items-center gap-2">
               <span className="text-2xl">{ZODIAC_SYMBOLS[currentUser.zodiacSign]}</span>
               <div>
-                <p className="text-xs text-muted-foreground">Sun Sign</p>
+                <p className="text-xs text-muted-foreground">Güneş Burcu</p>
                 <p className="text-sm text-foreground font-medium">{currentUser.zodiacSign}</p>
               </div>
             </div>
@@ -74,7 +93,7 @@ export const ProfileScreen = () => {
               <div className="glass rounded-xl px-4 py-3 flex items-center gap-2">
                 <span className="text-2xl">{ZODIAC_SYMBOLS[currentUser.risingSign]}</span>
                 <div>
-                  <p className="text-xs text-muted-foreground">Rising</p>
+                  <p className="text-xs text-muted-foreground">Yükselen</p>
                   <p className="text-sm text-foreground font-medium">{currentUser.risingSign}</p>
                 </div>
               </div>
@@ -83,7 +102,7 @@ export const ProfileScreen = () => {
 
           {/* Interests */}
           <div>
-            <p className="text-xs tracking-widest text-gold uppercase mb-3">Interests</p>
+            <p className="text-xs tracking-widest text-gold uppercase mb-3">İlgi Alanları</p>
             <div className="flex flex-wrap gap-2">
               {currentUser.interests.map((i) => (
                 <span key={i} className="bg-surface border border-border text-foreground text-xs px-3 py-1.5 rounded-full">{i}</span>
@@ -93,7 +112,7 @@ export const ProfileScreen = () => {
 
           {/* Music */}
           <div>
-            <p className="text-xs tracking-widest text-gold uppercase mb-3">Music</p>
+            <p className="text-xs tracking-widest text-gold uppercase mb-3">Müzik Zevki</p>
             <div className="flex flex-wrap gap-2">
               {currentUser.musicTaste.map((m) => (
                 <span key={m} className="bg-surface border border-border text-foreground text-xs px-3 py-1.5 rounded-full">🎵 {m}</span>
@@ -104,7 +123,7 @@ export const ProfileScreen = () => {
           {/* Photos grid */}
           {currentUser.photos.length > 1 && (
             <div>
-              <p className="text-xs tracking-widest text-gold uppercase mb-3">Photos</p>
+              <p className="text-xs tracking-widest text-gold uppercase mb-3">Fotoğraflar</p>
               <div className="grid grid-cols-3 gap-2">
                 {currentUser.photos.slice(1).map((photo, i) => (
                   <div key={i} className="aspect-square rounded-xl overflow-hidden">
@@ -118,13 +137,20 @@ export const ProfileScreen = () => {
           {/* Social links */}
           {(currentUser.instagramHandle || currentUser.linkedinUrl) && (
             <div>
-              <p className="text-xs tracking-widest text-gold uppercase mb-3">Social</p>
+              <p className="text-xs tracking-widest text-gold uppercase mb-3">Sosyal Medya</p>
               <div className="space-y-2">
                 {currentUser.instagramHandle && (
                   <div className="flex items-center gap-3 bg-surface rounded-xl px-4 py-3 border border-border">
                     <span>📸</span>
                     <span className="text-sm text-foreground">{currentUser.instagramHandle}</span>
-                    <div className="ml-auto text-xs text-gold">Verified</div>
+                    <div className="ml-auto text-xs text-gold">Doğrulandı</div>
+                  </div>
+                )}
+                {currentUser.linkedinUrl && (
+                  <div className="flex items-center gap-3 bg-surface rounded-xl px-4 py-3 border border-border">
+                    <span>💼</span>
+                    <span className="text-sm text-foreground truncate">{currentUser.linkedinUrl}</span>
+                    <div className="ml-auto text-xs text-gold">Doğrulandı</div>
                   </div>
                 )}
               </div>
@@ -135,17 +161,17 @@ export const ProfileScreen = () => {
           <div className="space-y-3 pt-2">
             <button onClick={() => setScreen("edit-profile")}
               className="w-full py-4 rounded-xl bg-surface border border-border text-foreground text-sm font-medium hover:border-gold transition-colors">
-              ✏️ Edit Profile
+              ✏️ Profili Düzenle
             </button>
             <button onClick={() => setScreen("premium")}
               className={`w-full py-4 rounded-xl text-sm font-medium tracking-wider transition-all ${
                 currentUser.isPremium ? "bg-surface border border-gold/50 text-gold" : "gold-gradient text-primary-foreground"
               }`}>
-              {currentUser.isPremium ? "✦ Premium Gold Active" : "✦ Upgrade to Premium"}
+              {currentUser.isPremium ? "✦ Premium Gold Aktif" : "✦ Premium'a Geç"}
             </button>
             <button onClick={() => setScreen("login")}
               className="w-full py-3 text-muted-foreground text-sm hover:text-foreground transition-colors">
-              Sign Out
+              Çıkış Yap
             </button>
           </div>
         </div>

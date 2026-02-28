@@ -1,5 +1,11 @@
 import { SwipeCard, Match, LikedByUser } from "@/types/app";
 
+// === Launch Threshold System ===
+// The app only becomes visible to approved members when this number is reached.
+export const LAUNCH_THRESHOLD = 50;
+// Mock: current approved member count (admin can see real number; users see progress)
+export const MOCK_APPROVED_COUNT = 34;
+
 export const MOCK_SWIPE_CARDS: SwipeCard[] = [
   {
     id: "1",
@@ -86,18 +92,24 @@ export const MOCK_MATCHES: Match[] = [
     userId: "1",
     name: "Isabelle",
     photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&q=80",
+    city: "New York",
     isVerified: true,
     matchedAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
     hasVibeCheck: true,
+    averageRating: 4.7,
+    ratingCount: 12,
   },
   {
     id: "m2",
     userId: "4",
     name: "Natasha",
     photo: "https://images.unsplash.com/photo-1502323703975-b9630fe78d8b?w=300&q=80",
+    city: "Milan",
     isVerified: true,
     matchedAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
     hasVibeCheck: false,
+    averageRating: 4.2,
+    ratingCount: 8,
   },
 ];
 

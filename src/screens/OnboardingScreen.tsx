@@ -165,9 +165,17 @@ export const OnboardingScreen = () => {
         {step === 1 && (
           <div className="space-y-6 animate-fade-up">
             <div>
-              <h2 className="font-serif text-3xl text-foreground mb-1">Your Photos</h2>
-              <p className="text-muted-foreground text-sm">Add up to 6 photos. First photo is your main photo.</p>
+              <h2 className="font-serif text-3xl text-foreground mb-1">Fotoğrafların</h2>
+              <p className="text-muted-foreground text-sm">
+                En az <span className="text-gold font-medium">5 fotoğraf</span> eklemen zorunlu, maksimum 6. İlk fotoğraf kapak fotoğrafın olur.
+              </p>
             </div>
+            {photos.length < 5 && (
+              <div className="flex items-center gap-2 bg-destructive/10 border border-destructive/30 rounded-xl px-4 py-3">
+                <span className="text-destructive text-sm">⚠️</span>
+                <p className="text-xs text-destructive">{5 - photos.length} fotoğraf daha eklemen gerekiyor.</p>
+              </div>
+            )}
 
             <div className="grid grid-cols-3 gap-3">
               {Array.from({ length: 6 }).map((_, i) => (
@@ -348,14 +356,19 @@ export const OnboardingScreen = () => {
               onClick={() => setStep(step - 1)}
               className="flex-1 py-4 rounded-xl bg-surface border border-border text-foreground text-sm font-medium hover:border-gold transition-colors"
             >
-              Back
+              Geri
             </button>
           )}
           <button
             onClick={next}
-            className="flex-[2] py-4 rounded-xl gold-gradient text-primary-foreground font-medium text-sm tracking-wider hover:opacity-90 active:scale-95 transition-all"
+            disabled={step === 1 && photos.length < 5}
+            className="flex-[2] py-4 rounded-xl gold-gradient text-primary-foreground font-medium text-sm tracking-wider hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
           >
-            {step === steps.length - 1 ? "Submit Application" : "Continue →"}
+            {step === steps.length - 1
+              ? "Başvuruyu Gönder"
+              : step === 1 && photos.length < 5
+              ? `${5 - photos.length} fotoğraf daha ekle`
+              : "Devam Et →"}
           </button>
         </div>
       </div>

@@ -8,6 +8,7 @@ export type AppScreen =
   | "onboarding-zodiac"
   | "onboarding-social"
   | "waitlist"
+  | "pre-launch"
   | "discovery"
   | "matches"
   | "profile"
@@ -41,10 +42,12 @@ export interface UserProfile {
   linkedinUrl?: string;
   isVerified: boolean;
   isPremium: boolean;
-  isApproved: boolean; // waitlist approval
+  isApproved: boolean;
   vibeTags: VibeTag[];
   subscriptionStatus: "none" | "monthly" | "yearly";
   dailySwipesLeft: number;
+  averageRating?: number;   // public star rating (avg of received ratings)
+  ratingCount?: number;
 }
 
 export interface SwipeCard {
@@ -59,6 +62,8 @@ export interface SwipeCard {
   isVerified: boolean;
   vibeTags: VibeTag[];
   compatibilityScore?: number;
+  averageRating?: number;
+  ratingCount?: number;
 }
 
 export interface Match {
@@ -66,9 +71,14 @@ export interface Match {
   userId: string;
   name: string;
   photo: string;
+  city: string;
   isVerified: boolean;
   matchedAt: Date;
   hasVibeCheck?: boolean;
+  myRating?: number;        // rating I gave them (1–5)
+  theirRating?: number;     // rating they gave me (1–5)
+  averageRating?: number;   // their public avg rating
+  ratingCount?: number;
 }
 
 export interface LikedByUser {
