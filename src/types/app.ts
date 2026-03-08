@@ -68,6 +68,8 @@ export interface SwipeCard {
   ratingCount?: number;
   profession?: string;
   gender: UserGender;
+  instagramHandle?: string;
+  linkedinUrl?: string;
 }
 
 export interface Match {
