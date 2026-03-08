@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useApp } from "@/context/AppContext";
 import { ZODIAC_SYMBOLS, GENDER_OPTIONS } from "@/data/mockData";
 import { StarRating } from "@/components/StarRating";
@@ -25,7 +25,9 @@ const BottomNav = ({ active, onNavigate }: { active: string; onNavigate: (s: any
 };
 
 export const ProfileScreen = () => {
-  const { currentUser, setScreen } = useApp();
+  const { currentUser, setCurrentUser, setScreen } = useApp();
+  const [locationVisible, setLocationVisible] = useState(true);
+  const [profileHidden, setProfileHidden] = useState(false);
 
   const publicRating = currentUser.averageRating ?? 4.3;
   const ratingCount = currentUser.ratingCount ?? 7;
@@ -34,6 +36,9 @@ export const ProfileScreen = () => {
   const interestedInLabels = currentUser.interestedIn
     .map((g) => GENDER_OPTIONS.find((o) => o.value === g)?.label ?? g)
     .join(", ");
+
+  // Simulated neighbourhood (like Bumble)
+  const neighbourhood = "Beşiktaş, İstanbul";
 
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-sm mx-auto">
@@ -80,9 +85,11 @@ export const ProfileScreen = () => {
           </div>
 
           {/* Bio */}
-          <div>
-            <p className="text-foreground text-sm leading-relaxed italic font-serif text-lg">"{currentUser.bio}"</p>
-          </div>
+          {currentUser.bio && (
+            <div>
+              <p className="text-foreground text-sm leading-relaxed italic font-serif text-lg">"{currentUser.bio}"</p>
+            </div>
+          )}
 
           <div className="luxury-divider" />
 
@@ -163,6 +170,58 @@ export const ProfileScreen = () => {
                     <div className="ml-auto text-xs text-gold">Doğrulandı</div>
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* Privacy Settings */}
+          <div>
+            <p className="text-xs tracking-widest text-gold uppercase mb-3">Gizlilik Ayarları</p>
+            <div className="space-y-3">
+              {/* Location toggle */}
+              <div className="flex items-center justify-between bg-surface rounded-xl px-4 py-3 border border-border">
+                <div>
+                  <p className="text-sm text-foreground font-medium">📍 Konum Göster</p>
+                  <p className="text-xs text-muted-foreground">Profilinde semtin görünsün</p>
+                </div>
+                <button
+                  onClick={() => setLocationVisible(!locationVisible)}
+                  className={`w-12 h-6 rounded-full transition-all relative ${locationVisible ? "gold-gradient" : "bg-muted"}`}
+                >
+                  <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all ${locationVisible ? "right-0.5" : "left-0.5"}`} />
+                </button>
+              </div>
+
+              {/* Profile hidden toggle */}
+              <div className="flex items-center justify-between bg-surface rounded-xl px-4 py-3 border border-border">
+                <div>
+                  <p className="text-sm text-foreground font-medium">🙈 Profili Gizle</p>
+                  <p className="text-xs text-muted-foreground">Sadece eşleşmelerin görebilir</p>
+                </div>
+                <button
+                  onClick={() => setProfileHidden(!profileHidden)}
+                  className={`w-12 h-6 rounded-full transition-all relative ${profileHidden ? "bg-destructive" : "bg-muted"}`}
+                >
+                  <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all ${profileHidden ? "right-0.5" : "left-0.5"}`} />
+                </button>
+              </div>
+
+              {profileHidden && (
+                <div className="flex items-center gap-2 bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3">
+                  <span className="text-destructive text-sm">🙈</span>
+                  <p className="text-xs text-destructive">Profilin gizli. Yalnızca eşleşmelerin seni görebilir ve seninle konuşabilir.</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Neighbourhood (like Bumble) */}
+          {locationVisible && (
+            <div className="bg-surface rounded-xl px-4 py-3 border border-border flex items-center gap-3">
+              <span className="text-base">📍</span>
+              <div>
+                <p className="text-xs text-muted-foreground">Şu an bulunduğun yer</p>
+                <p className="text-sm text-foreground font-medium">{neighbourhood}</p>
               </div>
             </div>
           )}

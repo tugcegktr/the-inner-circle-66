@@ -10,13 +10,23 @@ export const AdminScreen = () => {
   const [members] = useState(ADMIN_ALL_MEMBERS);
   const [approvedCount, setApprovedCount] = useState(MOCK_APPROVED_COUNT);
   const [selectedMember, setSelectedMember] = useState<typeof ADMIN_ALL_MEMBERS[0] | null>(null);
+  const [notif, setNotif] = useState<string | null>(null);
 
   const launchReady = approvedCount >= LAUNCH_THRESHOLD;
   const progress = Math.min((approvedCount / LAUNCH_THRESHOLD) * 100, 100);
 
+  const showNotif = (msg: string) => {
+    setNotif(msg);
+    setTimeout(() => setNotif(null), 3000);
+  };
+
   const handleApprove = (id: string) => {
+    const user = pending.find((u) => u.id === id);
     setPending((p) => p.filter((u) => u.id !== id));
     setApprovedCount((c) => c + 1);
+    if (user) {
+      showNotif(`📱 ${user.name}'e bildirim gönderildi: "Tebrikler! The Club üyeliğiniz onaylandı."`);
+    }
   };
   const reject = (id: string) => setPending((p) => p.filter((u) => u.id !== id));
   const ban = (id: string) => setFlagged((f) => f.filter((u) => u.id !== id));
@@ -44,6 +54,16 @@ export const AdminScreen = () => {
 
   return (
     <div className="min-h-screen bg-background max-w-sm mx-auto">
+
+      {/* Notification toast */}
+      {notif && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-sm w-full px-4 animate-fade-up">
+          <div className="bg-surface border border-gold/40 rounded-xl px-4 py-3 shadow-gold-sm">
+            <p className="text-xs text-foreground">{notif}</p>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="px-6 pt-10 pb-4">
         <div className="flex items-center justify-between mb-4">
@@ -77,8 +97,6 @@ export const AdminScreen = () => {
         {/* ── STATS ── */}
         {tab === "stats" && (
           <div className="space-y-4 animate-fade-up">
-
-            {/* Launch Threshold Banner */}
             <div className={`rounded-xl p-4 border ${launchReady ? "glass-gold border-gold" : "bg-surface border-border"}`}>
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs tracking-widest text-gold uppercase">Açılış Eşiği</p>
@@ -100,7 +118,6 @@ export const AdminScreen = () => {
               </p>
             </div>
 
-            {/* Stat grid */}
             <div className="grid grid-cols-2 gap-3">
               {stats.map(({ label, value, delta }) => (
                 <div key={label} className="bg-surface rounded-xl p-4 border border-border">
@@ -196,6 +213,7 @@ export const AdminScreen = () => {
                     { label: "Meslek", value: selectedMember.profession },
                     { label: "Burç", value: selectedMember.zodiac },
                     { label: "Instagram", value: selectedMember.instagram },
+                    { label: "LinkedIn", value: selectedMember.linkedin || "—" },
                     { label: "Katılım", value: selectedMember.joinedAt },
                   ].map(({ label, value }) => (
                     <div key={label} className="flex items-center justify-between py-2 border-b border-border last:border-0">
@@ -228,6 +246,10 @@ export const AdminScreen = () => {
                         </div>
                         <p className="text-muted-foreground text-xs mt-0.5">
                           {member.age} · {member.city} · {member.profession}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          📸 {member.instagram}
+                          {member.linkedin && <span className="ml-2">💼 {member.linkedin}</span>}
                         </p>
                       </div>
                       <div className="text-right">
@@ -304,9 +326,7 @@ export const AdminScreen = () => {
                       <p className="text-foreground font-medium text-sm">{user.name}</p>
                       <p className="text-muted-foreground text-xs">{user.age} · {user.city}</p>
                       <div className="flex items-center gap-2 mt-1.5">
-                        <span className="text-xs bg-destructive/10 text-destructive px-2 py-0.5 rounded-full">
-                          {user.reason}
-                        </span>
+                        <span className="text-xs bg-destructive/10 text-destructive px-2 py-0.5 rounded-full">{user.reason}</span>
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">{user.reportCount} şikayet</p>
                     </div>

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useApp } from "@/context/AppContext";
 import heroBg from "@/assets/hero-bg.jpg";
 
-// Admin phone number (digits only, no spaces)
 const ADMIN_PHONE = "5058396333";
 
 export const LoginScreen = () => {
@@ -39,14 +38,11 @@ export const LoginScreen = () => {
 
   return (
     <div className="min-h-screen relative flex flex-col items-center justify-center overflow-hidden">
-      {/* Background */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${heroBg})` }}
       />
       <div className="absolute inset-0 bg-black/60" />
-
-      {/* Gold shimmer top bar */}
       <div className="absolute top-0 left-0 right-0 h-px luxury-divider" />
 
       <div className="relative z-10 w-full max-w-sm px-6 animate-fade-up">
@@ -59,7 +55,7 @@ export const LoginScreen = () => {
             THE CLUB
           </h1>
           <p className="text-muted-foreground text-xs tracking-[0.3em] uppercase font-sans">
-            Yalnızca Üyelere Özel
+            Members Only
           </p>
         </div>
 
@@ -149,7 +145,6 @@ export const LoginScreen = () => {
           )}
         </div>
 
-        {/* Tagline */}
         <p className="text-center mt-8 text-muted-foreground text-xs tracking-wider">
           Kaliteli bağlantılar. Seçilmiş üyelikler. Sıfır tolerans.
         </p>
