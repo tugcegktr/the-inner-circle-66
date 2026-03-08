@@ -85,7 +85,7 @@ const RateMatchModal = ({ match, onClose, onRate }: {
         </div>
         <h3 className="font-serif text-2xl mb-2">Değerlendirme Gönderildi</h3>
         <p className="text-muted-foreground text-sm mb-6">
-          {match.name} için {rating} yıldız verdin. Bu değerlendirme herkese açık olarak profilinde görünecek.
+          {match.name} için {rating} yıldız verdin.
         </p>
         <button onClick={onClose} className="w-full py-3 rounded-xl gold-gradient text-primary-foreground text-sm font-medium">Tamam</button>
       </div>
@@ -96,7 +96,6 @@ const RateMatchModal = ({ match, onClose, onRate }: {
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end justify-center">
       <div className="w-full max-w-sm glass rounded-t-3xl p-8 animate-fade-up">
         <div className="w-12 h-1 bg-muted rounded-full mx-auto mb-6" />
-
         <div className="flex items-center gap-4 mb-6">
           <img src={match.photo} alt={match.name} className="w-14 h-14 rounded-full object-cover" />
           <div>
@@ -104,22 +103,18 @@ const RateMatchModal = ({ match, onClose, onRate }: {
             <p className="text-muted-foreground text-xs">{match.city}</p>
           </div>
         </div>
-
         <h3 className="font-serif text-xl text-center mb-2">Bu Eşleşmeyi Değerlendir</h3>
         <p className="text-muted-foreground text-sm text-center mb-8">
           Değerlendirmen {match.name}'in profilinde <span className="text-gold">herkese açık</span> olarak görünecek.
         </p>
-
         <div className="flex justify-center mb-8">
           <StarRating value={rating} onChange={setRating} size="lg" />
         </div>
-
         {rating > 0 && (
           <p className="text-center text-sm text-foreground mb-6 animate-fade-in">
             {["", "😕 Hayal Kırıklığı", "😐 Ortalama", "🙂 İyiydi", "😊 Çok İyi", "🌟 Mükemmel"][rating]}
           </p>
         )}
-
         <button
           disabled={rating === 0}
           onClick={() => { onRate(match.id, rating); setSent(true); }}
@@ -133,12 +128,106 @@ const RateMatchModal = ({ match, onClose, onRate }: {
   );
 };
 
+// ── Chat Screen ──
+const ChatModal = ({ match, onClose }: { match: Match; onClose: () => void }) => {
+  const [messages, setMessages] = useState<{ from: "me" | "them"; text: string; time: string }[]>([
+    { from: "them", text: "Merhaba! Nasılsın? 😊", time: "10:32" },
+  ]);
+  const [input, setInput] = useState("");
+
+  const now = () => {
+    const d = new Date();
+    return `${d.getHours()}:${String(d.getMinutes()).padStart(2, "0")}`;
+  };
+
+  const send = () => {
+    const txt = input.trim();
+    if (!txt) return;
+    const t = now();
+    setMessages((prev) => [...prev, { from: "me", text: txt, time: t }]);
+    setInput("");
+    setTimeout(() => {
+      const replies = [
+        "Çok güzel, seninle tanışmak harika! ✨",
+        "Haha, gerçekten mi? 😄",
+        "Kesinlikle katılıyorum!",
+        "Bu akşam müsait misin? ☕",
+      ];
+      setMessages((prev) => [
+        ...prev,
+        { from: "them", text: replies[Math.floor(Math.random() * replies.length)], time: now() },
+      ]);
+    }, 1200);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-background z-50 flex flex-col max-w-sm mx-auto">
+      {/* Header */}
+      <div className="glass border-b border-border px-5 pt-10 pb-4 flex items-center gap-4 flex-shrink-0">
+        <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors text-xl leading-none">←</button>
+        <img src={match.photo} alt={match.name} className="w-10 h-10 rounded-full object-cover border-2 border-gold/30" />
+        <div className="flex-1">
+          <div className="flex items-center gap-1.5">
+            <p className="text-foreground font-medium text-sm">{match.name}</p>
+            {match.isVerified && (
+              <span className="verified-badge text-xs px-1.5 py-0.5 rounded-full text-primary-foreground font-bold">✓</span>
+            )}
+          </div>
+          <p className="text-muted-foreground text-xs">📍 {match.city}</p>
+        </div>
+      </div>
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto no-scrollbar px-5 py-4 space-y-3">
+        <div className="text-center mb-2">
+          <span className="text-xs text-muted-foreground bg-surface px-3 py-1 rounded-full border border-border">
+            ✦ {match.name} ile eşleştin
+          </span>
+        </div>
+        {messages.map((msg, i) => (
+          <div key={i} className={`flex ${msg.from === "me" ? "justify-end" : "justify-start"}`}>
+            <div className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${
+              msg.from === "me"
+                ? "gold-gradient text-primary-foreground rounded-br-sm"
+                : "bg-surface border border-border text-foreground rounded-bl-sm"
+            }`}>
+              <p className="text-sm leading-relaxed">{msg.text}</p>
+              <p className={`text-xs mt-1 ${msg.from === "me" ? "text-primary-foreground/70 text-right" : "text-muted-foreground"}`}>{msg.time}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Input */}
+      <div className="glass border-t border-border px-4 py-4 flex items-center gap-3 flex-shrink-0">
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && send()}
+          placeholder="Mesaj yaz…"
+          className="flex-1 bg-surface rounded-xl px-4 py-3 border border-border text-foreground placeholder-muted-foreground text-sm outline-none focus:border-gold transition-colors"
+        />
+        <button
+          onClick={send}
+          disabled={!input.trim()}
+          className="w-10 h-10 rounded-full gold-gradient flex items-center justify-center text-primary-foreground disabled:opacity-40 active:scale-95 transition-all flex-shrink-0"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+};
+
 export const MatchesScreen = () => {
   const { currentUser, setScreen } = useApp();
   const [activeTab, setActiveTab] = useState<"matches" | "likes">("matches");
   const [matches, setMatches] = useState<Match[]>(MOCK_MATCHES);
   const [vibeTagTarget, setVibeTagTarget] = useState<string | null>(null);
   const [rateTarget, setRateTarget] = useState<Match | null>(null);
+  const [chatTarget, setChatTarget] = useState<Match | null>(null);
 
   const handleRate = (matchId: string, rating: number) => {
     setMatches((prev) =>
@@ -166,12 +255,12 @@ export const MatchesScreen = () => {
             {matches.map((match) => (
               <div key={match.id} className="bg-surface rounded-xl p-4 border border-border">
                 <div className="flex items-center gap-4 mb-3">
-                  <div className="relative">
+                  <button onClick={() => setChatTarget(match)} className="relative flex-shrink-0">
                     <img src={match.photo} alt={match.name} className="w-14 h-14 rounded-full object-cover" />
                     {match.isVerified && (
                       <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 verified-badge rounded-full flex items-center justify-center text-xs text-primary-foreground font-bold">✓</div>
                     )}
-                  </div>
+                  </button>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="text-foreground font-medium text-sm">{match.name}</p>
@@ -184,7 +273,6 @@ export const MatchesScreen = () => {
                       {match.hasVibeCheck ? "🎙 Vibe Check gönderdi" : "Yakın zamanda eşleşti"}
                     </p>
                   </div>
-                  {/* Their public rating */}
                   {match.averageRating && (
                     <div className="text-right">
                       <div className="text-gold text-sm">{'★'.repeat(Math.round(match.averageRating))}</div>
@@ -193,26 +281,27 @@ export const MatchesScreen = () => {
                   )}
                 </div>
 
-                {/* Rating row */}
+                {/* Action row */}
                 <div className="flex items-center gap-2 pt-3 border-t border-border">
+                  <button
+                    onClick={() => setChatTarget(match)}
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg gold-gradient text-primary-foreground text-xs font-medium active:scale-95 transition-all"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                    Mesaj Gönder
+                  </button>
+                  <div className="flex-1" />
                   {match.myRating ? (
-                    <div className="flex-1 flex items-center gap-2">
-                      <StarRating value={match.myRating} size="sm" />
-                      <span className="text-xs text-muted-foreground">Değerlendirdin</span>
-                    </div>
+                    <StarRating value={match.myRating} size="sm" />
                   ) : (
-                    <button
-                      onClick={() => setRateTarget(match)}
-                      className="flex-1 text-xs text-gold hover:underline text-left"
-                    >
+                    <button onClick={() => setRateTarget(match)} className="text-xs text-muted-foreground hover:text-gold transition-colors">
                       ★ Değerlendir
                     </button>
                   )}
-                  <button
-                    onClick={() => setVibeTagTarget(match.name)}
-                    className="text-xs text-muted-foreground hover:text-gold transition-colors"
-                  >
-                    + Vibe Tag
+                  <button onClick={() => setVibeTagTarget(match.name)} className="text-xs text-muted-foreground hover:text-gold transition-colors">
+                    + Vibe
                   </button>
                 </div>
               </div>
@@ -233,9 +322,7 @@ export const MatchesScreen = () => {
             <div className="space-y-3">
               {MOCK_LIKED_BY.map((user) => (
                 <div key={user.id} className={`bg-surface rounded-xl p-4 border border-border flex items-center gap-4 ${!currentUser.isPremium ? "opacity-70" : ""}`}>
-                  <div className="relative">
-                    <img src={user.photo} alt="" className={`w-14 h-14 rounded-full object-cover ${!currentUser.isPremium ? "blur-premium" : ""}`} />
-                  </div>
+                  <img src={user.photo} alt="" className={`w-14 h-14 rounded-full object-cover ${!currentUser.isPremium ? "blur-premium" : ""}`} />
                   <div className="flex-1">
                     <p className={`font-medium text-sm ${!currentUser.isPremium ? "blur-premium select-none" : "text-foreground"}`}>
                       {currentUser.isPremium ? user.name : "Gizli"}
@@ -256,12 +343,9 @@ export const MatchesScreen = () => {
 
       {vibeTagTarget && <VibeTagModal name={vibeTagTarget} onClose={() => setVibeTagTarget(null)} />}
       {rateTarget && (
-        <RateMatchModal
-          match={rateTarget}
-          onClose={() => setRateTarget(null)}
-          onRate={handleRate}
-        />
+        <RateMatchModal match={rateTarget} onClose={() => setRateTarget(null)} onRate={handleRate} />
       )}
+      {chatTarget && <ChatModal match={chatTarget} onClose={() => setChatTarget(null)} />}
     </div>
   );
 };
