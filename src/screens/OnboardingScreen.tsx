@@ -429,8 +429,36 @@ export const OnboardingScreen = () => {
           </div>
         )}
 
-        {/* ── STEP 4: Fotoğraflar ── */}
+        {/* ── STEP 4: Müzik Zevki ── */}
         {step === 4 && (
+          <div className="space-y-5 animate-fade-up">
+            <div>
+              <h2 className="font-serif text-3xl text-foreground mb-1">Müzik Zevkin</h2>
+              <p className="text-muted-foreground text-sm">Dinlediğin türleri seç — profilde görünür</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {MUSIC_GENRES.map((genre) => {
+                const isSelected = selectedMusic.includes(genre);
+                return (
+                  <button
+                    key={genre}
+                    onClick={() => toggleMusic(genre)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                      isSelected
+                        ? "gold-gradient text-primary-foreground shadow-gold-sm"
+                        : "bg-muted text-muted-foreground border border-border hover:border-gold"
+                    }`}
+                  >
+                    {genre}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ── STEP 5: Fotoğraflar ── */}
+        {step === 5 && (
           <div className="space-y-6 animate-fade-up">
             <div>
               <h2 className="font-serif text-3xl text-foreground mb-1">Fotoğrafların</h2>
