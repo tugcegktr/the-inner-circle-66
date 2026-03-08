@@ -132,7 +132,7 @@ const ProfileModal = ({
 );
 
 export const AdminScreen = () => {
-  const { setScreen } = useApp();
+  const { setScreen, flaggedReports } = useApp();
   const [tab, setTab] = useState<"pending" | "flagged" | "stats" | "members">("stats");
   const [pending, setPending] = useState(ADMIN_PENDING_USERS);
   const [flagged, setFlagged] = useState(ADMIN_FLAGGED_PROFILES);
@@ -144,6 +144,23 @@ export const AdminScreen = () => {
   const [selectedPending, setSelectedPending] = useState<PendingUser | null>(null);
   const [selectedFlagged, setSelectedFlagged] = useState<FlaggedUser | null>(null);
   const [approveAction, setApproveAction] = useState<{ user: PendingUser; type: "premium" | "standard" } | null>(null);
+
+  // Merge mock flagged + live reports from context
+  const allFlagged = [
+    ...flaggedReports.map((r) => ({
+      id: r.id,
+      name: r.reportedName,
+      age: 0,
+      city: "—",
+      reason: r.reason,
+      reportCount: 1,
+      reportedBy: r.reportedBy,
+      reportDate: r.timestamp,
+      instagram: "",
+      linkedin: "",
+    })),
+    ...flagged,
+  ];
 
   const launchReady = approvedCount >= LAUNCH_THRESHOLD;
   const progress = Math.min((approvedCount / LAUNCH_THRESHOLD) * 100, 100);
