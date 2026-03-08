@@ -3,8 +3,15 @@ import { useApp } from "@/context/AppContext";
 import { ZODIAC_SIGNS, ZODIAC_SYMBOLS, INTEREST_CATEGORIES, PERSONALITY_TAGS, GENDER_OPTIONS } from "@/data/mockData";
 import { ZodiacSign, UserGender } from "@/types/app";
 
-// Steps: basic → astro → interests → photos → social
-const steps = ["basic", "gender", "astro", "interests", "photos", "social"] as const;
+// Steps: basic → gender → astro → interests → music → photos → social
+const steps = ["basic", "gender", "astro", "interests", "music", "photos", "social"] as const;
+
+const MUSIC_GENRES = [
+  "Pop", "Rock", "Alternatif", "Indie", "Rap / Hip-Hop", "R&B",
+  "Elektronik / EDM", "House / Techno", "Jazz", "Blues", "Klasik Müzik",
+  "Latin", "Reggaeton", "Türkçe Pop", "Türkçe Rock", "Arabesk",
+  "Halk Müziği", "Metal", "Lo-fi / Chill", "Soundtrack / Film Müzikleri",
+];
 
 const StepIndicator = ({ current }: { current: number }) => (
   <div className="flex items-center gap-2 justify-center mb-8">
@@ -57,7 +64,10 @@ export const OnboardingScreen = () => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>(currentUser.hobbyPreferences);
   const [personality, setPersonality] = useState<string[]>(currentUser.personalityTags);
 
-  // Step 4 – Photos
+  // Step 4 – Music
+  const [selectedMusic, setSelectedMusic] = useState<string[]>(currentUser.musicTaste || []);
+
+  // Step 5 – Photos
   const [photos, setPhotos] = useState<string[]>(currentUser.photos);
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
   const dragOverIdx = useRef<number | null>(null);
@@ -97,16 +107,19 @@ export const OnboardingScreen = () => {
   const togglePersonality = (val: string) =>
     setPersonality((prev) => prev.includes(val) ? prev.filter((x) => x !== val) : [...prev, val]);
 
+  const toggleMusic = (val: string) =>
+    setSelectedMusic((prev) => prev.includes(val) ? prev.filter((x) => x !== val) : [...prev, val]);
+
   const canProceed = () => {
     if (step === 0) return firstName.trim().length > 0 && city.trim() && height.trim() && profession.trim() && dob;
     if (step === 1) return interestedIn.length > 0;
-    if (step === 4) return photos.length >= 5;
+    if (step === 5) return photos.length >= 5;
     return true;
   };
 
   const btnLabel = () => {
     if (step === steps.length - 1) return "Başvuruyu Gönder";
-    if (step === 4 && photos.length < 5) return `${5 - photos.length} fotoğraf daha ekle`;
+    if (step === 5 && photos.length < 5) return `${5 - photos.length} fotoğraf daha ekle`;
     return "Devam Et →";
   };
 
@@ -128,7 +141,7 @@ export const OnboardingScreen = () => {
       hobbyPreferences: selectedInterests,
       personalityTags: personality,
       interests: selectedInterests.slice(0, 3),
-      musicTaste: [],
+      musicTaste: selectedMusic,
       zodiacSign: zodiac,
       risingSign: rising,
       instagramHandle: instagram,
@@ -416,8 +429,36 @@ export const OnboardingScreen = () => {
           </div>
         )}
 
-        {/* ── STEP 4: Fotoğraflar ── */}
+        {/* ── STEP 4: Müzik Zevki ── */}
         {step === 4 && (
+          <div className="space-y-5 animate-fade-up">
+            <div>
+              <h2 className="font-serif text-3xl text-foreground mb-1">Müzik Zevkin</h2>
+              <p className="text-muted-foreground text-sm">Dinlediğin türleri seç — profilde görünür</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {MUSIC_GENRES.map((genre) => {
+                const isSelected = selectedMusic.includes(genre);
+                return (
+                  <button
+                    key={genre}
+                    onClick={() => toggleMusic(genre)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                      isSelected
+                        ? "gold-gradient text-primary-foreground shadow-gold-sm"
+                        : "bg-muted text-muted-foreground border border-border hover:border-gold"
+                    }`}
+                  >
+                    {genre}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ── STEP 5: Fotoğraflar ── */}
+        {step === 5 && (
           <div className="space-y-6 animate-fade-up">
             <div>
               <h2 className="font-serif text-3xl text-foreground mb-1">Fotoğrafların</h2>
@@ -493,8 +534,8 @@ export const OnboardingScreen = () => {
           </div>
         )}
 
-        {/* ── STEP 5: Sosyal Profil ── */}
-        {step === 5 && (
+        {/* ── STEP 6: Sosyal Profil ── */}
+        {step === 6 && (
           <div className="space-y-6 animate-fade-up">
             <div>
               <h2 className="font-serif text-3xl text-foreground mb-1">Sosyal Profiller</h2>
