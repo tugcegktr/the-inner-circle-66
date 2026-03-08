@@ -577,36 +577,43 @@ export const AdminScreen = () => {
         {/* ── FLAGGED ── */}
         {tab === "flagged" && (
           <div className="space-y-3 animate-fade-up">
-            <p className="text-xs text-muted-foreground mb-2">Eşleşmelerden gelen şikayetler. Detay için dokun.</p>
-            {flagged.length === 0 ? (
+            <p className="text-xs text-muted-foreground mb-2">Eşleşmelerden ve sohbetlerden gelen şikayetler. Detay için dokun.</p>
+            {allFlagged.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-4xl mb-3">🛡</p>
                 <p className="font-serif text-xl text-foreground">Temiz</p>
                 <p className="text-muted-foreground text-sm">İşaretlenmiş profil yok</p>
               </div>
             ) : (
-              flagged.map((user) => (
+              allFlagged.map((user) => (
                 <button
                   key={user.id}
                   onClick={() => setSelectedFlagged(user)}
                   className="w-full bg-surface rounded-xl p-4 border border-destructive/30 text-left hover:border-destructive transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <img
-                      src={FLAGGED_PHOTOS[user.id]}
-                      alt={user.name}
-                      className="w-12 h-12 rounded-full object-cover flex-shrink-0 border-2 border-destructive/40 select-none"
-                      draggable={false}
-                      onContextMenu={(e) => e.preventDefault()}
-                    />
+                    {FLAGGED_PHOTOS[user.id] ? (
+                      <img
+                        src={FLAGGED_PHOTOS[user.id]}
+                        alt={user.name}
+                        className="w-12 h-12 rounded-full object-cover flex-shrink-0 border-2 border-destructive/40 select-none"
+                        draggable={false}
+                        onContextMenu={(e) => e.preventDefault()}
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full flex-shrink-0 border-2 border-destructive/40 bg-destructive/10 flex items-center justify-center text-destructive font-serif text-lg">
+                        {user.name[0]}
+                      </div>
+                    )}
                     <div className="flex-1 min-w-0">
                       <p className="text-foreground font-medium text-sm">{user.name}</p>
-                      <p className="text-muted-foreground text-xs">{user.age} · {user.city}</p>
+                      {user.age > 0 && <p className="text-muted-foreground text-xs">{user.age} · {user.city}</p>}
                       <div className="flex items-center gap-2 mt-1">
                         <span className="text-xs bg-destructive/10 text-destructive px-2 py-0.5 rounded-full">{user.reason}</span>
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">
                         {user.reportCount} şikayet · {(user as any).reportedBy}
+                        {(user as any).reportDate && <span className="ml-1">· {(user as any).reportDate}</span>}
                       </p>
                     </div>
                     <span className="text-xs text-destructive flex-shrink-0">→ İncele</span>
