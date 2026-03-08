@@ -186,6 +186,32 @@ const ChatModal = ({
     }, 1200);
   };
 
+  const sendPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    setMessages((prev) => [...prev, { from: "me", image: url, time: nowStr() }]);
+    onMessageSent(match.id);
+    e.target.value = "";
+  };
+
+  const startRecording = () => {
+    setIsRecording(true);
+    setRecordSeconds(0);
+    recordTimerRef.current = setInterval(() => setRecordSeconds((s) => s + 1), 1000);
+  };
+
+  const stopRecording = () => {
+    setIsRecording(false);
+    if (recordTimerRef.current) clearInterval(recordTimerRef.current);
+    recordTimerRef.current = null;
+    if (recordSeconds > 0) {
+      setMessages((prev) => [...prev, { from: "me", audio: true, text: `🎤 ${recordSeconds}s`, time: nowStr() }]);
+      onMessageSent(match.id);
+    }
+    setRecordSeconds(0);
+  };
+
   if (unmatched || deleted) {
     return (
       <div className="fixed inset-0 bg-background z-50 flex flex-col items-center justify-center max-w-sm mx-auto p-8 text-center">
