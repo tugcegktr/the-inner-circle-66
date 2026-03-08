@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useApp } from "@/context/AppContext";
 import { MOCK_MATCHES, MOCK_LIKED_BY, VIBE_TAGS } from "@/data/mockData";
-import { Match, VibeTag } from "@/types/app";
+import { Match, VibeTag, FlaggedReport } from "@/types/app";
 import { StarRating } from "@/components/StarRating";
 
 const BottomNav = ({ active, onNavigate }: { active: string; onNavigate: (s: any) => void }) => {
