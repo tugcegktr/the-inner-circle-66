@@ -342,15 +342,28 @@ export const DiscoveryScreen = () => {
                 ? `The Club, günde ${maxSwipes} profil sunar. Kalite, niceliğin önünde.`
                 : "Filtrelerini genişleterek daha fazla profil bulabilirsin."}
             </p>
+
+            {/* Filtre varsa temizle */}
             {filteredCards.length === 0 && swipesLeft > 0 && (
               <button onClick={() => setFilters(DEFAULT_FILTERS)}
                 className="py-3 px-6 rounded-xl gold-gradient text-primary-foreground text-sm font-medium mb-3">
                 Filtreleri Temizle
               </button>
             )}
+
+            {/* Reddedilenleri tekrar göster */}
+            {passedCards.length > 0 && (
+              <button
+                onClick={handleRediscoverPassed}
+                className="py-3 px-6 rounded-xl gold-gradient text-primary-foreground text-sm font-medium mb-3 w-full max-w-xs"
+              >
+                ✦ Keşfet ({passedCards.length} profil)
+              </button>
+            )}
+
             <button
               onClick={() => setScreen("matches")}
-              className="py-3 px-6 rounded-xl border border-border text-muted-foreground text-sm font-medium"
+              className="py-3 px-6 rounded-xl border border-border text-muted-foreground text-sm font-medium w-full max-w-xs"
             >
               Eşleşmelerini Gör →
             </button>
