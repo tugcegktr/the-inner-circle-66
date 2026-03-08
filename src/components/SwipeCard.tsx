@@ -150,6 +150,40 @@ export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: S
 
         {/* ── Scrollable content below cover ── */}
         <div className="bg-background px-5 py-5 space-y-5">
+
+          {/* Vibe tags */}
+          {card.vibeTags.length > 0 && (
+            <div>
+              <p className="text-xs text-gold uppercase tracking-wider mb-2">✦ Vibe Etiketleri</p>
+              <div className="flex flex-wrap gap-1.5">
+                {card.vibeTags.map((tag) => (
+                  <span key={tag} className="text-xs gold-gradient text-primary-foreground px-2.5 py-1 rounded-full font-medium">
+                    ✦ {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Star rating */}
+          {card.averageRating && card.ratingCount && (
+            <div className="flex items-center gap-2">
+              <div className="flex gap-0.5">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span
+                    key={star}
+                    className="text-base leading-none"
+                    style={{ color: star <= Math.round(card.averageRating!) ? "hsl(var(--gold))" : "hsl(var(--muted-foreground))" }}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+              <span className="text-sm font-medium text-foreground">{card.averageRating.toFixed(1)}</span>
+              <span className="text-xs text-muted-foreground">({card.ratingCount} değerlendirme)</span>
+            </div>
+          )}
+
           {/* Interests */}
           {card.interests.length > 0 && (
             <div>
@@ -191,6 +225,19 @@ export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: S
             />
           </div>
         ))}
+
+        {/* ── Location after photos ── */}
+        <div className="bg-background px-5 py-5 border-t border-border flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-surface border border-border flex items-center justify-center text-lg flex-shrink-0">
+            📍
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground">Son Görülme Konumu</p>
+            <p className="text-sm text-foreground font-medium">
+              {card.district ? `${card.district}, ${card.city}` : card.city}
+            </p>
+          </div>
+        </div>
 
         {/* Bottom padding */}
         <div className="h-6 bg-background" />
