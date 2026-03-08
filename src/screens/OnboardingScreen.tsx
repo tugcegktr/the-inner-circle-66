@@ -80,7 +80,7 @@ export const OnboardingScreen = () => {
   const [linkedin, setLinkedin] = useState(currentUser.linkedinUrl || "");
 
   const addPhoto = () => {
-    if (photos.length < 6) {
+    if (photos.length < 5) {
       setPhotos([...photos, MOCK_PHOTOS[photos.length % MOCK_PHOTOS.length]]);
     }
   };
@@ -117,13 +117,13 @@ export const OnboardingScreen = () => {
     if (step === 0) return firstName.trim().length > 0 && city.trim() && height.trim() && profession.trim() && dob;
     if (step === 1) return lookingFor.length > 0;
     if (step === 2) return interestedIn.length > 0;
-    if (step === 6) return photos.length >= 5;
+    if (step === 6) return photos.length >= 3;
     return true;
   };
 
   const btnLabel = () => {
     if (step === steps.length - 1) return "Başvuruyu Gönder";
-    if (step === 6 && photos.length < 5) return `${5 - photos.length} fotoğraf daha ekle`;
+    if (step === 6 && photos.length < 3) return `${3 - photos.length} fotoğraf daha ekle`;
     return "Devam Et →";
   };
 
@@ -535,22 +535,22 @@ export const OnboardingScreen = () => {
             <div>
               <h2 className="font-serif text-3xl text-foreground mb-1">Fotoğrafların</h2>
               <p className="text-muted-foreground text-sm">
-                En az <span className="text-gold font-medium">5 fotoğraf</span> zorunlu, maksimum 6.
+                En az <span className="text-gold font-medium">3 fotoğraf</span> zorunlu, maksimum 5.
               </p>
               <p className="text-xs text-muted-foreground mt-1">
                 📌 İlk fotoğraf kapak fotoğrafın olur. Sürükleyerek sıralayabilirsin.
               </p>
             </div>
 
-            {photos.length < 5 && (
+            {photos.length < 3 && (
               <div className="flex items-center gap-2 bg-destructive/10 border border-destructive/30 rounded-xl px-4 py-3">
                 <span className="text-destructive text-sm">⚠️</span>
-                <p className="text-xs text-destructive">{5 - photos.length} fotoğraf daha eklemelisin.</p>
+                <p className="text-xs text-destructive">{3 - photos.length} fotoğraf daha eklemelisin.</p>
               </div>
             )}
 
             <div className="grid grid-cols-3 gap-3">
-              {Array.from({ length: 6 }).map((_, i) => (
+              {Array.from({ length: 5 }).map((_, i) => (
                 <div
                   key={i}
                   className={`aspect-[3/4] rounded-xl overflow-hidden relative transition-all ${
