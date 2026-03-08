@@ -205,7 +205,7 @@ const FilterSheet = ({
 export const DiscoveryScreen = () => {
   const { currentUser, setCurrentUser, setScreen } = useApp();
   const isPremium = currentUser.isPremium;
-  const maxSwipes = isPremium ? 50 : 20;
+  const maxSwipes = isPremium ? 50 : 15;
 
   const [cards, setCards] = useState<SwipeCard[]>(MOCK_SWIPE_CARDS);
   const [showVibeCheck, setShowVibeCheck] = useState(false);

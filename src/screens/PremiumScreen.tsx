@@ -18,7 +18,7 @@ const PLANS: Record<PlanTier, {
     monthly: { price: "₺249,90", originalPrice: "₺399,90", total: "Aylık ₺249,90" },
     yearly: { price: "₺199,90", originalPrice: "₺349,90", total: "Yıllık ₺2.398,80" },
     features: [
-      { icon: "✦", text: "Günde 20 profil görüntüleme" },
+      { icon: "✦", text: "Günde 15 profil görüntüleme" },
       { icon: "💬", text: "Sınırsız eşleşme & mesajlaşma" },
       { icon: "⭐", text: "Eşleşmene yıldız ver" },
       { icon: "📍", text: "Konum bazlı keşif" },
