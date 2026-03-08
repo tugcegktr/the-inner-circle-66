@@ -387,8 +387,8 @@ export const OnboardingScreen = () => {
           </div>
         )}
 
-        {/* ── STEP 2: Astro Profil ── */}
-        {step === 2 && (
+        {/* ── STEP 3: Astro Profil ── */}
+        {step === 3 && (
           <div className="space-y-6 animate-fade-up">
             <div>
               <h2 className="font-serif text-3xl text-foreground mb-1">Astro Profilin</h2>
