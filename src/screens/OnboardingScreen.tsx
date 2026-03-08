@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useApp } from "@/context/AppContext";
-import { ZODIAC_SIGNS, ZODIAC_SYMBOLS, MUSIC_OPTIONS, HOBBY_OPTIONS, PERSONALITY_TAGS } from "@/data/mockData";
-import { ZodiacSign } from "@/types/app";
+import { ZODIAC_SIGNS, ZODIAC_SYMBOLS, INTEREST_CATEGORIES, PERSONALITY_TAGS, GENDER_OPTIONS } from "@/data/mockData";
+import { ZodiacSign, UserGender } from "@/types/app";
 
-const steps = ["basic", "photos", "lifestyle", "zodiac", "social"] as const;
+const steps = ["basic", "gender", "photos", "interests", "zodiac", "social"] as const;
 
 const StepIndicator = ({ current }: { current: number }) => (
   <div className="flex items-center gap-2 justify-center mb-8">
@@ -22,43 +22,34 @@ const StepIndicator = ({ current }: { current: number }) => (
   </div>
 );
 
-const TagSelector = ({
-  options, selected, onToggle, max = 5
-}: { options: string[], selected: string[], onToggle: (v: string) => void, max?: number }) => (
-  <div className="flex flex-wrap gap-2">
-    {options.map((opt) => {
-      const isSelected = selected.includes(opt);
-      return (
-        <button
-          key={opt}
-          onClick={() => (!isSelected && selected.length >= max) ? null : onToggle(opt)}
-          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-            isSelected
-              ? "gold-gradient text-primary-foreground shadow-gold-sm"
-              : "bg-muted text-muted-foreground border border-border hover:border-gold"
-          }`}
-        >
-          {opt}
-        </button>
-      );
-    })}
-  </div>
-);
-
 export const OnboardingScreen = () => {
   const { setScreen, currentUser, setCurrentUser } = useApp();
   const [step, setStep] = useState(0);
+
+  // Basic info
   const [name, setName] = useState(currentUser.name);
   const [dob, setDob] = useState("1997-06-15");
   const [city, setCity] = useState(currentUser.city);
   const [height, setHeight] = useState(currentUser.height);
+  const [profession, setProfession] = useState(currentUser.profession || "");
   const [bio, setBio] = useState(currentUser.bio);
+
+  // Gender
+  const [gender, setGender] = useState<UserGender>(currentUser.gender);
+  const [interestedIn, setInterestedIn] = useState<UserGender[]>(currentUser.interestedIn);
+
+  // Photos
   const [photos, setPhotos] = useState<string[]>(currentUser.photos);
-  const [music, setMusic] = useState<string[]>(currentUser.musicTaste);
-  const [hobbies, setHobbies] = useState<string[]>(currentUser.hobbyPreferences);
+
+  // Interests (categorized)
+  const [selectedInterests, setSelectedInterests] = useState<string[]>(currentUser.hobbyPreferences);
   const [personality, setPersonality] = useState<string[]>(currentUser.personalityTags);
+
+  // Zodiac
   const [zodiac, setZodiac] = useState<ZodiacSign>(currentUser.zodiacSign);
   const [rising, setRising] = useState<ZodiacSign | undefined>(currentUser.risingSign);
+
+  // Social
   const [instagram, setInstagram] = useState(currentUser.instagramHandle || "");
   const [linkedin, setLinkedin] = useState(currentUser.linkedinUrl || "");
 
@@ -78,6 +69,24 @@ export const OnboardingScreen = () => {
 
   const removePhoto = (i: number) => setPhotos(photos.filter((_, idx) => idx !== i));
 
+  const toggleInterestedIn = (val: UserGender) => {
+    setInterestedIn((prev) =>
+      prev.includes(val) ? prev.filter((x) => x !== val) : [...prev, val]
+    );
+  };
+
+  const toggleInterest = (val: string) => {
+    setSelectedInterests((prev) =>
+      prev.includes(val) ? prev.filter((x) => x !== val) : [...prev, val]
+    );
+  };
+
+  const togglePersonality = (val: string) => {
+    setPersonality((prev) =>
+      prev.includes(val) ? prev.filter((x) => x !== val) : [...prev, val]
+    );
+  };
+
   const next = () => {
     if (step < steps.length - 1) setStep(step + 1);
     else finish();
@@ -86,12 +95,13 @@ export const OnboardingScreen = () => {
   const finish = () => {
     setCurrentUser({
       ...currentUser,
-      name, city, height, bio,
+      name, city, height, bio, profession,
+      gender, interestedIn,
       photos,
-      musicTaste: music,
-      hobbyPreferences: hobbies,
+      hobbyPreferences: selectedInterests,
       personalityTags: personality,
-      interests: [...music.slice(0, 2), ...hobbies.slice(0, 1)],
+      interests: selectedInterests.slice(0, 3),
+      musicTaste: [],
       zodiacSign: zodiac,
       risingSign: rising,
       instagramHandle: instagram,
@@ -100,9 +110,20 @@ export const OnboardingScreen = () => {
     setScreen("waitlist");
   };
 
+  const canProceed = () => {
+    if (step === 2) return photos.length >= 5;
+    if (step === 1) return interestedIn.length > 0;
+    return true;
+  };
+
+  const btnLabel = () => {
+    if (step === steps.length - 1) return "Başvuruyu Gönder";
+    if (step === 2 && photos.length < 5) return `${5 - photos.length} fotoğraf daha ekle`;
+    return "Devam Et →";
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-sm mx-auto">
-      {/* Header */}
       <div className="px-6 pt-12 pb-4">
         <StepIndicator current={step} />
         <div className="flex items-center gap-3 mb-2">
@@ -112,18 +133,20 @@ export const OnboardingScreen = () => {
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-32">
-        {/* Step 0: Basic Info */}
+
+        {/* Step 0: Temel Bilgiler */}
         {step === 0 && (
           <div className="space-y-6 animate-fade-up">
             <div>
-              <h2 className="font-serif text-3xl text-foreground mb-1">Tell us about you</h2>
-              <p className="text-muted-foreground text-sm">This information helps curate your experience</p>
+              <h2 className="font-serif text-3xl text-foreground mb-1">Seni Tanıyalım</h2>
+              <p className="text-muted-foreground text-sm">Bu bilgiler deneyimini kişiselleştirmek için kullanılır</p>
             </div>
 
             {[
-              { label: "Full Name", value: name, onChange: setName, placeholder: "Alexandra" },
-              { label: "City", value: city, onChange: setCity, placeholder: "New York" },
-              { label: "Height", value: height, onChange: setHeight, placeholder: "5'6\"" },
+              { label: "Ad Soyad", value: name, onChange: setName, placeholder: "Adın ve soyadın" },
+              { label: "Şehir", value: city, onChange: setCity, placeholder: "İstanbul" },
+              { label: "Boy (cm)", value: height, onChange: setHeight, placeholder: "170" },
+              { label: "Meslek", value: profession, onChange: setProfession, placeholder: "Mesleğin" },
             ].map(({ label, value, onChange, placeholder }) => (
               <div key={label}>
                 <label className="text-xs tracking-wider text-gold uppercase mb-2 block">{label}</label>
@@ -137,7 +160,7 @@ export const OnboardingScreen = () => {
             ))}
 
             <div>
-              <label className="text-xs tracking-wider text-gold uppercase mb-2 block">Date of Birth</label>
+              <label className="text-xs tracking-wider text-gold uppercase mb-2 block">Doğum Tarihi</label>
               <input
                 type="date"
                 value={dob}
@@ -147,13 +170,13 @@ export const OnboardingScreen = () => {
             </div>
 
             <div>
-              <label className="text-xs tracking-wider text-gold uppercase mb-2 block">Your Bio</label>
+              <label className="text-xs tracking-wider text-gold uppercase mb-2 block">Hakkında</label>
               <textarea
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 rows={3}
                 maxLength={150}
-                placeholder="A few words about yourself..."
+                placeholder="Kendini kısaca anlat..."
                 className="w-full bg-surface rounded-xl px-4 py-3.5 text-foreground placeholder-muted-foreground border border-border focus:border-gold outline-none transition-colors text-sm resize-none"
               />
               <p className="text-xs text-muted-foreground text-right mt-1">{bio.length}/150</p>
@@ -161,19 +184,85 @@ export const OnboardingScreen = () => {
           </div>
         )}
 
-        {/* Step 1: Photos */}
+        {/* Step 1: Cinsiyet */}
         {step === 1 && (
+          <div className="space-y-8 animate-fade-up">
+            <div>
+              <h2 className="font-serif text-3xl text-foreground mb-1">Cinsiyet Bilgileri</h2>
+              <p className="text-muted-foreground text-sm">Sana uygun profilleri göstermek için</p>
+            </div>
+
+            <div>
+              <label className="text-xs tracking-wider text-gold uppercase mb-4 block">Ben bir…</label>
+              <div className="space-y-2">
+                {GENDER_OPTIONS.map(({ value, label }) => (
+                  <button
+                    key={value}
+                    onClick={() => setGender(value as UserGender)}
+                    className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl border transition-all text-left ${
+                      gender === value
+                        ? "glass-gold border-gold"
+                        : "bg-surface border-border hover:border-gold/50"
+                    }`}
+                  >
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                      gender === value ? "border-gold" : "border-border"
+                    }`}>
+                      {gender === value && <div className="w-2.5 h-2.5 rounded-full gold-gradient" />}
+                    </div>
+                    <span className={`text-sm font-medium ${gender === value ? "text-foreground" : "text-muted-foreground"}`}>
+                      {label}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="text-xs tracking-wider text-gold uppercase mb-2 block">İlgilendiğim cinsiyet(ler)</label>
+              <p className="text-xs text-muted-foreground mb-4">Birden fazla seçebilirsin</p>
+              <div className="space-y-2">
+                {GENDER_OPTIONS.map(({ value, label }) => {
+                  const isSelected = interestedIn.includes(value as UserGender);
+                  return (
+                    <button
+                      key={value}
+                      onClick={() => toggleInterestedIn(value as UserGender)}
+                      className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl border transition-all text-left ${
+                        isSelected
+                          ? "glass-gold border-gold"
+                          : "bg-surface border-border hover:border-gold/50"
+                      }`}
+                    >
+                      <div className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center flex-shrink-0 ${
+                        isSelected ? "border-gold gold-gradient" : "border-border"
+                      }`}>
+                        {isSelected && <span className="text-primary-foreground text-xs font-bold">✓</span>}
+                      </div>
+                      <span className={`text-sm font-medium ${isSelected ? "text-foreground" : "text-muted-foreground"}`}>
+                        {label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 2: Fotoğraflar */}
+        {step === 2 && (
           <div className="space-y-6 animate-fade-up">
             <div>
               <h2 className="font-serif text-3xl text-foreground mb-1">Fotoğrafların</h2>
               <p className="text-muted-foreground text-sm">
-                En az <span className="text-gold font-medium">5 fotoğraf</span> eklemen zorunlu, maksimum 6. İlk fotoğraf kapak fotoğrafın olur.
+                En az <span className="text-gold font-medium">5 fotoğraf</span> zorunlu, maksimum 6. İlk fotoğraf kapak fotoğrafın olur.
               </p>
             </div>
             {photos.length < 5 && (
               <div className="flex items-center gap-2 bg-destructive/10 border border-destructive/30 rounded-xl px-4 py-3">
                 <span className="text-destructive text-sm">⚠️</span>
-                <p className="text-xs text-destructive">{5 - photos.length} fotoğraf daha eklemen gerekiyor.</p>
+                <p className="text-xs text-destructive">{5 - photos.length} fotoğraf daha eklemelisin.</p>
               </div>
             )}
 
@@ -189,7 +278,7 @@ export const OnboardingScreen = () => {
                       <img src={photos[i]} alt="" className="w-full h-full object-cover" />
                       {i === 0 && (
                         <div className="absolute top-2 left-2 text-xs gold-gradient px-2 py-0.5 rounded-full text-primary-foreground font-medium">
-                          Main
+                          Kapak
                         </div>
                       )}
                       <button
@@ -208,58 +297,88 @@ export const OnboardingScreen = () => {
               ))}
             </div>
 
-            {/* Identity Verification */}
             <div className="glass-gold rounded-xl p-4">
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-8 h-8 rounded-full gold-gradient flex items-center justify-center text-primary-foreground text-sm">✓</div>
                 <div>
-                  <p className="text-sm font-medium text-foreground">Identity Verification</p>
-                  <p className="text-xs text-muted-foreground">Get your Verified badge</p>
+                  <p className="text-sm font-medium text-foreground">Kimlik Doğrulama</p>
+                  <p className="text-xs text-muted-foreground">Onaylı rozet kazan</p>
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground mb-3">Take a real-time selfie to verify your identity and unlock the Verified badge on your profile.</p>
+              <p className="text-xs text-muted-foreground mb-3">Anlık bir selfie çekerek kimliğini doğrula ve profilinde Onaylı rozetini kazan.</p>
               <button className="w-full py-2.5 rounded-lg gold-gradient text-primary-foreground text-xs font-medium tracking-wider">
-                📸 Take Verification Selfie
+                📸 Doğrulama Selfie'si Çek
               </button>
             </div>
           </div>
         )}
 
-        {/* Step 2: Lifestyle */}
-        {step === 2 && (
+        {/* Step 3: İlgi Alanları */}
+        {step === 3 && (
           <div className="space-y-6 animate-fade-up">
             <div>
-              <h2 className="font-serif text-3xl text-foreground mb-1">Your Vibe</h2>
-              <p className="text-muted-foreground text-sm">Select up to 5 in each category</p>
+              <h2 className="font-serif text-3xl text-foreground mb-1">İlgi Alanların</h2>
+              <p className="text-muted-foreground text-sm">Birden fazla seçebilirsin — seçimler profilinde görünür</p>
             </div>
 
-            <div>
-              <label className="text-xs tracking-wider text-gold uppercase mb-3 block">Music Taste</label>
-              <TagSelector options={MUSIC_OPTIONS} selected={music} onToggle={(v) => setMusic(music.includes(v) ? music.filter((x) => x !== v) : [...music, v])} />
-            </div>
+            {INTEREST_CATEGORIES.map(({ category, items }) => (
+              <div key={category}>
+                <label className="text-xs tracking-wider text-gold uppercase mb-3 block">{category}</label>
+                <div className="flex flex-wrap gap-2">
+                  {items.map((item) => {
+                    const isSelected = selectedInterests.includes(item);
+                    return (
+                      <button
+                        key={item}
+                        onClick={() => toggleInterest(item)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                          isSelected
+                            ? "gold-gradient text-primary-foreground shadow-gold-sm"
+                            : "bg-muted text-muted-foreground border border-border hover:border-gold"
+                        }`}
+                      >
+                        {item}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
 
             <div>
-              <label className="text-xs tracking-wider text-gold uppercase mb-3 block">Hobby Preferences</label>
-              <TagSelector options={HOBBY_OPTIONS} selected={hobbies} onToggle={(v) => setHobbies(hobbies.includes(v) ? hobbies.filter((x) => x !== v) : [...hobbies, v])} />
-            </div>
-
-            <div>
-              <label className="text-xs tracking-wider text-gold uppercase mb-3 block">Personality Tags</label>
-              <TagSelector options={PERSONALITY_TAGS} selected={personality} onToggle={(v) => setPersonality(personality.includes(v) ? personality.filter((x) => x !== v) : [...personality, v])} />
+              <label className="text-xs tracking-wider text-gold uppercase mb-3 block">Kişilik Etiketleri</label>
+              <div className="flex flex-wrap gap-2">
+                {PERSONALITY_TAGS.map((tag) => {
+                  const isSelected = personality.includes(tag);
+                  return (
+                    <button
+                      key={tag}
+                      onClick={() => togglePersonality(tag)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                        isSelected
+                          ? "gold-gradient text-primary-foreground shadow-gold-sm"
+                          : "bg-muted text-muted-foreground border border-border hover:border-gold"
+                      }`}
+                    >
+                      {tag}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         )}
 
-        {/* Step 3: Zodiac */}
-        {step === 3 && (
+        {/* Step 4: Burç */}
+        {step === 4 && (
           <div className="space-y-6 animate-fade-up">
             <div>
-              <h2 className="font-serif text-3xl text-foreground mb-1">Astro Profile</h2>
-              <p className="text-muted-foreground text-sm">Your stars guide your connections</p>
+              <h2 className="font-serif text-3xl text-foreground mb-1">Astro Profilin</h2>
+              <p className="text-muted-foreground text-sm">Yıldızların bağlantılarına rehberlik eder</p>
             </div>
 
             <div>
-              <label className="text-xs tracking-wider text-gold uppercase mb-3 block">Sun Sign</label>
+              <label className="text-xs tracking-wider text-gold uppercase mb-3 block">Güneş Burcu</label>
               <div className="grid grid-cols-4 gap-2">
                 {ZODIAC_SIGNS.map((sign) => (
                   <button
@@ -279,7 +398,7 @@ export const OnboardingScreen = () => {
             </div>
 
             <div>
-              <label className="text-xs tracking-wider text-gold uppercase mb-3 block">Rising Sign (Optional)</label>
+              <label className="text-xs tracking-wider text-gold uppercase mb-3 block">Yükselen Burç (İsteğe Bağlı)</label>
               <div className="grid grid-cols-4 gap-2">
                 {ZODIAC_SIGNS.map((sign) => (
                   <button
@@ -300,27 +419,27 @@ export const OnboardingScreen = () => {
           </div>
         )}
 
-        {/* Step 4: Social */}
-        {step === 4 && (
+        {/* Step 5: Sosyal Medya */}
+        {step === 5 && (
           <div className="space-y-6 animate-fade-up">
             <div>
-              <h2 className="font-serif text-3xl text-foreground mb-1">Social Links</h2>
-              <p className="text-muted-foreground text-sm">Link at least one social profile for verification</p>
+              <h2 className="font-serif text-3xl text-foreground mb-1">Sosyal Profiller</h2>
+              <p className="text-muted-foreground text-sm">Doğrulama için en az bir sosyal profil bağla</p>
             </div>
 
             <div className="glass-gold rounded-xl p-4 mb-2">
-              <p className="text-xs text-gold font-medium mb-1">🔒 Required for Approval</p>
-              <p className="text-xs text-muted-foreground">The Club requires at least one verified social profile. Links are never shared with other members.</p>
+              <p className="text-xs text-gold font-medium mb-1">🔒 Onay İçin Gerekli</p>
+              <p className="text-xs text-muted-foreground">The Club, en az bir doğrulanmış sosyal profil gerektirir. Linkler hiçbir zaman diğer üyelerle paylaşılmaz.</p>
             </div>
 
             <div>
-              <label className="text-xs tracking-wider text-gold uppercase mb-2 block">Instagram Handle</label>
+              <label className="text-xs tracking-wider text-gold uppercase mb-2 block">Instagram Kullanıcı Adı</label>
               <div className="flex items-center gap-2 bg-surface rounded-xl px-4 py-3.5 border border-border focus-within:border-gold transition-colors">
                 <span className="text-muted-foreground text-sm">📸</span>
                 <input
                   value={instagram}
                   onChange={(e) => setInstagram(e.target.value)}
-                  placeholder="@yourusername"
+                  placeholder="@kullaniciadin"
                   className="flex-1 bg-transparent text-foreground placeholder-muted-foreground text-sm outline-none"
                 />
               </div>
@@ -333,7 +452,7 @@ export const OnboardingScreen = () => {
                 <input
                   value={linkedin}
                   onChange={(e) => setLinkedin(e.target.value)}
-                  placeholder="linkedin.com/in/you"
+                  placeholder="linkedin.com/in/sen"
                   className="flex-1 bg-transparent text-foreground placeholder-muted-foreground text-sm outline-none"
                 />
               </div>
@@ -341,7 +460,7 @@ export const OnboardingScreen = () => {
 
             <div className="bg-surface rounded-xl p-4 border border-border">
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Your application will be reviewed by our team within 24–48 hours. We manually approve every member to maintain the quality of The Club.
+                Başvurun ekibimiz tarafından 24–48 saat içinde incelenecek. The Club'ın kalitesini korumak için her üyeyi manuel olarak onaylıyoruz.
               </p>
             </div>
           </div>
@@ -361,14 +480,10 @@ export const OnboardingScreen = () => {
           )}
           <button
             onClick={next}
-            disabled={step === 1 && photos.length < 5}
+            disabled={!canProceed()}
             className="flex-[2] py-4 rounded-xl gold-gradient text-primary-foreground font-medium text-sm tracking-wider hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
           >
-            {step === steps.length - 1
-              ? "Başvuruyu Gönder"
-              : step === 1 && photos.length < 5
-              ? `${5 - photos.length} fotoğraf daha ekle`
-              : "Devam Et →"}
+            {btnLabel()}
           </button>
         </div>
       </div>

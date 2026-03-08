@@ -24,9 +24,8 @@ const VibeCheckModal = ({ onClose }: { onClose: () => void }) => {
       <div className="w-full max-w-sm glass rounded-t-3xl p-8 animate-fade-up">
         <div className="w-12 h-1 bg-muted rounded-full mx-auto mb-6" />
         <h3 className="font-serif text-2xl text-center mb-1">Vibe Check</h3>
-        <p className="text-muted-foreground text-sm text-center mb-8">Send a 15-second voice note. It disappears after listening.</p>
+        <p className="text-muted-foreground text-sm text-center mb-8">15 saniyelik sesli mesaj gönder. Dinlendikten sonra kaybolur.</p>
 
-        {/* Waveform visualization */}
         <div className="flex items-center justify-center gap-1 h-16 mb-8">
           {Array.from({ length: 24 }).map((_, i) => (
             <div
@@ -55,25 +54,25 @@ const VibeCheckModal = ({ onClose }: { onClose: () => void }) => {
               recording ? "bg-destructive text-destructive-foreground" : "gold-gradient text-primary-foreground"
             }`}
           >
-            {recording ? "🔴 Recording..." : "🎙 Start Recording"}
+            {recording ? "🔴 Kaydediliyor..." : "🎙 Kayda Başla"}
           </button>
         ) : (
           <div className="space-y-3">
             <div className="flex items-center gap-3 bg-surface rounded-xl p-3 border border-gold/30">
               <div className="w-10 h-10 rounded-full gold-gradient flex items-center justify-center text-primary-foreground">▶</div>
               <div>
-                <p className="text-sm text-foreground font-medium">Voice Note</p>
-                <p className="text-xs text-muted-foreground">15 seconds · Disappears after play</p>
+                <p className="text-sm text-foreground font-medium">Sesli Not</p>
+                <p className="text-xs text-muted-foreground">15 saniye · Dinlendikten sonra kaybolur</p>
               </div>
             </div>
             <button onClick={onClose} className="w-full py-4 rounded-xl gold-gradient text-primary-foreground font-medium text-sm tracking-wider">
-              Send Vibe Check ✦
+              Vibe Check Gönder ✦
             </button>
           </div>
         )}
 
         <button onClick={onClose} className="w-full mt-3 py-3 text-muted-foreground text-sm hover:text-foreground transition-colors">
-          Cancel
+          İptal
         </button>
       </div>
     </div>
@@ -84,7 +83,6 @@ export const DiscoveryScreen = () => {
   const { currentUser, setCurrentUser, setScreen } = useApp();
   const [cards, setCards] = useState<SwipeCard[]>(MOCK_SWIPE_CARDS);
   const [showVibeCheck, setShowVibeCheck] = useState(false);
-  const [rewindUsed, setRewindUsed] = useState(false);
   const [lastSwiped, setLastSwiped] = useState<SwipeCard | null>(null);
   const [showRewindPaywall, setShowRewindPaywall] = useState(false);
   const swipesLeft = currentUser.dailySwipesLeft;
@@ -115,7 +113,7 @@ export const DiscoveryScreen = () => {
         <div>
           <h1 className="font-serif text-2xl gold-text">The Club</h1>
           <p className="text-muted-foreground text-xs tracking-wider">
-            {swipesLeft} curated {swipesLeft === 1 ? "profile" : "profiles"} today
+            Bugün {swipesLeft} özel {swipesLeft === 1 ? "profil" : "profil"} seni bekliyor
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -148,20 +146,19 @@ export const DiscoveryScreen = () => {
             <div className="w-20 h-20 rounded-full glass-gold mx-auto mb-6 flex items-center justify-center animate-float">
               <span className="text-4xl">✦</span>
             </div>
-            <h3 className="font-serif text-2xl text-foreground mb-2">Come Back Tomorrow</h3>
+            <h3 className="font-serif text-2xl text-foreground mb-2">Yarın Görüşürüz</h3>
             <p className="text-muted-foreground text-sm mb-6">
-              The Club curates 5 exclusive profiles daily. Quality over quantity.
+              The Club, günde 5 özel profil sunar. Kalite, niceliğin önünde.
             </p>
             <button
               onClick={() => setScreen("matches")}
               className="py-3 px-6 rounded-xl gold-gradient text-primary-foreground text-sm font-medium"
             >
-              See Your Matches →
+              Eşleşmelerini Gör →
             </button>
           </div>
         ) : (
           <div className="relative h-[520px]">
-            {/* Stack background cards */}
             {cards.slice(1, 3).map((card, i) => (
               <div
                 key={card.id}
@@ -176,7 +173,6 @@ export const DiscoveryScreen = () => {
               </div>
             ))}
 
-            {/* Top card */}
             <SwipeCardComponent
               card={cards[0]}
               onSwipeLeft={handleSwipeLeft}
@@ -191,7 +187,6 @@ export const DiscoveryScreen = () => {
       {cards.length > 0 && swipesLeft > 0 && (
         <div className="px-6 py-4">
           <div className="flex items-center justify-center gap-4 mb-4">
-            {/* Pass */}
             <button
               onClick={handleSwipeLeft}
               className="w-14 h-14 rounded-full bg-surface border border-border flex items-center justify-center text-xl hover:border-destructive hover:text-destructive transition-all active:scale-95 shadow-luxury"
@@ -199,7 +194,6 @@ export const DiscoveryScreen = () => {
               ✕
             </button>
 
-            {/* Vibe Check */}
             <button
               onClick={() => setShowVibeCheck(true)}
               className="w-12 h-12 rounded-full glass-gold flex items-center justify-center text-lg hover:shadow-gold transition-all active:scale-95"
@@ -207,7 +201,6 @@ export const DiscoveryScreen = () => {
               🎙
             </button>
 
-            {/* Like */}
             <button
               onClick={handleSwipeRight}
               className="w-14 h-14 rounded-full gold-gradient flex items-center justify-center text-xl text-primary-foreground shadow-gold-sm hover:shadow-gold transition-all active:scale-95"
@@ -216,34 +209,31 @@ export const DiscoveryScreen = () => {
             </button>
           </div>
 
-          {/* Rewind */}
           <div className="flex justify-center">
             <button
               onClick={handleRewind}
               disabled={!lastSwiped}
               className="flex items-center gap-2 text-xs text-muted-foreground hover:text-gold transition-colors disabled:opacity-30"
             >
-              ↩ Rewind {!currentUser.isPremium && <span className="gold-gradient text-primary-foreground px-1.5 py-0.5 rounded text-xs">PRO</span>}
+              ↩ Geri Al {!currentUser.isPremium && <span className="gold-gradient text-primary-foreground px-1.5 py-0.5 rounded text-xs">PRO</span>}
             </button>
           </div>
         </div>
       )}
 
-      {/* Bottom Nav */}
-      <BottomNav active="discover" onNavigate={setScreen} />
+      <BottomNav active="discovery" onNavigate={setScreen} />
 
-      {/* Modals */}
       {showVibeCheck && <VibeCheckModal onClose={() => setShowVibeCheck(false)} />}
       {showRewindPaywall && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6">
           <div className="glass rounded-2xl p-6 w-full max-w-sm animate-scale-in">
-            <p className="font-serif text-xl text-center mb-2">Premium Feature</p>
-            <p className="text-muted-foreground text-sm text-center mb-6">Rewind requires a Premium Gold subscription.</p>
+            <p className="font-serif text-xl text-center mb-2">Premium Özellik</p>
+            <p className="text-muted-foreground text-sm text-center mb-6">Geri alma özelliği Premium Gold üyeliği gerektirir.</p>
             <button onClick={() => { setShowRewindPaywall(false); setScreen("premium"); }} className="w-full py-3 rounded-xl gold-gradient text-primary-foreground text-sm font-medium mb-2">
-              Upgrade to Premium ✦
+              Premium'a Geç ✦
             </button>
             <button onClick={() => setShowRewindPaywall(false)} className="w-full py-3 text-muted-foreground text-sm">
-              Not now
+              Şimdi Değil
             </button>
           </div>
         </div>
@@ -252,12 +242,11 @@ export const DiscoveryScreen = () => {
   );
 };
 
-// Bottom Navigation
 const BottomNav = ({ active, onNavigate }: { active: string; onNavigate: (s: any) => void }) => {
   const tabs = [
-    { id: "discovery", icon: "✦", label: "Discover" },
-    { id: "matches", icon: "💬", label: "Matches" },
-    { id: "profile", icon: "👤", label: "Profile" },
+    { id: "discovery", icon: "✦", label: "Keşfet" },
+    { id: "matches", icon: "💬", label: "Eşleşmeler" },
+    { id: "profile", icon: "👤", label: "Profil" },
   ];
 
   return (

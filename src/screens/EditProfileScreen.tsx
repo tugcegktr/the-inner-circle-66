@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useApp } from "@/context/AppContext";
-import { ZODIAC_SIGNS, ZODIAC_SYMBOLS, MUSIC_OPTIONS, HOBBY_OPTIONS, PERSONALITY_TAGS } from "@/data/mockData";
+import { ZODIAC_SIGNS, ZODIAC_SYMBOLS, INTEREST_CATEGORIES, PERSONALITY_TAGS } from "@/data/mockData";
 import { ZodiacSign } from "@/types/app";
 
 export const EditProfileScreen = () => {
@@ -9,8 +9,8 @@ export const EditProfileScreen = () => {
   const [bio, setBio] = useState(currentUser.bio);
   const [city, setCity] = useState(currentUser.city);
   const [height, setHeight] = useState(currentUser.height);
+  const [profession, setProfession] = useState(currentUser.profession || "");
   const [zodiac, setZodiac] = useState(currentUser.zodiacSign);
-  const [music, setMusic] = useState(currentUser.musicTaste);
   const [hobbies, setHobbies] = useState(currentUser.hobbyPreferences);
   const [personality, setPersonality] = useState(currentUser.personalityTags);
   const [instagram, setInstagram] = useState(currentUser.instagramHandle || "");
@@ -22,12 +22,11 @@ export const EditProfileScreen = () => {
   const save = () => {
     setCurrentUser({
       ...currentUser,
-      name, bio, city, height,
+      name, bio, city, height, profession,
       zodiacSign: zodiac as ZodiacSign,
-      musicTaste: music,
       hobbyPreferences: hobbies,
       personalityTags: personality,
-      interests: [...music.slice(0, 2), ...hobbies.slice(0, 1)],
+      interests: hobbies.slice(0, 3),
       instagramHandle: instagram,
     });
     setScreen("profile");
@@ -38,16 +37,16 @@ export const EditProfileScreen = () => {
       {/* Header */}
       <div className="px-6 pt-10 pb-4 flex items-center gap-4">
         <button onClick={() => setScreen("profile")} className="text-muted-foreground hover:text-foreground transition-colors">←</button>
-        <h1 className="font-serif text-2xl flex-1">Edit Profile</h1>
-        <button onClick={save} className="text-gold text-sm font-medium">Save</button>
+        <h1 className="font-serif text-2xl flex-1">Profili Düzenle</h1>
+        <button onClick={save} className="text-gold text-sm font-medium">Kaydet</button>
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-32 space-y-6">
-        {/* Basic */}
         {[
-          { label: "Name", value: name, onChange: setName },
-          { label: "City", value: city, onChange: setCity },
-          { label: "Height", value: height, onChange: setHeight },
+          { label: "Ad Soyad", value: name, onChange: setName },
+          { label: "Şehir", value: city, onChange: setCity },
+          { label: "Boy (cm)", value: height, onChange: setHeight },
+          { label: "Meslek", value: profession, onChange: setProfession },
         ].map(({ label, value, onChange }) => (
           <div key={label}>
             <label className="text-xs tracking-wider text-gold uppercase mb-2 block">{label}</label>
@@ -57,7 +56,7 @@ export const EditProfileScreen = () => {
         ))}
 
         <div>
-          <label className="text-xs tracking-wider text-gold uppercase mb-2 block">Bio</label>
+          <label className="text-xs tracking-wider text-gold uppercase mb-2 block">Hakkında</label>
           <textarea value={bio} onChange={(e) => setBio(e.target.value)} rows={3} maxLength={150}
             className="w-full bg-surface rounded-xl px-4 py-3.5 text-foreground border border-border focus:border-gold outline-none transition-colors text-sm resize-none" />
           <p className="text-xs text-muted-foreground text-right mt-1">{bio.length}/150</p>
@@ -65,13 +64,13 @@ export const EditProfileScreen = () => {
 
         <div>
           <label className="text-xs tracking-wider text-gold uppercase mb-2 block">Instagram</label>
-          <input value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="@handle"
+          <input value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="@kullaniciadin"
             className="w-full bg-surface rounded-xl px-4 py-3.5 text-foreground border border-border focus:border-gold outline-none transition-colors text-sm" />
         </div>
 
         {/* Sun Sign */}
         <div>
-          <label className="text-xs tracking-wider text-gold uppercase mb-3 block">Sun Sign</label>
+          <label className="text-xs tracking-wider text-gold uppercase mb-3 block">Güneş Burcu</label>
           <div className="grid grid-cols-4 gap-2">
             {ZODIAC_SIGNS.map((sign) => (
               <button key={sign} onClick={() => setZodiac(sign as ZodiacSign)}
@@ -85,39 +84,26 @@ export const EditProfileScreen = () => {
           </div>
         </div>
 
-        {/* Music */}
-        <div>
-          <label className="text-xs tracking-wider text-gold uppercase mb-3 block">Music Taste</label>
-          <div className="flex flex-wrap gap-2">
-            {MUSIC_OPTIONS.map((opt) => (
-              <button key={opt} onClick={() => toggleTag(music, setMusic, opt)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                  music.includes(opt) ? "gold-gradient text-primary-foreground" : "bg-muted text-muted-foreground border border-border hover:border-gold"
-                }`}>
-                {opt}
-              </button>
-            ))}
+        {/* Interest categories */}
+        {INTEREST_CATEGORIES.map(({ category, items }) => (
+          <div key={category}>
+            <label className="text-xs tracking-wider text-gold uppercase mb-3 block">{category}</label>
+            <div className="flex flex-wrap gap-2">
+              {items.map((opt) => (
+                <button key={opt} onClick={() => toggleTag(hobbies, setHobbies, opt)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                    hobbies.includes(opt) ? "gold-gradient text-primary-foreground" : "bg-muted text-muted-foreground border border-border hover:border-gold"
+                  }`}>
+                  {opt}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-
-        {/* Hobbies */}
-        <div>
-          <label className="text-xs tracking-wider text-gold uppercase mb-3 block">Hobbies</label>
-          <div className="flex flex-wrap gap-2">
-            {HOBBY_OPTIONS.map((opt) => (
-              <button key={opt} onClick={() => toggleTag(hobbies, setHobbies, opt)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                  hobbies.includes(opt) ? "gold-gradient text-primary-foreground" : "bg-muted text-muted-foreground border border-border hover:border-gold"
-                }`}>
-                {opt}
-              </button>
-            ))}
-          </div>
-        </div>
+        ))}
 
         {/* Personality */}
         <div>
-          <label className="text-xs tracking-wider text-gold uppercase mb-3 block">Personality</label>
+          <label className="text-xs tracking-wider text-gold uppercase mb-3 block">Kişilik Etiketleri</label>
           <div className="flex flex-wrap gap-2">
             {PERSONALITY_TAGS.map((opt) => (
               <button key={opt} onClick={() => toggleTag(personality, setPersonality, opt)}
@@ -133,7 +119,7 @@ export const EditProfileScreen = () => {
 
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-sm px-6 pb-8 pt-4 bg-gradient-to-t from-background to-transparent">
         <button onClick={save} className="w-full py-4 rounded-xl gold-gradient text-primary-foreground font-medium text-sm tracking-wider hover:opacity-90 active:scale-95 transition-all">
-          Save Changes
+          Değişiklikleri Kaydet
         </button>
       </div>
     </div>
