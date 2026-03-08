@@ -1,10 +1,10 @@
 import React, { useState, useRef } from "react";
 import { useApp } from "@/context/AppContext";
 import { ZODIAC_SIGNS, ZODIAC_SYMBOLS, INTEREST_CATEGORIES, PERSONALITY_TAGS, GENDER_OPTIONS } from "@/data/mockData";
-import { ZodiacSign, UserGender } from "@/types/app";
+import { ZodiacSign, UserGender, LookingFor } from "@/types/app";
 
-// Steps: basic → gender → astro → interests → music → photos → social
-const steps = ["basic", "gender", "astro", "interests", "music", "photos", "social"] as const;
+// Steps: basic → lookingFor → gender → astro → interests → music → photos → social
+const steps = ["basic", "lookingFor", "gender", "astro", "interests", "music", "photos", "social"] as const;
 
 const MUSIC_GENRES = [
   "Pop", "Rock", "Alternatif", "Indie", "Rap / Hip-Hop", "R&B",
