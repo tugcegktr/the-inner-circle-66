@@ -150,6 +150,7 @@ export const OnboardingScreen = () => {
       risingSign: rising,
       instagramHandle: instagram,
       linkedinUrl: linkedin,
+      lookingFor,
     });
     setScreen("waitlist");
   };
