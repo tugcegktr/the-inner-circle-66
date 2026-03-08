@@ -535,7 +535,7 @@ export const OnboardingScreen = () => {
             <div>
               <h2 className="font-serif text-3xl text-foreground mb-1">Fotoğrafların</h2>
               <p className="text-muted-foreground text-sm">
-                En az <span className="text-gold font-medium">5 fotoğraf</span> zorunlu, maksimum 6.
+                En az <span className="text-gold font-medium">3 fotoğraf</span> zorunlu, maksimum 5.
               </p>
               <p className="text-xs text-muted-foreground mt-1">
                 📌 İlk fotoğraf kapak fotoğrafın olur. Sürükleyerek sıralayabilirsin.
