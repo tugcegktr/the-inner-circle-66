@@ -23,6 +23,7 @@ export const MOCK_SWIPE_CARDS: SwipeCard[] = [
     compatibilityScore: 94,
     profession: "Mimar",
     gender: "woman",
+    musicTaste: ["Indie", "Jazz", "Lo-fi / Chill"],
   },
   {
     id: "2",
@@ -42,6 +43,7 @@ export const MOCK_SWIPE_CARDS: SwipeCard[] = [
     compatibilityScore: 87,
     profession: "Küratör",
     gender: "woman",
+    musicTaste: ["Klasik Müzik", "Alternatif", "Soundtrack / Film Müzikleri"],
   },
   {
     id: "3",
@@ -60,6 +62,7 @@ export const MOCK_SWIPE_CARDS: SwipeCard[] = [
     compatibilityScore: 78,
     profession: "Avukat",
     gender: "woman",
+    musicTaste: ["Pop", "Türkçe Pop", "R&B"],
   },
   {
     id: "4",
@@ -78,6 +81,7 @@ export const MOCK_SWIPE_CARDS: SwipeCard[] = [
     compatibilityScore: 91,
     profession: "Tasarımcı",
     gender: "woman",
+    musicTaste: ["House / Techno", "Elektronik / EDM", "Indie"],
   },
   {
     id: "5",
@@ -96,6 +100,7 @@ export const MOCK_SWIPE_CARDS: SwipeCard[] = [
     compatibilityScore: 83,
     profession: "Girişimci",
     gender: "woman",
+    musicTaste: ["Latin", "Reggaeton", "Blues"],
   },
 ];
 
