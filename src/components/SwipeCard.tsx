@@ -275,6 +275,20 @@ export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: S
                 </div>
               )}
 
+              {/* Music taste */}
+              {card.musicTaste && card.musicTaste.length > 0 && (
+                <div>
+                  <p className="text-xs text-gold uppercase tracking-wider mb-2">🎵 Müzik Zevki</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {card.musicTaste.map((genre) => (
+                      <span key={genre} className="text-xs bg-surface border border-border text-muted-foreground px-2.5 py-1 rounded-full">
+                        {genre}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Vibe Tags */}
               {card.vibeTags.length > 0 && (
                 <div>
