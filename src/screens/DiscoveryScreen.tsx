@@ -343,25 +343,16 @@ export const DiscoveryScreen = () => {
           </div>
         ) : (
           <div className="relative h-[520px]">
-            {filteredCards.slice(1, 3).map((card, i) => (
-              <div
+            {filteredCards.slice(0, 3).map((card, i) => (
+              <SwipeCardComponent
                 key={card.id}
-                className="absolute inset-0 rounded-3xl overflow-hidden"
-                style={{
-                  transform: `scale(${1 - (i + 1) * 0.04}) translateY(${(i + 1) * 8}px)`,
-                  zIndex: 5 - i,
-                }}
-              >
-                <img src={card.photos[0]} alt="" className="w-full h-full object-cover" />
-                <div className="absolute inset-0" style={{ background: "var(--gradient-card)" }} />
-              </div>
+                card={card}
+                onSwipeLeft={handleSwipeLeft}
+                onSwipeRight={handleSwipeRight}
+                isTop={i === 0}
+                stackIndex={i}
+              />
             ))}
-            <SwipeCardComponent
-              card={filteredCards[0]}
-              onSwipeLeft={handleSwipeLeft}
-              onSwipeRight={handleSwipeRight}
-              isTop={true}
-            />
           </div>
         )}
       </div>

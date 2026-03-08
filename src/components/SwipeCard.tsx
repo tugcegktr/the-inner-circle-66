@@ -7,9 +7,10 @@ interface SwipeCardProps {
   onSwipeLeft: () => void;
   onSwipeRight: () => void;
   isTop: boolean;
+  stackIndex?: number;
 }
 
-export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: SwipeCardProps) => {
+export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop, stackIndex = 0 }: SwipeCardProps) => {
   const [dragX, setDragX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [swipeDir, setSwipeDir] = useState<"left" | "right" | null>(null);
@@ -76,10 +77,12 @@ export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: S
             ? "rotate(-20deg) translateX(-150%)"
             : swipeDir === "right"
             ? "rotate(20deg) translateX(150%)"
-            : `rotate(${rotation}deg) translateX(${dragX}px)`,
+            : isTop
+            ? `rotate(${rotation}deg) translateX(${dragX}px)`
+            : `scale(${1 - stackIndex * 0.04}) translateY(${stackIndex * 8}px)`,
           transition: isDragging ? "none" : "transform 0.35s ease",
-          opacity: swipeDir ? 0 : opacity,
-          zIndex: isTop ? 10 : 5,
+          opacity: swipeDir ? 0 : isTop ? opacity : 1,
+          zIndex: isTop ? 10 : 5 - stackIndex,
           borderRadius: "1.5rem",
         }}
         onMouseDown={handleMouseDown}
