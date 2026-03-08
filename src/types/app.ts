@@ -74,6 +74,8 @@ export interface SwipeCard {
   instagramHandle?: string;
   linkedinUrl?: string;
   musicTaste?: string[];
+  lookingFor?: LookingFor[];
+  bio?: string;
 }
 
 export interface FlaggedReport {
