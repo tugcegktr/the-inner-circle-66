@@ -542,15 +542,15 @@ export const OnboardingScreen = () => {
               </p>
             </div>
 
-            {photos.length < 5 && (
+            {photos.length < 3 && (
               <div className="flex items-center gap-2 bg-destructive/10 border border-destructive/30 rounded-xl px-4 py-3">
                 <span className="text-destructive text-sm">⚠️</span>
-                <p className="text-xs text-destructive">{5 - photos.length} fotoğraf daha eklemelisin.</p>
+                <p className="text-xs text-destructive">{3 - photos.length} fotoğraf daha eklemelisin.</p>
               </div>
             )}
 
             <div className="grid grid-cols-3 gap-3">
-              {Array.from({ length: 6 }).map((_, i) => (
+              {Array.from({ length: 5 }).map((_, i) => (
                 <div
                   key={i}
                   className={`aspect-[3/4] rounded-xl overflow-hidden relative transition-all ${
