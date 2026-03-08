@@ -36,7 +36,7 @@ const defaultUser: UserProfile = {
   isApproved: true,
   vibeTags: [],
   subscriptionStatus: "none",
-  dailySwipesLeft: 5,
+  dailySwipesLeft: 15,
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
