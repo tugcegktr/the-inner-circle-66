@@ -204,7 +204,8 @@ export const DiscoveryScreen = () => {
   const maxSwipes = isPremium ? 50 : 15;
 
   const [cards, setCards] = useState<SwipeCard[]>(MOCK_SWIPE_CARDS);
-  const [showVibeCheck, setShowVibeCheck] = useState(false);
+  const [showSuperVibe, setShowSuperVibe] = useState(false);
+  const [showSuperVibePaywall, setShowSuperVibePaywall] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [lastSwiped, setLastSwiped] = useState<SwipeCard | null>(null);
   const [showRewindPaywall, setShowRewindPaywall] = useState(false);
