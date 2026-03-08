@@ -64,7 +64,7 @@ export const LoginScreen = () => {
           {step === "phone" ? (
             <div className="space-y-6">
               <div>
-                <p className="font-serif text-xl text-foreground mb-1">Tekrar Hoş Geldin</p>
+                <p className="font-serif text-xl text-foreground mb-1">Hoş Geldin</p>
                 <p className="text-muted-foreground text-sm">Devam etmek için numaranı gir</p>
               </div>
 
