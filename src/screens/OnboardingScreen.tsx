@@ -117,13 +117,13 @@ export const OnboardingScreen = () => {
     if (step === 0) return firstName.trim().length > 0 && city.trim() && height.trim() && profession.trim() && dob;
     if (step === 1) return lookingFor.length > 0;
     if (step === 2) return interestedIn.length > 0;
-    if (step === 6) return photos.length >= 5;
+    if (step === 6) return photos.length >= 3;
     return true;
   };
 
   const btnLabel = () => {
     if (step === steps.length - 1) return "Başvuruyu Gönder";
-    if (step === 6 && photos.length < 5) return `${5 - photos.length} fotoğraf daha ekle`;
+    if (step === 6 && photos.length < 3) return `${3 - photos.length} fotoğraf daha ekle`;
     return "Devam Et →";
   };
 

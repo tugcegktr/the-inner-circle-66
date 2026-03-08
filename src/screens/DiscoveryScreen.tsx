@@ -214,7 +214,7 @@ export const DiscoveryScreen = () => {
   const swipesLeft = currentUser.dailySwipesLeft;
 
   // Apply filters to cards
-  const filteredCards = cards.filter((card) => {
+  const baseFiltered = cards.filter((card) => {
     const userAge = currentUser.age;
     const ageMin = filters.ageMin === 0 ? userAge - 5 : filters.ageMin;
     const ageMax = filters.ageMax === 99 ? userAge + 5 : filters.ageMax;
@@ -226,6 +226,29 @@ export const DiscoveryScreen = () => {
     }
     return true;
   });
+
+  // Networking önceliği: kullanıcı Networking seçtiyse aynı mesleği öne çıkar
+  const isNetworker = currentUser.lookingFor?.includes("networking");
+  const filteredCards = isNetworker && currentUser.profession
+    ? [
+        ...baseFiltered.filter((c) =>
+          c.profession?.toLowerCase().split(/[\s,/&]+/).some((word) =>
+            word.length > 3 && currentUser.profession!.toLowerCase().includes(word)
+          ) || currentUser.profession!.toLowerCase().split(/[\s,/&]+/).some((word) =>
+            word.length > 3 && (c.profession?.toLowerCase() || "").includes(word)
+          )
+        ),
+        ...baseFiltered.filter((c) =>
+          !(
+            c.profession?.toLowerCase().split(/[\s,/&]+/).some((word) =>
+              word.length > 3 && currentUser.profession!.toLowerCase().includes(word)
+            ) || currentUser.profession!.toLowerCase().split(/[\s,/&]+/).some((word) =>
+              word.length > 3 && (c.profession?.toLowerCase() || "").includes(word)
+            )
+          )
+        ),
+      ]
+    : baseFiltered;
 
   const hasActiveFilters = filters.ageMin !== 0 || filters.ageMax !== 99 || filters.zodiac || filters.interests.length > 0;
 
