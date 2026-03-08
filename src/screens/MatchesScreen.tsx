@@ -129,7 +129,15 @@ const RateMatchModal = ({ match, onClose, onRate }: {
 };
 
 // ── Chat Screen ──
-const ChatModal = ({ match, onClose }: { match: Match; onClose: () => void }) => {
+const ChatModal = ({
+  match,
+  onClose,
+  onMessageSent,
+}: {
+  match: Match;
+  onClose: () => void;
+  onMessageSent: (matchId: string) => void;
+}) => {
   const [messages, setMessages] = useState<{ from: "me" | "them"; text: string; time: string }[]>([
     { from: "them", text: "Merhaba! Nasılsın? 😊", time: "10:32" },
   ]);
