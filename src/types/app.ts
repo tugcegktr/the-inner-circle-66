@@ -47,6 +47,7 @@ export interface UserProfile {
   isPremium: boolean;
   isApproved: boolean;
   vibeTags: VibeTag[];
+  lookingFor?: LookingFor[];
   subscriptionStatus: "none" | "monthly" | "yearly";
   dailySwipesLeft: number;
   averageRating?: number;
