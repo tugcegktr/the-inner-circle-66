@@ -1,6 +1,5 @@
 import React from "react";
 import { useApp } from "@/context/AppContext";
-import { LAUNCH_THRESHOLD, MOCK_APPROVED_COUNT } from "@/data/mockData";
 
 export const WaitlistScreen = () => {
   const { setScreen, currentUser } = useApp();
@@ -24,7 +23,7 @@ export const WaitlistScreen = () => {
           Başvurun <span className="gold-text">Alındı</span>
         </h1>
         <p className="text-muted-foreground text-sm leading-relaxed mb-8 max-w-xs mx-auto">
-          Ekibimiz başvurunu inceliyor. Onaylandığında SMS ile bilgilendirileceksin.
+          Ekibimiz başvurunu inceliyor. Onaylandığında bildirim alacaksın.
         </p>
 
         {/* Status card */}
@@ -37,7 +36,6 @@ export const WaitlistScreen = () => {
           <div className="space-y-4">
             {steps.map(({ icon, title, desc, done }, i) => (
               <div key={title} className="flex items-start gap-3">
-                {/* Connector line */}
                 <div className="flex flex-col items-center">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 ${
                     done ? "gold-gradient text-primary-foreground" : "bg-surface border border-border text-muted-foreground"
@@ -57,18 +55,10 @@ export const WaitlistScreen = () => {
           </div>
         </div>
 
-        {/* Launch info */}
-        <div className="bg-surface rounded-xl p-4 border border-border mb-6">
-          <p className="text-xs text-gold font-medium mb-1">🚀 Açılış Hakkında</p>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            Onaylandıktan sonra bile The Club, <span className="text-foreground font-medium">{LAUNCH_THRESHOLD} üyeye</span> ulaşana kadar aktif olmayacak. Şu an <span className="text-gold font-medium">{MOCK_APPROVED_COUNT} onaylı üye</span> var.
-          </p>
-        </div>
-
-        {/* What you CANNOT do yet (clear info) */}
+        {/* What you can / cannot do */}
         <div className="space-y-2 mb-8 text-left">
           {[
-            { icon: "🔒", text: "Diğer üyeleri göremezsin (açılış gününe kadar)" },
+            { icon: "🔒", text: "Diğer üyeleri göremezsin" },
             { icon: "🔒", text: "Profilleri gezemezsin" },
             { icon: "✅", text: "Profilini düzenleyebilirsin" },
             { icon: "✅", text: "Durumunu takip edebilirsin" },
@@ -85,14 +75,6 @@ export const WaitlistScreen = () => {
           className="w-full py-4 rounded-xl gold-gradient text-primary-foreground font-medium text-sm tracking-wider hover:opacity-90 active:scale-95 transition-all"
         >
           Profilimi Düzenle
-        </button>
-
-        {/* Demo shortcut */}
-        <button
-          onClick={() => setScreen("pre-launch")}
-          className="mt-3 w-full py-3 text-muted-foreground text-xs hover:text-gold transition-colors"
-        >
-          Açılış Sayfasını Görüntüle
         </button>
       </div>
     </div>
