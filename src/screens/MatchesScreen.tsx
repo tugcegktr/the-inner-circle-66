@@ -299,33 +299,92 @@ const ChatModal = ({
         </div>
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.from === "me" ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${
-              msg.from === "me"
-                ? "gold-gradient text-primary-foreground rounded-br-sm"
-                : "bg-surface border border-border text-foreground rounded-bl-sm"
-            }`}>
-              <p className="text-sm leading-relaxed">{msg.text}</p>
-              <p className={`text-xs mt-1 ${msg.from === "me" ? "text-primary-foreground/70 text-right" : "text-muted-foreground"}`}>{msg.time}</p>
-            </div>
+            {msg.image ? (
+              <div className={`max-w-[70%] rounded-2xl overflow-hidden ${msg.from === "me" ? "rounded-br-sm" : "rounded-bl-sm"}`}>
+                <img src={msg.image} alt="fotoğraf" className="w-full object-cover max-h-60" />
+                <p className={`text-xs px-3 py-1.5 ${msg.from === "me" ? "gold-gradient text-primary-foreground/70 text-right" : "bg-surface text-muted-foreground"}`}>{msg.time}</p>
+              </div>
+            ) : msg.audio ? (
+              <div className={`max-w-[75%] rounded-2xl px-4 py-2.5 flex items-center gap-3 ${
+                msg.from === "me" ? "gold-gradient text-primary-foreground rounded-br-sm" : "bg-surface border border-border text-foreground rounded-bl-sm"
+              }`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${msg.from === "me" ? "bg-white/20" : "bg-muted"}`}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v7c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.42 2.72 6.23 6 6.72V21h2v-2.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+                </div>
+                <div className="flex-1">
+                  <div className="flex gap-0.5 items-center mb-1">
+                    {Array.from({ length: 12 }).map((_, j) => (
+                      <div key={j} className={`rounded-full w-0.5 ${msg.from === "me" ? "bg-white/60" : "bg-muted-foreground/60"}`} style={{ height: `${6 + Math.sin(j * 1.3) * 5}px` }} />
+                    ))}
+                  </div>
+                  <p className={`text-xs ${msg.from === "me" ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{msg.text?.replace("🎤 ", "")} · {msg.time}</p>
+                </div>
+              </div>
+            ) : (
+              <div className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${
+                msg.from === "me"
+                  ? "gold-gradient text-primary-foreground rounded-br-sm"
+                  : "bg-surface border border-border text-foreground rounded-bl-sm"
+              }`}>
+                <p className="text-sm leading-relaxed">{msg.text}</p>
+                <p className={`text-xs mt-1 ${msg.from === "me" ? "text-primary-foreground/70 text-right" : "text-muted-foreground"}`}>{msg.time}</p>
+              </div>
+            )}
           </div>
         ))}
       </div>
 
       {/* Input */}
-      <div className="glass border-t border-border px-4 py-4 flex items-center gap-3 flex-shrink-0">
+      <div className="glass border-t border-border px-3 py-3 flex items-center gap-2 flex-shrink-0">
+        {/* Hidden photo input */}
+        <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={sendPhoto} />
+
+        {/* Photo button */}
+        <button
+          onClick={() => photoInputRef.current?.click()}
+          className="w-9 h-9 rounded-full bg-surface border border-border flex items-center justify-center text-muted-foreground hover:border-gold hover:text-gold transition-all flex-shrink-0"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </button>
+
+        {/* Voice button */}
+        {isRecording ? (
+          <button
+            onPointerUp={stopRecording}
+            className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 animate-pulse"
+            style={{ background: "hsl(var(--destructive))", color: "hsl(var(--destructive-foreground))" }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+          </button>
+        ) : (
+          <button
+            onPointerDown={startRecording}
+            className="w-9 h-9 rounded-full bg-surface border border-border flex items-center justify-center text-muted-foreground hover:border-gold hover:text-gold transition-all flex-shrink-0"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v7c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.42 2.72 6.23 6 6.72V21h2v-2.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+          </button>
+        )}
+
+        {isRecording && (
+          <span className="text-xs text-destructive font-medium flex-shrink-0">{recordSeconds}s</span>
+        )}
+
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && send()}
-          placeholder="Mesaj yaz…"
-          className="flex-1 bg-surface rounded-xl px-4 py-3 border border-border text-foreground placeholder-muted-foreground text-sm outline-none focus:border-gold transition-colors"
+          placeholder={isRecording ? "Kaydediliyor…" : "Mesaj yaz…"}
+          disabled={isRecording}
+          className="flex-1 bg-surface rounded-xl px-4 py-2.5 border border-border text-foreground placeholder-muted-foreground text-sm outline-none focus:border-gold transition-colors disabled:opacity-50"
         />
         <button
           onClick={send}
-          disabled={!input.trim()}
-          className="w-10 h-10 rounded-full gold-gradient flex items-center justify-center text-primary-foreground disabled:opacity-40 active:scale-95 transition-all flex-shrink-0"
+          disabled={!input.trim() || isRecording}
+          className="w-9 h-9 rounded-full gold-gradient flex items-center justify-center text-primary-foreground disabled:opacity-40 active:scale-95 transition-all flex-shrink-0"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
             <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
           </svg>
         </button>
