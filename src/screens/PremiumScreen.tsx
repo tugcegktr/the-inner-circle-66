@@ -65,7 +65,7 @@ export const PremiumScreen = () => {
         ...currentUser,
         isPremium: selectedTier === "premium",
         subscriptionStatus: billing as "monthly" | "yearly",
-        dailySwipesLeft: selectedTier === "premium" ? 50 : 20,
+        dailySwipesLeft: selectedTier === "premium" ? 50 : 15,
       });
       setLoading(false);
       setSuccess(true);
