@@ -102,15 +102,15 @@ export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: S
 
           {/* Swipe indicator overlays */}
           {dragX > 30 && (
-            <div className="absolute inset-0 bg-green-500/20 flex items-start justify-start p-6 pointer-events-none">
-              <div className="border-2 border-green-400 text-green-400 rounded-lg px-4 py-2 rotate-[-20deg] font-bold text-2xl font-serif">
+            <div className="absolute inset-0 flex items-start justify-start p-6 pointer-events-none" style={{ background: "rgba(34,197,94,0.2)" }}>
+              <div className="rounded-lg px-4 py-2 rotate-[-20deg] font-bold text-2xl font-serif" style={{ border: "2px solid rgb(74,222,128)", color: "rgb(74,222,128)" }}>
                 LIKE
               </div>
             </div>
           )}
           {dragX < -30 && (
-            <div className="absolute inset-0 bg-red-500/20 flex items-start justify-end p-6 pointer-events-none">
-              <div className="border-2 border-red-400 text-red-400 rounded-lg px-4 py-2 rotate-[20deg] font-bold text-2xl font-serif">
+            <div className="absolute inset-0 flex items-start justify-end p-6 pointer-events-none" style={{ background: "rgba(239,68,68,0.2)" }}>
+              <div className="rounded-lg px-4 py-2 rotate-[20deg] font-bold text-2xl font-serif" style={{ border: "2px solid rgb(248,113,113)", color: "rgb(248,113,113)" }}>
                 PASS
               </div>
             </div>
