@@ -57,6 +57,7 @@ export interface SwipeCard {
   name: string;
   age: number;
   city: string;
+  district?: string;
   height: string;
   photos: string[];
   zodiacSign: ZodiacSign;
@@ -70,6 +71,14 @@ export interface SwipeCard {
   gender: UserGender;
   instagramHandle?: string;
   linkedinUrl?: string;
+}
+
+export interface FlaggedReport {
+  id: string;
+  reportedName: string;
+  reportedBy: string;
+  reason: string;
+  timestamp: string;
 }
 
 export interface Match {

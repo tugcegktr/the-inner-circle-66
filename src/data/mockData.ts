@@ -10,6 +10,7 @@ export const MOCK_SWIPE_CARDS: SwipeCard[] = [
     name: "İsabelle",
     age: 28,
     city: "İstanbul",
+    district: "Beşiktaş",
     height: "1.72",
     photos: [
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&q=80",
@@ -28,6 +29,7 @@ export const MOCK_SWIPE_CARDS: SwipeCard[] = [
     name: "Margaux",
     age: 26,
     city: "İzmir",
+    district: "Alsancak",
     height: "1.65",
     photos: [
       "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=600&q=80",
@@ -46,6 +48,7 @@ export const MOCK_SWIPE_CARDS: SwipeCard[] = [
     name: "Celine",
     age: 30,
     city: "Ankara",
+    district: "Çankaya",
     height: "1.75",
     photos: [
       "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&q=80",
@@ -62,7 +65,8 @@ export const MOCK_SWIPE_CARDS: SwipeCard[] = [
     id: "4",
     name: "Natasha",
     age: 27,
-    city: "Bodrum",
+    city: "Muğla",
+    district: "Bodrum",
     height: "1.68",
     photos: [
       "https://images.unsplash.com/photo-1502323703975-b9630fe78d8b?w=600&q=80",
@@ -80,6 +84,7 @@ export const MOCK_SWIPE_CARDS: SwipeCard[] = [
     name: "Valentina",
     age: 29,
     city: "Antalya",
+    district: "Konyaaltı",
     height: "1.63",
     photos: [
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&q=80",
