@@ -102,15 +102,15 @@ export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: S
 
           {/* Swipe indicator overlays */}
           {dragX > 30 && (
-            <div className="absolute inset-0 bg-green-500/20 flex items-start justify-start p-6 pointer-events-none">
-              <div className="border-2 border-green-400 text-green-400 rounded-lg px-4 py-2 rotate-[-20deg] font-bold text-2xl font-serif">
+            <div className="absolute inset-0 flex items-start justify-start p-6 pointer-events-none" style={{ background: "rgba(34,197,94,0.2)" }}>
+              <div className="rounded-lg px-4 py-2 rotate-[-20deg] font-bold text-2xl font-serif" style={{ border: "2px solid rgb(74,222,128)", color: "rgb(74,222,128)" }}>
                 LIKE
               </div>
             </div>
           )}
           {dragX < -30 && (
-            <div className="absolute inset-0 bg-red-500/20 flex items-start justify-end p-6 pointer-events-none">
-              <div className="border-2 border-red-400 text-red-400 rounded-lg px-4 py-2 rotate-[20deg] font-bold text-2xl font-serif">
+            <div className="absolute inset-0 flex items-start justify-end p-6 pointer-events-none" style={{ background: "rgba(239,68,68,0.2)" }}>
+              <div className="rounded-lg px-4 py-2 rotate-[20deg] font-bold text-2xl font-serif" style={{ border: "2px solid rgb(248,113,113)", color: "rgb(248,113,113)" }}>
                 PASS
               </div>
             </div>
@@ -150,6 +150,40 @@ export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: S
 
         {/* ── Scrollable content below cover ── */}
         <div className="bg-background px-5 py-5 space-y-5">
+
+          {/* Vibe tags */}
+          {card.vibeTags.length > 0 && (
+            <div>
+              <p className="text-xs text-gold uppercase tracking-wider mb-2">✦ Vibe Etiketleri</p>
+              <div className="flex flex-wrap gap-1.5">
+                {card.vibeTags.map((tag) => (
+                  <span key={tag} className="text-xs gold-gradient text-primary-foreground px-2.5 py-1 rounded-full font-medium">
+                    ✦ {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Star rating */}
+          {card.averageRating && card.ratingCount && (
+            <div className="flex items-center gap-2">
+              <div className="flex gap-0.5">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span
+                    key={star}
+                    className="text-base leading-none"
+                    style={{ color: star <= Math.round(card.averageRating!) ? "hsl(var(--gold))" : "hsl(var(--muted-foreground))" }}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+              <span className="text-sm font-medium text-foreground">{card.averageRating.toFixed(1)}</span>
+              <span className="text-xs text-muted-foreground">({card.ratingCount} değerlendirme)</span>
+            </div>
+          )}
+
           {/* Interests */}
           {card.interests.length > 0 && (
             <div>
@@ -191,6 +225,19 @@ export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: S
             />
           </div>
         ))}
+
+        {/* ── Location after photos ── */}
+        <div className="bg-background px-5 py-5 border-t border-border flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-surface border border-border flex items-center justify-center text-lg flex-shrink-0">
+            📍
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground">Son Görülme Konumu</p>
+            <p className="text-sm text-foreground font-medium">
+              {card.district ? `${card.district}, ${card.city}` : card.city}
+            </p>
+          </div>
+        </div>
 
         {/* Bottom padding */}
         <div className="h-6 bg-background" />
