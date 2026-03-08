@@ -25,60 +25,56 @@ const DEFAULT_FILTERS: Filters = {
   interests: [],
 };
 
-const VibeCheckModal = ({ onClose }: { onClose: () => void }) => {
-  const [recording, setRecording] = useState(false);
-  const [recorded, setRecorded] = useState(false);
-  const [seconds, setSeconds] = useState(15);
+const SuperVibeModal = ({ onClose, onConfirm }: { onClose: () => void; onConfirm: () => void }) => {
+  const [sent, setSent] = useState(false);
 
-  const startRecording = () => {
-    setRecording(true);
-    let s = 15;
-    const interval = setInterval(() => {
-      s -= 1;
-      setSeconds(s);
-      if (s <= 0) { clearInterval(interval); setRecording(false); setRecorded(true); }
-    }, 1000);
+  const handleSend = () => {
+    setSent(true);
+    setTimeout(() => { onConfirm(); onClose(); }, 1800);
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end justify-center">
+    <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-end justify-center">
       <div className="w-full max-w-sm glass rounded-t-3xl p-8 animate-fade-up">
         <div className="w-12 h-1 bg-muted rounded-full mx-auto mb-6" />
-        <h3 className="font-serif text-2xl text-center mb-1">Vibe Check</h3>
-        <p className="text-muted-foreground text-sm text-center mb-8">15 saniyelik sesli mesaj gönder. Dinlendikten sonra kaybolur.</p>
-        <div className="flex items-center justify-center gap-1 h-16 mb-8">
-          {Array.from({ length: 24 }).map((_, i) => (
-            <div key={i} className="w-1.5 rounded-full"
-              style={{
-                background: recording ? "hsl(var(--gold))" : "hsl(var(--border))",
-                height: recording ? `${20 + Math.random() * 36}px` : "8px",
-                transition: "height 0.3s ease",
-              }}
-            />
+
+        {/* Icon */}
+        <div className="flex justify-center mb-5">
+          <div className="w-20 h-20 rounded-full flex items-center justify-center"
+            style={{ background: "linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(48,90%,70%) 100%)", boxShadow: "0 0 40px hsl(var(--gold)/0.5)" }}>
+            <span className="text-4xl">⚡</span>
+          </div>
+        </div>
+
+        <h3 className="font-serif text-2xl text-center mb-2">Super Vibe</h3>
+        <p className="text-muted-foreground text-sm text-center mb-6 leading-relaxed">
+          Sıradan bir beğeninin çok ötesinde — bu kişiden gerçekten etkilendiğini özel bir bildirimle ilet. Profilin kartlarının en üstünde gösterilir.
+        </p>
+
+        {/* Stars decoration */}
+        <div className="flex justify-center gap-1.5 mb-6">
+          {[1,2,3,4,5].map((i) => (
+            <span key={i} className="text-xl"
+              style={{ color: "hsl(var(--gold))", animationDelay: `${i * 0.1}s` }}>
+              ✦
+            </span>
           ))}
         </div>
-        {recording && <p className="text-center text-gold text-2xl font-serif mb-6">{seconds}s</p>}
-        {!recorded ? (
-          <button onClick={startRecording} disabled={recording}
-            className={`w-full py-4 rounded-xl font-medium text-sm tracking-wider transition-all ${
-              recording ? "bg-destructive text-destructive-foreground" : "gold-gradient text-primary-foreground"
-            }`}>
-            {recording ? "🔴 Kaydediliyor..." : "🎙 Kayda Başla"}
+
+        {!sent ? (
+          <button onClick={handleSend}
+            className="w-full py-4 rounded-xl font-medium text-sm tracking-widest transition-all active:scale-95"
+            style={{ background: "linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(48,90%,65%) 100%)", color: "hsl(var(--background))", boxShadow: "0 4px 20px hsl(var(--gold)/0.4)" }}>
+            ⚡ Super Vibe Gönder
           </button>
         ) : (
-          <div className="space-y-3">
-            <div className="flex items-center gap-3 bg-surface rounded-xl p-3 border border-gold/30">
-              <div className="w-10 h-10 rounded-full gold-gradient flex items-center justify-center text-primary-foreground">▶</div>
-              <div>
-                <p className="text-sm text-foreground font-medium">Sesli Not</p>
-                <p className="text-xs text-muted-foreground">15 saniye · Dinlendikten sonra kaybolur</p>
-              </div>
-            </div>
-            <button onClick={onClose} className="w-full py-4 rounded-xl gold-gradient text-primary-foreground font-medium text-sm tracking-wider">
-              Vibe Check Gönder ✦
-            </button>
+          <div className="flex flex-col items-center gap-3 py-2">
+            <span className="text-4xl animate-bounce">⚡</span>
+            <p className="text-foreground font-serif text-lg">Gönderildi!</p>
+            <p className="text-muted-foreground text-xs">Karşı taraf bildirim aldı.</p>
           </div>
         )}
+
         <button onClick={onClose} className="w-full mt-3 py-3 text-muted-foreground text-sm hover:text-foreground transition-colors">İptal</button>
       </div>
     </div>
