@@ -80,7 +80,7 @@ export const OnboardingScreen = () => {
   const [linkedin, setLinkedin] = useState(currentUser.linkedinUrl || "");
 
   const addPhoto = () => {
-    if (photos.length < 6) {
+    if (photos.length < 5) {
       setPhotos([...photos, MOCK_PHOTOS[photos.length % MOCK_PHOTOS.length]]);
     }
   };
