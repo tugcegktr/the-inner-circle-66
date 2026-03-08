@@ -455,10 +455,16 @@ export const MatchesScreen = () => {
                       </button>
                     )}
 
-                    {/* Vibe button */}
+                    {/* Vibe button – active only after 5 sent messages */}
                     <button
-                      onClick={() => setVibeTagTarget(match.name)}
-                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-gold/20 border border-gold/50 text-gold hover:bg-gold/30 active:scale-95 transition-all"
+                      onClick={() => canRate && setVibeTagTarget(match.name)}
+                      disabled={!canRate}
+                      title={canRate ? undefined : "Vibe göndermek için en az 5 mesaj gönder"}
+                      className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                        canRate
+                          ? "bg-gold/20 border border-gold/50 text-gold hover:bg-gold/30 active:scale-95"
+                          : "bg-muted border border-border text-muted-foreground opacity-50 cursor-not-allowed"
+                      }`}
                     >
                       ✦ Vibe
                     </button>
