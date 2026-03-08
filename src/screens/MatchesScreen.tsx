@@ -135,10 +135,12 @@ const ChatModal = ({
   match,
   onClose,
   onMessageSent,
+  onReport,
 }: {
   match: Match;
   onClose: () => void;
   onMessageSent: (matchId: string) => void;
+  onReport: (report: FlaggedReport) => void;
 }) => {
   const [messages, setMessages] = useState<{ from: "me" | "them"; text: string; time: string }[]>([
     { from: "them", text: "Merhaba! Nasılsın? 😊", time: "10:32" },
