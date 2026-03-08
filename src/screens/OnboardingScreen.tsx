@@ -1,10 +1,10 @@
 import React, { useState, useRef } from "react";
 import { useApp } from "@/context/AppContext";
 import { ZODIAC_SIGNS, ZODIAC_SYMBOLS, INTEREST_CATEGORIES, PERSONALITY_TAGS, GENDER_OPTIONS } from "@/data/mockData";
-import { ZodiacSign, UserGender } from "@/types/app";
+import { ZodiacSign, UserGender, LookingFor } from "@/types/app";
 
-// Steps: basic → gender → astro → interests → music → photos → social
-const steps = ["basic", "gender", "astro", "interests", "music", "photos", "social"] as const;
+// Steps: basic → lookingFor → gender → astro → interests → music → photos → social
+const steps = ["basic", "lookingFor", "gender", "astro", "interests", "music", "photos", "social"] as const;
 
 const MUSIC_GENRES = [
   "Pop", "Rock", "Alternatif", "Indie", "Rap / Hip-Hop", "R&B",
@@ -52,7 +52,10 @@ export const OnboardingScreen = () => {
   const [profession, setProfession] = useState(currentUser.profession || "");
   const [bio, setBio] = useState(currentUser.bio);
 
-  // Step 1 – Gender
+  // Step 1 – Looking For
+  const [lookingFor, setLookingFor] = useState<LookingFor[]>((currentUser.lookingFor as LookingFor[]) || []);
+
+  // Step 2 – Gender
   const [gender, setGender] = useState<UserGender>(currentUser.gender);
   const [interestedIn, setInterestedIn] = useState<UserGender[]>(currentUser.interestedIn);
 
@@ -112,14 +115,15 @@ export const OnboardingScreen = () => {
 
   const canProceed = () => {
     if (step === 0) return firstName.trim().length > 0 && city.trim() && height.trim() && profession.trim() && dob;
-    if (step === 1) return interestedIn.length > 0;
-    if (step === 5) return photos.length >= 5;
+    if (step === 1) return lookingFor.length > 0;
+    if (step === 2) return interestedIn.length > 0;
+    if (step === 6) return photos.length >= 5;
     return true;
   };
 
   const btnLabel = () => {
     if (step === steps.length - 1) return "Başvuruyu Gönder";
-    if (step === 5 && photos.length < 5) return `${5 - photos.length} fotoğraf daha ekle`;
+    if (step === 6 && photos.length < 5) return `${5 - photos.length} fotoğraf daha ekle`;
     return "Devam Et →";
   };
 
@@ -146,6 +150,7 @@ export const OnboardingScreen = () => {
       risingSign: rising,
       instagramHandle: instagram,
       linkedinUrl: linkedin,
+      lookingFor,
     });
     setScreen("waitlist");
   };
@@ -257,8 +262,75 @@ export const OnboardingScreen = () => {
           </div>
         )}
 
-        {/* ── STEP 1: Cinsiyet ── */}
+        {/* ── STEP 1: Ne Arıyorsun ── */}
         {step === 1 && (
+          <div className="space-y-6 animate-fade-up">
+            <div>
+              <h2 className="font-serif text-3xl text-foreground mb-1">Ne Arıyorsun?</h2>
+              <p className="text-muted-foreground text-sm">Birden fazla seçebilirsin — profilinde gösterilir</p>
+            </div>
+
+            {[
+              {
+                value: "dating" as LookingFor,
+                emoji: "💛",
+                title: "Dating",
+                desc: "Anlamlı bir ilişki veya romantik bağ arıyorum.",
+              },
+              {
+                value: "networking" as LookingFor,
+                emoji: "🤝",
+                title: "Networking",
+                desc: "Profesyonel bağlantılar ve iş birliği fırsatları arıyorum.",
+              },
+              {
+                value: "friendship" as LookingFor,
+                emoji: "✨",
+                title: "Friendship",
+                desc: "Kaliteli arkadaşlıklar ve sosyal çevre genişletmek istiyorum.",
+              },
+            ].map(({ value, emoji, title, desc }) => {
+              const isSelected = lookingFor.includes(value);
+              return (
+                <button
+                  key={value}
+                  onClick={() =>
+                    setLookingFor((prev) =>
+                      prev.includes(value) ? prev.filter((x) => x !== value) : [...prev, value]
+                    )
+                  }
+                  className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl border-2 transition-all text-left ${
+                    isSelected ? "glass-gold border-gold" : "bg-surface border-border hover:border-gold/50"
+                  }`}
+                >
+                  <div
+                    className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 transition-all ${
+                      isSelected ? "gold-gradient" : "bg-muted"
+                    }`}
+                  >
+                    {emoji}
+                  </div>
+                  <div className="flex-1">
+                    <p className={`font-semibold text-sm mb-0.5 ${isSelected ? "text-foreground" : "text-muted-foreground"}`}>
+                      {title}
+                    </p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
+                  </div>
+                  <div
+                    className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center flex-shrink-0 ${
+                      isSelected ? "border-gold gold-gradient" : "border-border"
+                    }`}
+                  >
+                    {isSelected && <span className="text-primary-foreground text-xs font-bold">✓</span>}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* ── STEP 2: Cinsiyet ── */}
+        {step === 2 && (
           <div className="space-y-8 animate-fade-up">
             <div>
               <h2 className="font-serif text-3xl text-foreground mb-1">Cinsiyet Bilgileri</h2>
@@ -315,8 +387,8 @@ export const OnboardingScreen = () => {
           </div>
         )}
 
-        {/* ── STEP 2: Astro Profil ── */}
-        {step === 2 && (
+        {/* ── STEP 3: Astro Profil ── */}
+        {step === 3 && (
           <div className="space-y-6 animate-fade-up">
             <div>
               <h2 className="font-serif text-3xl text-foreground mb-1">Astro Profilin</h2>
@@ -373,8 +445,8 @@ export const OnboardingScreen = () => {
           </div>
         )}
 
-        {/* ── STEP 3: İlgi Alanları ── */}
-        {step === 3 && (
+        {/* ── STEP 4: İlgi Alanları ── */}
+        {step === 4 && (
           <div className="space-y-6 animate-fade-up">
             <div>
               <h2 className="font-serif text-3xl text-foreground mb-1">İlgi Alanların</h2>
@@ -429,8 +501,8 @@ export const OnboardingScreen = () => {
           </div>
         )}
 
-        {/* ── STEP 4: Müzik Zevki ── */}
-        {step === 4 && (
+        {/* ── STEP 5: Müzik Zevki ── */}
+        {step === 5 && (
           <div className="space-y-5 animate-fade-up">
             <div>
               <h2 className="font-serif text-3xl text-foreground mb-1">Müzik Zevkin</h2>
@@ -457,8 +529,8 @@ export const OnboardingScreen = () => {
           </div>
         )}
 
-        {/* ── STEP 5: Fotoğraflar ── */}
-        {step === 5 && (
+        {/* ── STEP 6: Fotoğraflar ── */}
+        {step === 6 && (
           <div className="space-y-6 animate-fade-up">
             <div>
               <h2 className="font-serif text-3xl text-foreground mb-1">Fotoğrafların</h2>
@@ -534,8 +606,8 @@ export const OnboardingScreen = () => {
           </div>
         )}
 
-        {/* ── STEP 6: Sosyal Profil ── */}
-        {step === 6 && (
+        {/* ── STEP 7: Sosyal Profil ── */}
+        {step === 7 && (
           <div className="space-y-6 animate-fade-up">
             <div>
               <h2 className="font-serif text-3xl text-foreground mb-1">Sosyal Profiller</h2>

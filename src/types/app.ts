@@ -17,6 +17,7 @@ export type AppScreen =
   | "admin";
 
 export type UserGender = "woman" | "man" | "bisexual" | "lesbian" | "gay";
+export type LookingFor = "dating" | "networking" | "friendship";
 export type ZodiacSign =
   | "Koç" | "Boğa" | "İkizler" | "Yengeç" | "Aslan" | "Başak"
   | "Terazi" | "Akrep" | "Yay" | "Oğlak" | "Kova" | "Balık";
@@ -46,6 +47,7 @@ export interface UserProfile {
   isPremium: boolean;
   isApproved: boolean;
   vibeTags: VibeTag[];
+  lookingFor?: LookingFor[];
   subscriptionStatus: "none" | "monthly" | "yearly";
   dailySwipesLeft: number;
   averageRating?: number;
@@ -72,6 +74,8 @@ export interface SwipeCard {
   instagramHandle?: string;
   linkedinUrl?: string;
   musicTaste?: string[];
+  lookingFor?: LookingFor[];
+  bio?: string;
 }
 
 export interface FlaggedReport {

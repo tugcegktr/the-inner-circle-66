@@ -151,7 +151,7 @@ export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: S
         {/* ── Scrollable content below cover ── */}
         <div className="bg-background px-5 py-5 space-y-5">
 
-          {/* Vibe tags – max 3 (en çok tıklanan) */}
+          {/* Vibe tags – max 3 */}
           {card.vibeTags.length > 0 && (
             <div>
               <p className="text-xs text-gold uppercase tracking-wider mb-2">✦ Vibe Etiketleri</p>
@@ -181,6 +181,36 @@ export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: S
               <span className="text-sm font-medium text-foreground">{card.averageRating.toFixed(1)}</span>
               <span className="text-xs text-muted-foreground">({card.ratingCount} oy)</span>
             </div>
+          )}
+
+          {/* Looking For */}
+          {card.lookingFor && card.lookingFor.length > 0 && (
+            <div>
+              <p className="text-xs text-gold uppercase tracking-wider mb-2">Ne Arıyor?</p>
+              <div className="flex flex-wrap gap-1.5">
+                {card.lookingFor.map((lf) => {
+                  const map: Record<string, { label: string; emoji: string }> = {
+                    dating: { label: "Dating", emoji: "💛" },
+                    networking: { label: "Networking", emoji: "🤝" },
+                    friendship: { label: "Friendship", emoji: "✨" },
+                  };
+                  const item = map[lf];
+                  return item ? (
+                    <span key={lf} className="text-xs bg-surface border border-border text-foreground px-2.5 py-1 rounded-full flex items-center gap-1">
+                      <span>{item.emoji}</span>
+                      <span>{item.label}</span>
+                    </span>
+                  ) : null;
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Bio */}
+          {card.bio && (
+            <p className="text-sm text-muted-foreground leading-relaxed italic border-l-2 pl-3" style={{ borderColor: "hsl(var(--gold)/0.4)" }}>
+              "{card.bio}"
+            </p>
           )}
 
           {/* Interests */}

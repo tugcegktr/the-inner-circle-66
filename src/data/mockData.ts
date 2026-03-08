@@ -26,6 +26,8 @@ export const MOCK_SWIPE_CARDS: SwipeCard[] = [
     musicTaste: ["Indie", "Jazz", "Lo-fi / Chill"],
     averageRating: 4.7,
     ratingCount: 38,
+    lookingFor: ["dating", "friendship"],
+    bio: "Mimari çizgiler ve sezgisel estetik üzerine düşünen biri. Benimle iyi bir kahve ve daha iyi bir sohbet için buluşalım.",
   },
   {
     id: "2",
@@ -48,6 +50,8 @@ export const MOCK_SWIPE_CARDS: SwipeCard[] = [
     musicTaste: ["Klasik Müzik", "Alternatif", "Soundtrack / Film Müzikleri"],
     averageRating: 4.4,
     ratingCount: 21,
+    lookingFor: ["networking", "friendship"],
+    bio: "Sanatı tüketmekten çok yaşarım. Ortak projeler ve derin sohbetlere açığım.",
   },
   {
     id: "3",
@@ -69,6 +73,8 @@ export const MOCK_SWIPE_CARDS: SwipeCard[] = [
     musicTaste: ["Pop", "Türkçe Pop", "R&B"],
     averageRating: 4.1,
     ratingCount: 14,
+    lookingFor: ["dating"],
+    bio: "Hukuk hayatımın büyük parçası ama hafta sonları doğada kaybolmayı tercih ederim.",
   },
   {
     id: "4",
@@ -90,6 +96,8 @@ export const MOCK_SWIPE_CARDS: SwipeCard[] = [
     musicTaste: ["House / Techno", "Elektronik / EDM", "Indie"],
     averageRating: 4.8,
     ratingCount: 56,
+    lookingFor: ["dating", "networking"],
+    bio: "Tasarım sadece bir iş değil, bir bakış açısı. Vizyon sahibi insanlarla tanışmak istiyorum.",
   },
   {
     id: "5",
@@ -111,6 +119,8 @@ export const MOCK_SWIPE_CARDS: SwipeCard[] = [
     musicTaste: ["Latin", "Reggaeton", "Blues"],
     averageRating: 4.5,
     ratingCount: 29,
+    lookingFor: ["friendship", "networking"],
+    bio: "Sürdürülebilir bir dünya için çalışıyorum. Aynı değerleri paylaşan insanlarla bağlantı kurmak istiyorum.",
   },
 ];
 
