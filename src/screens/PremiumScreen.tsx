@@ -191,7 +191,7 @@ export const PremiumScreen = () => {
             <p className="text-xs text-gold font-medium mb-2">Normal vs Premium karşılaştırma</p>
             <div className="space-y-2">
               {[
-                { label: "Günlük profil", standard: "20 kişi", premium: "50 kişi" },
+                { label: "Günlük profil", standard: "15 kişi", premium: "50 kişi" },
                 { label: "Beğenenleri görme", standard: "Sadece isim", premium: "Fotoğraflı tam görüntü" },
                 { label: "Filtreler", standard: "Sadece yaş", premium: "Yaş, konum, boy, burç, ilgi" },
               ].map(({ label, standard, premium }) => (
