@@ -235,15 +235,16 @@ export const GENDER_OPTIONS = [
 ] as const;
 
 export const ADMIN_PENDING_USERS = [
-  { id: "p1", name: "Elif Şahin", age: 25, city: "İstanbul", profession: "Doktor", gender: "Kadın", submittedAt: "2 saat önce", verified: true, socialLinked: true },
-  { id: "p2", name: "Zeynep Kaya", age: 29, city: "Ankara", profession: "Mühendis", gender: "Kadın", submittedAt: "5 saat önce", verified: false, socialLinked: true },
-  { id: "p3", name: "Mert Demir", age: 31, city: "İzmir", profession: "Avukat", gender: "Erkek", submittedAt: "1 gün önce", verified: true, socialLinked: false },
-  { id: "p4", name: "Ayşe Yıldız", age: 24, city: "Bursa", profession: "Girişimci", gender: "Kadın", submittedAt: "2 gün önce", verified: true, socialLinked: true },
+  { id: "p1", name: "Elif Şahin", age: 25, city: "İstanbul", profession: "Doktor", gender: "Kadın", submittedAt: "2 saat önce", verified: true, socialLinked: true, instagram: "@elif.sahin", linkedin: "linkedin.com/in/elifsahin", zodiac: "Terazi", height: "1.65", interests: ["Fine Dining Kaşifliği", "Opera & Bale"], bio: "İstanbul'da çalışan genç bir doktorum." },
+  { id: "p2", name: "Zeynep Kaya", age: 29, city: "Ankara", profession: "Mühendis", gender: "Kadın", submittedAt: "5 saat önce", verified: false, socialLinked: true, instagram: "@zeynep.kaya", linkedin: "", zodiac: "Boğa", height: "1.70", interests: ["Padel Tenis", "Biohacking"], bio: "Teknoloji ve sporu bir arada seviyorum." },
+  { id: "p3", name: "Mert Demir", age: 31, city: "İzmir", profession: "Avukat", gender: "Erkek", submittedAt: "1 gün önce", verified: true, socialLinked: false, instagram: "@mert.demir", linkedin: "linkedin.com/in/mertdemir", zodiac: "Aslan", height: "1.82", interests: ["Yelkencilik", "Golf"], bio: "İzmir'de avukatım, denizi çok seviyorum." },
+  { id: "p4", name: "Ayşe Yıldız", age: 24, city: "Bursa", profession: "Girişimci", gender: "Kadın", submittedAt: "2 gün önce", verified: true, socialLinked: true, instagram: "@ayse.yildiz", linkedin: "linkedin.com/in/ayseyildiz", zodiac: "Kova", height: "1.62", interests: ["Sürdürülebilir Yaşam", "Ses Meditasyonu"], bio: "Kendi işimi kuran, hayata pozitif bakan biriyim." },
 ];
 
 export const ADMIN_FLAGGED_PROFILES = [
-  { id: "f1", name: "Ahmet D.", age: 31, city: "İstanbul", reason: "Uygunsuz mesajlar", reportCount: 3 },
-  { id: "f2", name: "Burak W.", age: 28, city: "Ankara", reason: "Sahte profil fotoğrafı", reportCount: 1 },
+  { id: "f1", name: "Ahmet D.", age: 31, city: "İstanbul", reason: "Uygunsuz mesajlar", reportCount: 3, reportedBy: "İsabelle", reportDate: "1 gün önce", instagram: "@ahmetd", linkedin: "" },
+  { id: "f2", name: "Burak W.", age: 28, city: "Ankara", reason: "Sahte profil fotoğrafı", reportCount: 1, reportedBy: "Natasha", reportDate: "3 gün önce", instagram: "@burakw", linkedin: "linkedin.com/in/burakw" },
+  { id: "f3", name: "Serkan M.", age: 35, city: "İzmir", reason: "Taciz içerikli mesaj", reportCount: 2, reportedBy: "Margaux", reportDate: "5 gün önce", instagram: "@serkanm", linkedin: "" },
 ];
 
 // Mock members list for admin
