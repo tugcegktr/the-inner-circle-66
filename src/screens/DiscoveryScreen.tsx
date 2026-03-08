@@ -347,14 +347,28 @@ export const DiscoveryScreen = () => {
       {filteredCards.length > 0 && swipesLeft > 0 && (
         <div className="px-6 py-4">
           <div className="flex items-center justify-center gap-4 mb-4">
+            {/* Pass */}
             <button onClick={handleSwipeLeft}
               className="w-14 h-14 rounded-full bg-surface border border-border flex items-center justify-center text-xl hover:border-destructive hover:text-destructive transition-all active:scale-95 shadow-luxury">
               ✕
             </button>
-            <button onClick={() => setShowVibeCheck(true)}
-              className="w-12 h-12 rounded-full glass-gold flex items-center justify-center text-lg hover:shadow-gold transition-all active:scale-95">
-              🎙
+
+            {/* Super Vibe */}
+            <button
+              onClick={() => isPremium ? setShowSuperVibe(true) : setShowSuperVibePaywall(true)}
+              className="relative w-12 h-12 rounded-full flex items-center justify-center text-xl transition-all active:scale-95 hover:shadow-gold"
+              style={{ background: "linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(48,90%,65%) 100%)", boxShadow: "0 2px 12px hsl(var(--gold)/0.35)" }}
+              title="Super Vibe"
+            >
+              ⚡
+              {!isPremium && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full gold-gradient flex items-center justify-center text-[9px] font-bold text-primary-foreground border border-background">
+                  ✦
+                </span>
+              )}
             </button>
+
+            {/* Like */}
             <button onClick={handleSwipeRight}
               className="w-14 h-14 rounded-full gold-gradient flex items-center justify-center text-xl text-primary-foreground shadow-gold-sm hover:shadow-gold transition-all active:scale-95">
               ✦
@@ -371,7 +385,12 @@ export const DiscoveryScreen = () => {
 
       <BottomNav active="discovery" onNavigate={setScreen} />
 
-      {showVibeCheck && <VibeCheckModal onClose={() => setShowVibeCheck(false)} />}
+      {showSuperVibe && (
+        <SuperVibeModal
+          onClose={() => setShowSuperVibe(false)}
+          onConfirm={handleSwipeRight}
+        />
+      )}
       {showFilters && (
         <FilterSheet
           filters={filters}
@@ -390,6 +409,28 @@ export const DiscoveryScreen = () => {
               Premium'a Geç ✦
             </button>
             <button onClick={() => setShowRewindPaywall(false)} className="w-full py-3 text-muted-foreground text-sm">
+              Şimdi Değil
+            </button>
+          </div>
+        </div>
+      )}
+      {showSuperVibePaywall && (
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+          <div className="glass rounded-2xl p-6 w-full max-w-sm animate-scale-in text-center">
+            <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center"
+              style={{ background: "linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(48,90%,65%) 100%)", boxShadow: "0 0 30px hsl(var(--gold)/0.4)" }}>
+              <span className="text-3xl">⚡</span>
+            </div>
+            <p className="font-serif text-xl mb-2">Super Vibe</p>
+            <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
+              Super Vibe, sadece <span className="text-gold font-medium">Premium Gold</span> üyelerine özel. Gerçekten etkilendiğin kişilere özel bir sinyal gönder.
+            </p>
+            <button onClick={() => { setShowSuperVibePaywall(false); setScreen("premium"); }}
+              className="w-full py-3 rounded-xl font-medium text-sm tracking-wider mb-2"
+              style={{ background: "linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(48,90%,65%) 100%)", color: "hsl(var(--background))" }}>
+              Premium'a Geç ✦
+            </button>
+            <button onClick={() => setShowSuperVibePaywall(false)} className="w-full py-3 text-muted-foreground text-sm">
               Şimdi Değil
             </button>
           </div>
