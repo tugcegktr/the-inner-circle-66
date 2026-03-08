@@ -10,7 +10,7 @@ interface SwipeCardProps {
   stackIndex?: number;
 }
 
-export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: SwipeCardProps) => {
+export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop, stackIndex = 0 }: SwipeCardProps) => {
   const [dragX, setDragX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [swipeDir, setSwipeDir] = useState<"left" | "right" | null>(null);
