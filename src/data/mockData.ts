@@ -1,88 +1,96 @@
-import { SwipeCard, Match, LikedByUser } from "@/types/app";
+import { SwipeCard, Match, LikedByUser, ZodiacSign } from "@/types/app";
 
 // === Launch Threshold System ===
-// The app only becomes visible to approved members when this number is reached.
 export const LAUNCH_THRESHOLD = 50;
-// Mock: current approved member count (admin can see real number; users see progress)
 export const MOCK_APPROVED_COUNT = 34;
 
 export const MOCK_SWIPE_CARDS: SwipeCard[] = [
   {
     id: "1",
-    name: "Isabelle",
+    name: "İsabelle",
     age: 28,
-    city: "New York",
-    height: "5'7\"",
+    city: "İstanbul",
+    height: "1.72",
     photos: [
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&q=80",
       "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&q=80",
     ],
-    zodiacSign: "Libra",
-    interests: ["Techno", "Coffee", "Art Galleries"],
+    zodiacSign: "Terazi",
+    interests: ["Fine Dining Kaşifliği", "Specialty Coffee", "Bienal & Art Week"],
     isVerified: true,
-    vibeTags: ["Respectful", "Funny"],
+    vibeTags: ["Saygılı", "Eğlenceli"],
     compatibilityScore: 94,
+    profession: "Mimar",
+    gender: "woman",
   },
   {
     id: "2",
     name: "Margaux",
     age: 26,
-    city: "Paris",
-    height: "5'5\"",
+    city: "İzmir",
+    height: "1.65",
     photos: [
       "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=600&q=80",
       "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600&q=80",
     ],
-    zodiacSign: "Pisces",
-    interests: ["Jazz", "Wine Tasting", "Film"],
+    zodiacSign: "Balık",
+    interests: ["Opera & Bale", "Mixology & Tadım", "Bağımsız Sinema"],
     isVerified: true,
-    vibeTags: ["Creative", "Thoughtful"],
+    vibeTags: ["Yaratıcı", "Düşünceli"],
     compatibilityScore: 87,
+    profession: "Küratör",
+    gender: "woman",
   },
   {
     id: "3",
     name: "Celine",
     age: 30,
-    city: "London",
-    height: "5'9\"",
+    city: "Ankara",
+    height: "1.75",
     photos: [
       "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&q=80",
     ],
-    zodiacSign: "Scorpio",
-    interests: ["Concerts", "Yoga", "Travel"],
+    zodiacSign: "Akrep",
+    interests: ["Yin Yoga & Derin Esneme", "Glamping", "Padel Tenis"],
     isVerified: false,
-    vibeTags: ["Adventurous", "Ambitious"],
+    vibeTags: ["Maceracı", "Hırslı"],
     compatibilityScore: 78,
+    profession: "Avukat",
+    gender: "woman",
   },
   {
     id: "4",
     name: "Natasha",
     age: 27,
-    city: "Milan",
-    height: "5'6\"",
+    city: "Bodrum",
+    height: "1.68",
     photos: [
       "https://images.unsplash.com/photo-1502323703975-b9630fe78d8b?w=600&q=80",
     ],
-    zodiacSign: "Gemini",
-    interests: ["Fashion", "DJ Sets", "Photography"],
+    zodiacSign: "İkizler",
+    interests: ["Yatçılık & Mavi Tur", "Omakase Deneyimi", "Koleksiyonerlik"],
     isVerified: true,
-    vibeTags: ["Kind", "Funny"],
+    vibeTags: ["Nazik", "Eğlenceli"],
     compatibilityScore: 91,
+    profession: "Tasarımcı",
+    gender: "woman",
   },
   {
     id: "5",
     name: "Valentina",
     age: 29,
-    city: "Barcelona",
-    height: "5'4\"",
+    city: "Antalya",
+    height: "1.63",
     photos: [
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&q=80",
     ],
-    zodiacSign: "Leo",
-    interests: ["Rooftop Bars", "Cooking", "Salsa"],
+    zodiacSign: "Aslan",
+    interests: ["Binicilik", "Sürdürülebilir Yaşam", "Ses Meditasyonu"],
     isVerified: true,
-    vibeTags: ["Respectful", "Creative"],
+    vibeTags: ["Saygılı", "Yaratıcı"],
     compatibilityScore: 83,
+    profession: "Girişimci",
+    gender: "woman",
   },
 ];
 
@@ -90,9 +98,9 @@ export const MOCK_MATCHES: Match[] = [
   {
     id: "m1",
     userId: "1",
-    name: "Isabelle",
+    name: "İsabelle",
     photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&q=80",
-    city: "New York",
+    city: "İstanbul",
     isVerified: true,
     matchedAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
     hasVibeCheck: true,
@@ -104,7 +112,7 @@ export const MOCK_MATCHES: Match[] = [
     userId: "4",
     name: "Natasha",
     photo: "https://images.unsplash.com/photo-1502323703975-b9630fe78d8b?w=300&q=80",
-    city: "Milan",
+    city: "Bodrum",
     isVerified: true,
     matchedAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
     hasVibeCheck: false,
@@ -135,37 +143,117 @@ export const MOCK_LIKED_BY: LikedByUser[] = [
 ];
 
 export const ZODIAC_COMPATIBILITY: Record<string, Record<string, number>> = {
-  Aries: { Aries: 72, Taurus: 55, Gemini: 85, Cancer: 60, Leo: 95, Virgo: 58, Libra: 88, Scorpio: 76, Sagittarius: 90, Capricorn: 52, Aquarius: 82, Pisces: 70 },
-  Libra: { Aries: 88, Taurus: 78, Gemini: 92, Cancer: 65, Leo: 86, Virgo: 72, Libra: 80, Scorpio: 62, Sagittarius: 85, Capricorn: 68, Aquarius: 90, Pisces: 75 },
-  Leo: { Aries: 95, Taurus: 60, Gemini: 82, Cancer: 70, Leo: 75, Virgo: 65, Libra: 86, Scorpio: 68, Sagittarius: 92, Capricorn: 55, Aquarius: 78, Pisces: 72 },
+  Koç: { Koç: 72, Boğa: 55, İkizler: 85, Yengeç: 60, Aslan: 95, Başak: 58, Terazi: 88, Akrep: 76, Yay: 90, Oğlak: 52, Kova: 82, Balık: 70 },
+  Terazi: { Koç: 88, Boğa: 78, İkizler: 92, Yengeç: 65, Aslan: 86, Başak: 72, Terazi: 80, Akrep: 62, Yay: 85, Oğlak: 68, Kova: 90, Balık: 75 },
+  Aslan: { Koç: 95, Boğa: 60, İkizler: 82, Yengeç: 70, Aslan: 75, Başak: 65, Terazi: 86, Akrep: 68, Yay: 92, Oğlak: 55, Kova: 78, Balık: 72 },
 };
 
-export const MUSIC_OPTIONS = ["Techno", "Jazz", "Hip-Hop", "Classical", "R&B", "Indie", "Electronic", "Pop", "Rock", "Afrobeats"];
-export const HOBBY_OPTIONS = ["Coffee Dates", "Parties", "Concerts", "Hiking", "Art Galleries", "Wine Tasting", "Yoga", "Cooking", "Travel", "Sports"];
-export const PERSONALITY_TAGS = ["Introvert", "Extrovert", "Ambitious", "Creative", "Spiritual", "Intellectual", "Adventurous", "Homebody", "Night Owl", "Early Bird"];
-export const INTERESTS = [...MUSIC_OPTIONS, ...HOBBY_OPTIONS];
-
-export const VIBE_TAGS = ["Respectful", "Funny", "Gentleman", "Thoughtful", "Ambitious", "Kind", "Creative", "Adventurous"];
-
-export const ZODIAC_SIGNS = [
-  "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
-  "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"
+// Zodiac signs in Turkish
+export const ZODIAC_SIGNS: ZodiacSign[] = [
+  "Koç", "Boğa", "İkizler", "Yengeç", "Aslan", "Başak",
+  "Terazi", "Akrep", "Yay", "Oğlak", "Kova", "Balık"
 ];
 
 export const ZODIAC_SYMBOLS: Record<string, string> = {
-  Aries: "♈", Taurus: "♉", Gemini: "♊", Cancer: "♋",
-  Leo: "♌", Virgo: "♍", Libra: "♎", Scorpio: "♏",
-  Sagittarius: "♐", Capricorn: "♑", Aquarius: "♒", Pisces: "♓"
+  Koç: "♈", Boğa: "♉", İkizler: "♊", Yengeç: "♋",
+  Aslan: "♌", Başak: "♍", Terazi: "♎", Akrep: "♏",
+  Yay: "♐", Oğlak: "♑", Kova: "♒", Balık: "♓"
 };
 
+// Categorized interest areas
+export const INTEREST_CATEGORIES = [
+  {
+    category: "Sanat & Kültür",
+    items: [
+      "Bienal & Art Week Takibi",
+      "Koleksiyonerlik",
+      "Bağımsız Sinema",
+      "Kitap Koleksiyonculuğu",
+      "Opera & Bale",
+    ],
+  },
+  {
+    category: "Spor & Aktif Yaşam",
+    items: [
+      "Padel Tenis",
+      "Binicilik",
+      "Yelkencilik",
+      "Reformist Pilates",
+      "Golf",
+      "Kış Sporları",
+      "Savunma Sanatları",
+    ],
+  },
+  {
+    category: "Gastronomi & Gurme",
+    items: [
+      "Fine Dining Kaşifliği",
+      "Specialty Coffee",
+      "Mixology & Tadım",
+      "Omakase Deneyimi",
+      "Yöresel Tadım Rotaları",
+    ],
+  },
+  {
+    category: "Wellness & Spiritüalite",
+    items: [
+      "Biohacking",
+      "Buz Banyosu & Soğuk Terapi",
+      "Astroloji",
+      "Ses Meditasyonu",
+      "Yin Yoga & Derin Esneme",
+    ],
+  },
+  {
+    category: "Seyahat & Yaşam Tarzı",
+    items: [
+      "Saklı Rotalar",
+      "Yatçılık & Mavi Tur",
+      "Sürdürülebilir Yaşam",
+      "Glamping",
+      "Solo Traveling",
+    ],
+  },
+];
+
+export const ALL_INTERESTS = INTEREST_CATEGORIES.flatMap((c) => c.items);
+
+// Legacy exports kept for backward compat
+export const MUSIC_OPTIONS = ["Techno", "Caz", "Hip-Hop", "Klasik", "R&B", "Indie", "Elektronik", "Pop", "Rock", "Afrobeats"];
+export const HOBBY_OPTIONS = ALL_INTERESTS;
+export const PERSONALITY_TAGS = ["İçe Dönük", "Dışa Dönük", "Hırslı", "Yaratıcı", "Spiritüel", "Entelektüel", "Maceracı", "Ev İnsanı", "Gece Kuşu", "Erken Kalkan"];
+export const INTERESTS = ALL_INTERESTS;
+
+export const VIBE_TAGS = ["Saygılı", "Eğlenceli", "Centilmen", "Düşünceli", "Hırslı", "Nazik", "Yaratıcı", "Maceracı"];
+
+export const GENDER_OPTIONS = [
+  { value: "woman", label: "Kadın" },
+  { value: "man", label: "Erkek" },
+  { value: "bisexual", label: "Biseksüel" },
+  { value: "lesbian", label: "Lezbiyen" },
+  { value: "gay", label: "Gay" },
+] as const;
+
 export const ADMIN_PENDING_USERS = [
-  { id: "p1", name: "Emma Laurent", age: 25, city: "Paris", submittedAt: "2 hours ago", verified: true, socialLinked: true },
-  { id: "p2", name: "Aisha Okonkwo", age: 29, city: "Lagos", submittedAt: "5 hours ago", verified: false, socialLinked: true },
-  { id: "p3", name: "Sofia Reyes", age: 27, city: "Madrid", submittedAt: "1 day ago", verified: true, socialLinked: false },
-  { id: "p4", name: "Zara Chen", age: 24, city: "Singapore", submittedAt: "2 days ago", verified: true, socialLinked: true },
+  { id: "p1", name: "Elif Şahin", age: 25, city: "İstanbul", profession: "Doktor", gender: "Kadın", submittedAt: "2 saat önce", verified: true, socialLinked: true },
+  { id: "p2", name: "Zeynep Kaya", age: 29, city: "Ankara", profession: "Mühendis", gender: "Kadın", submittedAt: "5 saat önce", verified: false, socialLinked: true },
+  { id: "p3", name: "Mert Demir", age: 31, city: "İzmir", profession: "Avukat", gender: "Erkek", submittedAt: "1 gün önce", verified: true, socialLinked: false },
+  { id: "p4", name: "Ayşe Yıldız", age: 24, city: "Bursa", profession: "Girişimci", gender: "Kadın", submittedAt: "2 gün önce", verified: true, socialLinked: true },
 ];
 
 export const ADMIN_FLAGGED_PROFILES = [
-  { id: "f1", name: "Marcus D.", age: 31, city: "NYC", reason: "Inappropriate messages", reportCount: 3 },
-  { id: "f2", name: "Tyler W.", age: 28, city: "LA", reason: "Fake profile photo", reportCount: 1 },
+  { id: "f1", name: "Ahmet D.", age: 31, city: "İstanbul", reason: "Uygunsuz mesajlar", reportCount: 3 },
+  { id: "f2", name: "Burak W.", age: 28, city: "Ankara", reason: "Sahte profil fotoğrafı", reportCount: 1 },
+];
+
+// Mock members list for admin
+export const ADMIN_ALL_MEMBERS = [
+  { id: "u1", name: "Elif Şahin", age: 25, city: "İstanbul", gender: "woman" as const, profession: "Doktor", zodiac: "Terazi", instagram: "@elif.s", status: "approved", joinedAt: "1 gün önce" },
+  { id: "u2", name: "Zeynep Kaya", age: 29, city: "Ankara", gender: "woman" as const, profession: "Mühendis", zodiac: "Boğa", instagram: "@zeynep.k", status: "approved", joinedAt: "3 gün önce" },
+  { id: "u3", name: "Mert Demir", age: 31, city: "İzmir", gender: "man" as const, profession: "Avukat", zodiac: "Aslan", instagram: "@mertd", status: "approved", joinedAt: "5 gün önce" },
+  { id: "u4", name: "Ayşe Yıldız", age: 24, city: "Bursa", gender: "woman" as const, profession: "Girişimci", zodiac: "Kova", instagram: "@ayse.y", status: "approved", joinedAt: "1 hafta önce" },
+  { id: "u5", name: "Can Öztürk", age: 27, city: "Antalya", gender: "man" as const, profession: "Mimar", zodiac: "Akrep", instagram: "@can.o", status: "approved", joinedAt: "1 hafta önce" },
+  { id: "u6", name: "Selin Arslan", age: 26, city: "İstanbul", gender: "woman" as const, profession: "Tasarımcı", zodiac: "İkizler", instagram: "@selinar", status: "pending", joinedAt: "2 gün önce" },
+  { id: "u7", name: "Defne Çelik", age: 28, city: "İzmir", gender: "woman" as const, profession: "Psikolog", zodiac: "Yay", instagram: "@defne.c", status: "approved", joinedAt: "2 hafta önce" },
+  { id: "u8", name: "Emre Koç", age: 33, city: "Ankara", gender: "man" as const, profession: "Finansçı", zodiac: "Oğlak", instagram: "@emrek", status: "approved", joinedAt: "3 hafta önce" },
 ];

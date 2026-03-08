@@ -4,29 +4,29 @@ import { useApp } from "@/context/AppContext";
 const plans = [
   {
     id: "monthly",
-    label: "Monthly",
-    price: "$39.99",
-    period: "/month",
+    label: "Aylık",
+    price: "₺1.299",
+    period: "/ay",
     badge: null,
-    total: "$39.99/mo",
+    total: "₺1.299/ay",
   },
   {
     id: "yearly",
-    label: "Annual",
-    price: "$19.99",
-    period: "/month",
-    badge: "BEST VALUE",
-    total: "Billed $239.88/year",
+    label: "Yıllık",
+    price: "₺649",
+    period: "/ay",
+    badge: "EN İYİ DEĞer",
+    total: "Yıllık ₺7.788 faturalandırılır",
   },
 ];
 
 const features = [
-  { icon: "👁", text: "See who liked your profile" },
-  { icon: "↩", text: "Unlimited rewinds" },
-  { icon: "✦", text: "5 Super Likes per day" },
-  { icon: "🎙", text: "Unlimited Vibe Checks" },
-  { icon: "⚡", text: "Priority placement in discovery" },
-  { icon: "🏆", text: "Gold badge on your profile" },
+  { icon: "👁", text: "Seni beğenenleri gör" },
+  { icon: "↩", text: "Sınırsız geri alma" },
+  { icon: "✦", text: "Günde 5 Süper Beğeni" },
+  { icon: "🎙", text: "Sınırsız Vibe Check" },
+  { icon: "⚡", text: "Keşifte öncelikli görünüm" },
+  { icon: "🏆", text: "Profilinde Altın rozet" },
 ];
 
 export const PremiumScreen = () => {
@@ -55,13 +55,13 @@ export const PremiumScreen = () => {
           <div className="w-24 h-24 rounded-full gold-gradient mx-auto mb-6 flex items-center justify-center text-5xl shadow-gold animate-float">
             ✦
           </div>
-          <h1 className="font-serif text-4xl mb-2">Welcome to Gold</h1>
-          <p className="text-muted-foreground text-sm mb-8">All premium features are now unlocked. Enjoy The Club at its finest.</p>
+          <h1 className="font-serif text-4xl mb-2">Altın Üyeliğe Hoş Geldin</h1>
+          <p className="text-muted-foreground text-sm mb-8">Tüm premium özellikler açıldı. The Club'ı en iyi haliyle yaşa.</p>
           <button
             onClick={() => setScreen("matches")}
             className="w-full py-4 rounded-xl gold-gradient text-primary-foreground font-medium text-sm tracking-wider"
           >
-            See Who Liked You →
+            Seni Beğenenleri Gör →
           </button>
         </div>
       </div>
@@ -83,7 +83,7 @@ export const PremiumScreen = () => {
           </div>
           <button onClick={() => setScreen("discovery")}
             className="absolute top-10 left-6 text-muted-foreground hover:text-foreground transition-colors text-sm">
-            ← Back
+            ← Geri
           </button>
         </div>
 
@@ -140,25 +140,22 @@ export const PremiumScreen = () => {
             ))}
           </div>
 
-          {/* Stripe mock payment notice */}
           <div className="bg-surface rounded-xl p-4 border border-border">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-xs text-gold">🔒</span>
-              <span className="text-xs text-foreground font-medium">Secure Payment via Stripe</span>
+              <span className="text-xs text-foreground font-medium">Stripe ile Güvenli Ödeme</span>
             </div>
             <p className="text-xs text-muted-foreground">
-              This is a demo. In production, Stripe checkout handles payment securely. Your premium status updates instantly after successful payment.
+              Bu bir demo. Gerçek üretimde Stripe ödemeyi güvenli şekilde işler. Başarılı ödeme sonrası premium statün anında güncellenir.
             </p>
           </div>
 
-          {/* Cancel anytime */}
           <p className="text-center text-xs text-muted-foreground">
-            Cancel anytime. No hidden fees. Subscriptions are managed through Stripe.
+            İstediğin zaman iptal et. Gizli ücret yok. Abonelikler Stripe üzerinden yönetilir.
           </p>
         </div>
       </div>
 
-      {/* CTA */}
       <div className="px-6 pb-10 pt-4 glass border-t border-border">
         <button
           onClick={handleSubscribe}
@@ -168,10 +165,10 @@ export const PremiumScreen = () => {
           {loading ? (
             <span className="flex items-center justify-center gap-2">
               <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-              Processing…
+              İşleniyor…
             </span>
           ) : (
-            `✦ Start ${plans.find((p) => p.id === selected)?.label} — ${plans.find((p) => p.id === selected)?.price}`
+            `✦ ${plans.find((p) => p.id === selected)?.label} Başlat — ${plans.find((p) => p.id === selected)?.price}`
           )}
         </button>
       </div>

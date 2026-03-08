@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useApp } from "@/context/AppContext";
 import heroBg from "@/assets/hero-bg.jpg";
 
+// Admin phone number (digits only, no spaces)
+const ADMIN_PHONE = "5058396333";
+
 export const LoginScreen = () => {
   const { setScreen, setIsAdmin } = useApp();
   const [phone, setPhone] = useState("");
@@ -17,13 +20,22 @@ export const LoginScreen = () => {
 
   const handleVerify = () => {
     setLoading(true);
-    // Admin shortcut
-    if (phone === "0000000000") {
+    if (phone.replace(/\s/g, "") === ADMIN_PHONE) {
       setTimeout(() => { setLoading(false); setIsAdmin(true); setScreen("admin"); }, 800);
       return;
     }
     setTimeout(() => { setLoading(false); setScreen("onboarding-basic"); }, 1000);
   };
+
+  const formatPhone = (val: string) => {
+    const digits = val.replace(/\D/g, "").slice(0, 10);
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
+    if (digits.length <= 8) return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+    return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6, 8)} ${digits.slice(8)}`;
+  };
+
+  const rawDigits = phone.replace(/\s/g, "");
 
   return (
     <div className="min-h-screen relative flex flex-col items-center justify-center overflow-hidden">
@@ -47,7 +59,7 @@ export const LoginScreen = () => {
             THE CLUB
           </h1>
           <p className="text-muted-foreground text-xs tracking-[0.3em] uppercase font-sans">
-            Members Only
+            Yalnızca Üyelere Özel
           </p>
         </div>
 
@@ -56,46 +68,45 @@ export const LoginScreen = () => {
           {step === "phone" ? (
             <div className="space-y-6">
               <div>
-                <p className="font-serif text-xl text-foreground mb-1">Welcome Back</p>
-                <p className="text-muted-foreground text-sm">Enter your number to continue</p>
+                <p className="font-serif text-xl text-foreground mb-1">Tekrar Hoş Geldin</p>
+                <p className="text-muted-foreground text-sm">Devam etmek için numaranı gir</p>
               </div>
 
               <div className="space-y-3">
                 <div className="flex items-center gap-3 bg-muted rounded-xl px-4 py-3 border border-border focus-within:border-gold transition-colors">
-                  <span className="text-muted-foreground text-sm">🇺🇸 +1</span>
+                  <span className="text-muted-foreground text-sm whitespace-nowrap">🇹🇷 +90</span>
                   <div className="w-px h-5 bg-border" />
                   <input
                     type="tel"
-                    placeholder="(555) 000-0000"
+                    placeholder="5XX XXX XX XX"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                    onChange={(e) => setPhone(formatPhone(e.target.value))}
                     className="flex-1 bg-transparent text-foreground placeholder-muted-foreground text-sm outline-none"
                   />
                 </div>
-                <p className="text-xs text-muted-foreground">Try 0000000000 for admin demo</p>
               </div>
 
               <button
                 onClick={handleSendOtp}
-                disabled={phone.length < 10 || loading}
+                disabled={rawDigits.length < 10 || loading}
                 className="w-full py-4 rounded-xl gold-gradient text-primary-foreground font-medium text-sm tracking-wider transition-all hover:opacity-90 active:scale-95 disabled:opacity-40 shadow-gold-sm"
               >
-                {loading ? "Sending…" : "Send Verification Code"}
+                {loading ? "Gönderiliyor…" : "Doğrulama Kodu Gönder"}
               </button>
 
               <div className="text-center">
                 <p className="text-muted-foreground text-xs">
-                  By continuing, you agree to our{" "}
-                  <span className="text-gold cursor-pointer">Terms of Service</span>
+                  Devam ederek{" "}
+                  <span className="text-gold cursor-pointer">Kullanım Koşulları</span>'nı kabul etmiş olursun
                 </p>
               </div>
             </div>
           ) : (
             <div className="space-y-6">
               <div>
-                <p className="font-serif text-xl text-foreground mb-1">Verify Your Identity</p>
+                <p className="font-serif text-xl text-foreground mb-1">Kimliğini Doğrula</p>
                 <p className="text-muted-foreground text-sm">
-                  Code sent to +1 {phone.slice(0, 3)}-{phone.slice(3, 6)}-{phone.slice(6)}
+                  +90 {phone} numarasına kod gönderildi
                 </p>
               </div>
 
@@ -111,14 +122,13 @@ export const LoginScreen = () => {
                 ))}
               </div>
 
-              {/* Hidden input trick */}
               <input
                 type="number"
                 maxLength={6}
                 value={otp}
                 onChange={(e) => setOtp(e.target.value.slice(0, 6))}
                 className="w-full bg-muted rounded-xl px-4 py-3 border border-border text-foreground text-center tracking-widest text-lg outline-none focus:border-gold transition-colors"
-                placeholder="Enter 6-digit code"
+                placeholder="6 haneli kodu gir"
               />
 
               <button
@@ -126,14 +136,14 @@ export const LoginScreen = () => {
                 disabled={otp.length < 4 || loading}
                 className="w-full py-4 rounded-xl gold-gradient text-primary-foreground font-medium text-sm tracking-wider transition-all hover:opacity-90 active:scale-95 disabled:opacity-40"
               >
-                {loading ? "Verifying…" : "Continue to The Club"}
+                {loading ? "Doğrulanıyor…" : "The Club'a Gir"}
               </button>
 
               <button
                 onClick={() => setStep("phone")}
                 className="w-full text-muted-foreground text-sm hover:text-foreground transition-colors"
               >
-                ← Change number
+                ← Numarayı Değiştir
               </button>
             </div>
           )}
@@ -141,7 +151,7 @@ export const LoginScreen = () => {
 
         {/* Tagline */}
         <p className="text-center mt-8 text-muted-foreground text-xs tracking-wider">
-          Quality connections. Curated memberships. Zero compromises.
+          Kaliteli bağlantılar. Seçilmiş üyelikler. Sıfır tolerans.
         </p>
       </div>
     </div>

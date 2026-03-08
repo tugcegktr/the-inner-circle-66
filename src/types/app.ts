@@ -16,12 +16,12 @@ export type AppScreen =
   | "premium"
   | "admin";
 
-export type UserGender = "woman" | "man" | "non-binary";
+export type UserGender = "woman" | "man" | "bisexual" | "lesbian" | "gay";
 export type ZodiacSign =
-  | "Aries" | "Taurus" | "Gemini" | "Cancer" | "Leo" | "Virgo"
-  | "Libra" | "Scorpio" | "Sagittarius" | "Capricorn" | "Aquarius" | "Pisces";
+  | "Koç" | "Boğa" | "İkizler" | "Yengeç" | "Aslan" | "Başak"
+  | "Terazi" | "Akrep" | "Yay" | "Oğlak" | "Kova" | "Balık";
 
-export type VibeTag = "Respectful" | "Funny" | "Gentleman" | "Thoughtful" | "Ambitious" | "Kind" | "Creative" | "Adventurous";
+export type VibeTag = "Saygılı" | "Eğlenceli" | "Centilmen" | "Düşünceli" | "Hırslı" | "Nazik" | "Yaratıcı" | "Maceracı";
 
 export interface UserProfile {
   id: string;
@@ -30,6 +30,8 @@ export interface UserProfile {
   city: string;
   height: string;
   gender: UserGender;
+  interestedIn: UserGender[];
+  profession?: string;
   bio: string;
   photos: string[];
   zodiacSign: ZodiacSign;
@@ -46,7 +48,7 @@ export interface UserProfile {
   vibeTags: VibeTag[];
   subscriptionStatus: "none" | "monthly" | "yearly";
   dailySwipesLeft: number;
-  averageRating?: number;   // public star rating (avg of received ratings)
+  averageRating?: number;
   ratingCount?: number;
 }
 
@@ -64,6 +66,8 @@ export interface SwipeCard {
   compatibilityScore?: number;
   averageRating?: number;
   ratingCount?: number;
+  profession?: string;
+  gender: UserGender;
 }
 
 export interface Match {
@@ -75,9 +79,9 @@ export interface Match {
   isVerified: boolean;
   matchedAt: Date;
   hasVibeCheck?: boolean;
-  myRating?: number;        // rating I gave them (1–5)
-  theirRating?: number;     // rating they gave me (1–5)
-  averageRating?: number;   // their public avg rating
+  myRating?: number;
+  theirRating?: number;
+  averageRating?: number;
   ratingCount?: number;
 }
 

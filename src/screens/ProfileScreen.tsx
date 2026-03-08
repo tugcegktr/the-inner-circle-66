@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { useApp } from "@/context/AppContext";
-import { ZODIAC_SYMBOLS } from "@/data/mockData";
+import { ZODIAC_SYMBOLS, GENDER_OPTIONS } from "@/data/mockData";
 import { StarRating } from "@/components/StarRating";
 
 const BottomNav = ({ active, onNavigate }: { active: string; onNavigate: (s: any) => void }) => {
@@ -27,9 +27,13 @@ const BottomNav = ({ active, onNavigate }: { active: string; onNavigate: (s: any
 export const ProfileScreen = () => {
   const { currentUser, setScreen } = useApp();
 
-  // Mock public rating data
   const publicRating = currentUser.averageRating ?? 4.3;
   const ratingCount = currentUser.ratingCount ?? 7;
+
+  const genderLabel = GENDER_OPTIONS.find((g) => g.value === currentUser.gender)?.label ?? currentUser.gender;
+  const interestedInLabels = currentUser.interestedIn
+    .map((g) => GENDER_OPTIONS.find((o) => o.value === g)?.label ?? g)
+    .join(", ");
 
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-sm mx-auto">
@@ -47,8 +51,10 @@ export const ProfileScreen = () => {
                     <div className="verified-badge w-6 h-6 rounded-full flex items-center justify-center text-xs text-primary-foreground font-bold">✓</div>
                   )}
                 </div>
-                <p className="text-muted-foreground text-sm">{currentUser.age} · {currentUser.height}</p>
-                {/* Location prominently */}
+                <p className="text-muted-foreground text-sm">{currentUser.age} · {currentUser.height} cm</p>
+                {currentUser.profession && (
+                  <p className="text-muted-foreground text-sm">💼 {currentUser.profession}</p>
+                )}
                 <div className="flex items-center gap-1.5 mt-1">
                   <span className="text-base">📍</span>
                   <span className="text-foreground text-sm font-medium">{currentUser.city}</span>
@@ -80,6 +86,18 @@ export const ProfileScreen = () => {
 
           <div className="luxury-divider" />
 
+          {/* Gender info */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-surface rounded-xl px-4 py-3 border border-border">
+              <p className="text-xs text-muted-foreground mb-1">Cinsiyet</p>
+              <p className="text-sm text-foreground font-medium">{genderLabel}</p>
+            </div>
+            <div className="bg-surface rounded-xl px-4 py-3 border border-border">
+              <p className="text-xs text-muted-foreground mb-1">İlgilendiği</p>
+              <p className="text-sm text-foreground font-medium">{interestedInLabels}</p>
+            </div>
+          </div>
+
           {/* Zodiac */}
           <div className="flex items-center gap-4">
             <div className="glass-gold rounded-xl px-4 py-3 flex items-center gap-2">
@@ -101,24 +119,16 @@ export const ProfileScreen = () => {
           </div>
 
           {/* Interests */}
-          <div>
-            <p className="text-xs tracking-widest text-gold uppercase mb-3">İlgi Alanları</p>
-            <div className="flex flex-wrap gap-2">
-              {currentUser.interests.map((i) => (
-                <span key={i} className="bg-surface border border-border text-foreground text-xs px-3 py-1.5 rounded-full">{i}</span>
-              ))}
+          {currentUser.interests.length > 0 && (
+            <div>
+              <p className="text-xs tracking-widest text-gold uppercase mb-3">İlgi Alanları</p>
+              <div className="flex flex-wrap gap-2">
+                {currentUser.interests.map((i) => (
+                  <span key={i} className="bg-surface border border-border text-foreground text-xs px-3 py-1.5 rounded-full">{i}</span>
+                ))}
+              </div>
             </div>
-          </div>
-
-          {/* Music */}
-          <div>
-            <p className="text-xs tracking-widest text-gold uppercase mb-3">Müzik Zevki</p>
-            <div className="flex flex-wrap gap-2">
-              {currentUser.musicTaste.map((m) => (
-                <span key={m} className="bg-surface border border-border text-foreground text-xs px-3 py-1.5 rounded-full">🎵 {m}</span>
-              ))}
-            </div>
-          </div>
+          )}
 
           {/* Photos grid */}
           {currentUser.photos.length > 1 && (
