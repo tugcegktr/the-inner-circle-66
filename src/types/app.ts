@@ -21,7 +21,7 @@ export type ZodiacSign =
   | "Koç" | "Boğa" | "İkizler" | "Yengeç" | "Aslan" | "Başak"
   | "Terazi" | "Akrep" | "Yay" | "Oğlak" | "Kova" | "Balık";
 
-export type VibeTag = "Saygılı" | "Eğlenceli" | "Centilmen" | "Düşünceli" | "Hırslı" | "Nazik" | "Yaratıcı" | "Maceracı";
+export type VibeTag = "Saygılı" | "Eğlenceli" | "Centilmen" | "Düşünceli" | "Hırslı" | "Nazik" | "Yaratıcı" | "Maceracı" | "Entelektüel";
 
 export interface UserProfile {
   id: string;
