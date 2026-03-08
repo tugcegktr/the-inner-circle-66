@@ -14,7 +14,7 @@ const BottomNav = ({ active, onNavigate }: { active: string; onNavigate: (s: any
     <div className="glass border-t border-border">
       <div className="flex">
         {tabs.map(({ id, icon, label }) => (
-          <button key={id} onClick={() => onNavigate(id === "discovery" ? "discovery" : id === "matches" ? "matches" : "profile")}
+          <button key={id} onClick={() => onNavigate(id)}
             className={`flex-1 py-4 flex flex-col items-center gap-1 transition-colors ${active === id ? "text-gold" : "text-muted-foreground hover:text-foreground"}`}>
             <span className="text-lg">{icon}</span>
             <span className="text-xs tracking-wider">{label}</span>
@@ -143,27 +143,31 @@ const ChatModal = ({
   ]);
   const [input, setInput] = useState("");
 
-  const now = () => {
+  const nowStr = () => {
     const d = new Date();
     return `${d.getHours()}:${String(d.getMinutes()).padStart(2, "0")}`;
   };
 
+  const sentCount = messages.filter((m) => m.from === "me").length;
+
   const send = () => {
     const txt = input.trim();
     if (!txt) return;
-    const t = now();
+    const t = nowStr();
     setMessages((prev) => [...prev, { from: "me", text: txt, time: t }]);
     setInput("");
+    onMessageSent(match.id);
     setTimeout(() => {
       const replies = [
         "Çok güzel, seninle tanışmak harika! ✨",
         "Haha, gerçekten mi? 😄",
         "Kesinlikle katılıyorum!",
         "Bu akşam müsait misin? ☕",
+        "Sana katılıyorum, harika bir seçim!",
       ];
       setMessages((prev) => [
         ...prev,
-        { from: "them", text: replies[Math.floor(Math.random() * replies.length)], time: now() },
+        { from: "them", text: replies[Math.floor(Math.random() * replies.length)], time: nowStr() },
       ]);
     }, 1200);
   };
@@ -183,6 +187,11 @@ const ChatModal = ({
           </div>
           <p className="text-muted-foreground text-xs">📍 {match.city}</p>
         </div>
+        {sentCount < 5 && (
+          <span className="text-xs text-muted-foreground bg-surface border border-border px-2 py-1 rounded-full flex-shrink-0">
+            {sentCount}/5 mesaj
+          </span>
+        )}
       </div>
 
       {/* Messages */}
@@ -236,11 +245,19 @@ export const MatchesScreen = () => {
   const [vibeTagTarget, setVibeTagTarget] = useState<string | null>(null);
   const [rateTarget, setRateTarget] = useState<Match | null>(null);
   const [chatTarget, setChatTarget] = useState<Match | null>(null);
+  // Track sent message counts per match
+  const [sentCounts, setSentCounts] = useState<Record<string, number>>({});
+
+  const MIN_MESSAGES_TO_RATE = 5;
 
   const handleRate = (matchId: string, rating: number) => {
     setMatches((prev) =>
       prev.map((m) => m.id === matchId ? { ...m, myRating: rating } : m)
     );
+  };
+
+  const handleMessageSent = (matchId: string) => {
+    setSentCounts((prev) => ({ ...prev, [matchId]: (prev[matchId] || 0) + 1 }));
   };
 
   return (
@@ -260,60 +277,86 @@ export const MatchesScreen = () => {
       <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-24">
         {activeTab === "matches" ? (
           <div className="space-y-3">
-            {matches.map((match) => (
-              <div key={match.id} className="bg-surface rounded-xl p-4 border border-border">
-                <div className="flex items-center gap-4 mb-3">
-                  <button onClick={() => setChatTarget(match)} className="relative flex-shrink-0">
-                    <img src={match.photo} alt={match.name} className="w-14 h-14 rounded-full object-cover" />
-                    {match.isVerified && (
-                      <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 verified-badge rounded-full flex items-center justify-center text-xs text-primary-foreground font-bold">✓</div>
-                    )}
-                  </button>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="text-foreground font-medium text-sm">{match.name}</p>
-                      {match.hasVibeCheck && (
-                        <div className="w-2 h-2 rounded-full gold-gradient animate-pulse-gold" />
-                      )}
-                    </div>
-                    <p className="text-muted-foreground text-xs">📍 {match.city}</p>
-                    <p className="text-muted-foreground text-xs">
-                      {match.hasVibeCheck ? "🎙 Vibe Check gönderdi" : "Yakın zamanda eşleşti"}
-                    </p>
-                  </div>
-                  {match.averageRating && (
-                    <div className="text-right">
-                      <div className="text-gold text-sm">{'★'.repeat(Math.round(match.averageRating))}</div>
-                      <p className="text-xs text-muted-foreground">{match.averageRating.toFixed(1)}</p>
-                    </div>
-                  )}
-                </div>
+            {matches.map((match) => {
+              const msgCount = sentCounts[match.id] || 0;
+              const canRate = msgCount >= MIN_MESSAGES_TO_RATE;
 
-                {/* Action row */}
-                <div className="flex items-center gap-2 pt-3 border-t border-border">
-                  <button
-                    onClick={() => setChatTarget(match)}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg gold-gradient text-primary-foreground text-xs font-medium active:scale-95 transition-all"
-                  >
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
-                    </svg>
-                    Mesaj Gönder
-                  </button>
-                  <div className="flex-1" />
-                  {match.myRating ? (
-                    <StarRating value={match.myRating} size="sm" />
-                  ) : (
-                    <button onClick={() => setRateTarget(match)} className="text-xs text-muted-foreground hover:text-gold transition-colors">
-                      ★ Değerlendir
+              return (
+                <div key={match.id} className="bg-surface rounded-xl p-4 border border-border">
+                  <div className="flex items-center gap-4 mb-3">
+                    <button onClick={() => setChatTarget(match)} className="relative flex-shrink-0">
+                      <img src={match.photo} alt={match.name} className="w-14 h-14 rounded-full object-cover" />
+                      {match.isVerified && (
+                        <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 verified-badge rounded-full flex items-center justify-center text-xs text-primary-foreground font-bold">✓</div>
+                      )}
                     </button>
-                  )}
-                  <button onClick={() => setVibeTagTarget(match.name)} className="text-xs text-muted-foreground hover:text-gold transition-colors">
-                    + Vibe
-                  </button>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="text-foreground font-medium text-sm">{match.name}</p>
+                        {match.hasVibeCheck && (
+                          <div className="w-2 h-2 rounded-full gold-gradient animate-pulse-gold" />
+                        )}
+                      </div>
+                      <p className="text-muted-foreground text-xs">📍 {match.city}</p>
+                      <p className="text-muted-foreground text-xs">
+                        {match.hasVibeCheck ? "🎙 Vibe Check gönderdi" : "Yakın zamanda eşleşti"}
+                      </p>
+                    </div>
+                    {match.averageRating && (
+                      <div className="text-right">
+                        <div className="text-gold text-sm">{'★'.repeat(Math.round(match.averageRating))}</div>
+                        <p className="text-xs text-muted-foreground">{match.averageRating.toFixed(1)}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Action row */}
+                  <div className="flex items-center gap-2 pt-3 border-t border-border">
+                    {/* Chat button */}
+                    <button
+                      onClick={() => setChatTarget(match)}
+                      className="flex items-center gap-1.5 px-3 py-2 rounded-lg gold-gradient text-primary-foreground text-xs font-medium active:scale-95 transition-all"
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                      </svg>
+                      Mesaj Gönder
+                    </button>
+
+                    <div className="flex-1" />
+
+                    {/* Rate button – active only after 5 sent messages */}
+                    {match.myRating ? (
+                      <StarRating value={match.myRating} size="sm" />
+                    ) : (
+                      <button
+                        onClick={() => canRate && setRateTarget(match)}
+                        disabled={!canRate}
+                        title={canRate ? undefined : "Değerlendirmek için en az 5 mesaj gönder"}
+                        className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                          canRate
+                            ? "bg-gold/20 border border-gold text-gold hover:bg-gold/30 active:scale-95"
+                            : "bg-muted border border-border text-muted-foreground opacity-50 cursor-not-allowed"
+                        }`}
+                      >
+                        ★ Değerlendir
+                        {!canRate && (
+                          <span className="ml-1 text-xs opacity-70">{msgCount}/5</span>
+                        )}
+                      </button>
+                    )}
+
+                    {/* Vibe button */}
+                    <button
+                      onClick={() => setVibeTagTarget(match.name)}
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-gold/20 border border-gold/50 text-gold hover:bg-gold/30 active:scale-95 transition-all"
+                    >
+                      ✦ Vibe
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div>
@@ -353,7 +396,13 @@ export const MatchesScreen = () => {
       {rateTarget && (
         <RateMatchModal match={rateTarget} onClose={() => setRateTarget(null)} onRate={handleRate} />
       )}
-      {chatTarget && <ChatModal match={chatTarget} onClose={() => setChatTarget(null)} />}
+      {chatTarget && (
+        <ChatModal
+          match={chatTarget}
+          onClose={() => setChatTarget(null)}
+          onMessageSent={handleMessageSent}
+        />
+      )}
     </div>
   );
 };
