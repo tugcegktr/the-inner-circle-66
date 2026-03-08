@@ -151,12 +151,12 @@ export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: S
         {/* ── Scrollable content below cover ── */}
         <div className="bg-background px-5 py-5 space-y-5">
 
-          {/* Vibe tags */}
+          {/* Vibe tags – max 3 (en çok tıklanan) */}
           {card.vibeTags.length > 0 && (
             <div>
               <p className="text-xs text-gold uppercase tracking-wider mb-2">✦ Vibe Etiketleri</p>
               <div className="flex flex-wrap gap-1.5">
-                {card.vibeTags.map((tag) => (
+                {card.vibeTags.slice(0, 3).map((tag) => (
                   <span key={tag} className="text-xs gold-gradient text-primary-foreground px-2.5 py-1 rounded-full font-medium">
                     ✦ {tag}
                   </span>
@@ -169,18 +169,17 @@ export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: S
           {card.averageRating && card.ratingCount && (
             <div className="flex items-center gap-2">
               <div className="flex gap-0.5">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <span
-                    key={star}
-                    className="text-base leading-none"
-                    style={{ color: star <= Math.round(card.averageRating!) ? "hsl(var(--gold))" : "hsl(var(--muted-foreground))" }}
-                  >
-                    ★
-                  </span>
-                ))}
+                {[1, 2, 3, 4, 5].map((star) => {
+                  const filled = star <= Math.round(card.averageRating!);
+                  return (
+                    <span key={star} className={`text-xl leading-none ${filled ? "text-gold" : "text-muted-foreground"}`}>
+                      ★
+                    </span>
+                  );
+                })}
               </div>
               <span className="text-sm font-medium text-foreground">{card.averageRating.toFixed(1)}</span>
-              <span className="text-xs text-muted-foreground">({card.ratingCount} değerlendirme)</span>
+              <span className="text-xs text-muted-foreground">({card.ratingCount} oy)</span>
             </div>
           )}
 
