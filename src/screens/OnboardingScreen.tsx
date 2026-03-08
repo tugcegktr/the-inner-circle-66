@@ -64,7 +64,10 @@ export const OnboardingScreen = () => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>(currentUser.hobbyPreferences);
   const [personality, setPersonality] = useState<string[]>(currentUser.personalityTags);
 
-  // Step 4 – Photos
+  // Step 4 – Music
+  const [selectedMusic, setSelectedMusic] = useState<string[]>(currentUser.musicTaste || []);
+
+  // Step 5 – Photos
   const [photos, setPhotos] = useState<string[]>(currentUser.photos);
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
   const dragOverIdx = useRef<number | null>(null);
