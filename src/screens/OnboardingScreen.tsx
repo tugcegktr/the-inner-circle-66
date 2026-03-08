@@ -534,7 +534,7 @@ export const OnboardingScreen = () => {
 
             <div className="bg-surface rounded-xl p-4 border border-border">
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Başvurun ekibimiz tarafından 24–48 saat içinde incelenecek. The Club'ın kalitesini korumak için her üyeyi manuel olarak onaylıyoruz.
+                Başvurunuz ekibimiz tarafından en kısa sürede incelenecektir. The Club'ın kalitesini korumak için her üyeyi manuel olarak onaylıyoruz.
               </p>
             </div>
           </div>

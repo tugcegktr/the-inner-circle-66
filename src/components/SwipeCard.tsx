@@ -181,57 +181,75 @@ export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: S
         </div>
       </div>
 
-      {/* Full Profile Detail Modal */}
+      {/* Full Profile Detail Modal – Bumble style */}
       {showDetail && (
         <div
           className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end justify-center"
           onClick={() => setShowDetail(false)}
         >
           <div
-            className="w-full max-w-sm glass rounded-t-3xl overflow-y-auto no-scrollbar max-h-[90vh] animate-fade-up"
+            className="w-full max-w-sm glass rounded-t-3xl overflow-y-auto no-scrollbar max-h-[92vh] animate-fade-up"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Photo strip */}
-            <div className="flex gap-2 p-4 overflow-x-auto no-scrollbar">
+            {/* ── Photos stacked vertically Bumble-style ── */}
+            <div className="relative">
               {card.photos.map((photo, i) => (
-                <img
-                  key={i}
-                  src={photo}
-                  alt=""
-                  className="w-24 h-32 rounded-xl object-cover flex-shrink-0 select-none"
-                  draggable={false}
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-              ))}
-            </div>
-
-            <div className="px-5 pb-8 space-y-4">
-              {/* Name & verification */}
-              <div className="flex items-center gap-3">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h2 className="font-serif text-2xl text-foreground">{card.name}, {card.age}</h2>
-                    {card.isVerified && (
-                      <span className="verified-badge text-xs px-2 py-0.5 rounded-full text-primary-foreground font-bold">✓ Onaylı</span>
-                    )}
-                  </div>
-                  {card.averageRating && (
-                    <div className="flex items-center gap-1 mt-0.5">
-                      <span className="text-gold text-sm">{'★'.repeat(Math.round(card.averageRating))}</span>
-                      <span className="text-xs text-muted-foreground">{card.averageRating.toFixed(1)} ({card.ratingCount} değerlendirme)</span>
+                <div key={i} className="relative w-full" style={{ aspectRatio: "4/5" }}>
+                  <img
+                    src={photo}
+                    alt=""
+                    className="w-full h-full object-cover select-none"
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+                  {/* Only show name/age overlay on first photo */}
+                  {i === 0 && (
+                    <div className="absolute bottom-0 left-0 right-0 p-5" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)" }}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <h2 className="font-serif text-3xl text-white font-medium">{card.name}, {card.age}</h2>
+                        {card.isVerified && (
+                          <span className="verified-badge text-xs px-2 py-0.5 rounded-full text-primary-foreground font-bold">✓</span>
+                        )}
+                      </div>
+                      {card.profession && (
+                        <p className="text-white/80 text-sm">💼 {card.profession}</p>
+                      )}
                     </div>
                   )}
                 </div>
+              ))}
+
+              {/* ── Location card at bottom of photos (Bumble style) ── */}
+              <div className="px-5 py-4 bg-surface border-b border-border">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-lg flex-shrink-0">
+                    📍
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Son Görülme Konumu</p>
+                    <p className="text-sm text-foreground font-medium">{card.city}</p>
+                  </div>
+                </div>
               </div>
+            </div>
+
+            <div className="px-5 pb-8 space-y-5 pt-5">
+              {/* Rating */}
+              {card.averageRating && (
+                <div className="flex items-center gap-1">
+                  <span className="text-gold text-sm">{'★'.repeat(Math.round(card.averageRating))}</span>
+                  <span className="text-xs text-muted-foreground">{card.averageRating.toFixed(1)} ({card.ratingCount} değerlendirme)</span>
+                </div>
+              )}
 
               <div className="luxury-divider" />
 
-              {/* Profile details */}
+              {/* Profile details grid */}
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { icon: "📍", label: "Konum", value: card.city },
+                  { icon: "📍", label: "Şehir", value: card.city },
                   { icon: "💼", label: "Meslek", value: card.profession || "—" },
-                  { icon: "↕", label: "Boy", value: `${card.height}m` },
+                  { icon: "↕", label: "Boy", value: `${card.height} m` },
                   { icon: ZODIAC_SYMBOLS[card.zodiacSign], label: "Burç", value: card.zodiacSign },
                 ].map(({ icon, label, value }) => (
                   <div key={label} className="bg-surface rounded-xl p-3 border border-border">
@@ -241,7 +259,7 @@ export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: S
                 ))}
               </div>
 
-              {/* Interests */}
+              {/* Interests – all */}
               {card.interests.length > 0 && (
                 <div>
                   <p className="text-xs text-gold uppercase tracking-wider mb-2">İlgi Alanları</p>
@@ -265,6 +283,27 @@ export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: S
                         ✦ {tag}
                       </span>
                     ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Social media (if available) */}
+              {(card.instagramHandle || card.linkedinUrl) && (
+                <div>
+                  <p className="text-xs text-gold uppercase tracking-wider mb-2">Sosyal Medya</p>
+                  <div className="space-y-2">
+                    {card.instagramHandle && (
+                      <div className="flex items-center gap-3 bg-surface rounded-xl px-4 py-3 border border-border">
+                        <span className="text-lg">📸</span>
+                        <span className="text-sm text-foreground">@{card.instagramHandle}</span>
+                      </div>
+                    )}
+                    {card.linkedinUrl && (
+                      <div className="flex items-center gap-3 bg-surface rounded-xl px-4 py-3 border border-border">
+                        <span className="text-lg">💼</span>
+                        <span className="text-sm text-foreground truncate">{card.linkedinUrl}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
