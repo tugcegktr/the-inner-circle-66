@@ -334,7 +334,16 @@ const ChatModal = ({
                 </div>
                 <button
                   disabled={!selectedReason}
-                  onClick={() => setReportSent(true)}
+                  onClick={() => {
+                    onReport({
+                      id: `r-${Date.now()}`,
+                      reportedName: match.name,
+                      reportedBy: "Ben",
+                      reason: selectedReason,
+                      timestamp: new Date().toLocaleString("tr-TR"),
+                    });
+                    setReportSent(true);
+                  }}
                   className="w-full py-3 rounded-xl bg-destructive text-destructive-foreground text-sm font-medium disabled:opacity-40 mb-2"
                 >
                   Şikayeti Gönder
