@@ -606,8 +606,8 @@ export const OnboardingScreen = () => {
           </div>
         )}
 
-        {/* ── STEP 6: Sosyal Profil ── */}
-        {step === 6 && (
+        {/* ── STEP 7: Sosyal Profil ── */}
+        {step === 7 && (
           <div className="space-y-6 animate-fade-up">
             <div>
               <h2 className="font-serif text-3xl text-foreground mb-1">Sosyal Profiller</h2>
