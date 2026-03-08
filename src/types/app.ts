@@ -17,6 +17,7 @@ export type AppScreen =
   | "admin";
 
 export type UserGender = "woman" | "man" | "bisexual" | "lesbian" | "gay";
+export type LookingFor = "dating" | "networking" | "friendship";
 export type ZodiacSign =
   | "Koç" | "Boğa" | "İkizler" | "Yengeç" | "Aslan" | "Başak"
   | "Terazi" | "Akrep" | "Yay" | "Oğlak" | "Kova" | "Balık";
