@@ -167,3 +167,44 @@ html {
   background: hsl(43 74% 57% / 0.3);
   color: hsl(45 15% 92%);
 }
+
+/* Screenshot prevention — blocks screen capture APIs where supported */
+.no-screenshot {
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Prevent image saving / right-click on profile photos */
+img.no-save {
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+  -webkit-touch-callout: none;
+}
+
+/* Disable context menu & drag on protected images */
+.profile-photo {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
+}
+
+/* Allow tap on parent but block image saving */
+.photo-wrapper {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Screen-capture CSS hint (Chrome supports this on Android) */
+@media (display-mode: standalone) {
+  .protected-content {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
