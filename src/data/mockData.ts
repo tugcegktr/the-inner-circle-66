@@ -248,12 +248,12 @@ export const ADMIN_FLAGGED_PROFILES = [
 
 // Mock members list for admin
 export const ADMIN_ALL_MEMBERS = [
-  { id: "u1", name: "Elif Şahin", age: 25, city: "İstanbul", gender: "woman" as const, profession: "Doktor", zodiac: "Terazi", instagram: "@elif.s", status: "approved", joinedAt: "1 gün önce" },
-  { id: "u2", name: "Zeynep Kaya", age: 29, city: "Ankara", gender: "woman" as const, profession: "Mühendis", zodiac: "Boğa", instagram: "@zeynep.k", status: "approved", joinedAt: "3 gün önce" },
-  { id: "u3", name: "Mert Demir", age: 31, city: "İzmir", gender: "man" as const, profession: "Avukat", zodiac: "Aslan", instagram: "@mertd", status: "approved", joinedAt: "5 gün önce" },
-  { id: "u4", name: "Ayşe Yıldız", age: 24, city: "Bursa", gender: "woman" as const, profession: "Girişimci", zodiac: "Kova", instagram: "@ayse.y", status: "approved", joinedAt: "1 hafta önce" },
-  { id: "u5", name: "Can Öztürk", age: 27, city: "Antalya", gender: "man" as const, profession: "Mimar", zodiac: "Akrep", instagram: "@can.o", status: "approved", joinedAt: "1 hafta önce" },
-  { id: "u6", name: "Selin Arslan", age: 26, city: "İstanbul", gender: "woman" as const, profession: "Tasarımcı", zodiac: "İkizler", instagram: "@selinar", status: "pending", joinedAt: "2 gün önce" },
-  { id: "u7", name: "Defne Çelik", age: 28, city: "İzmir", gender: "woman" as const, profession: "Psikolog", zodiac: "Yay", instagram: "@defne.c", status: "approved", joinedAt: "2 hafta önce" },
-  { id: "u8", name: "Emre Koç", age: 33, city: "Ankara", gender: "man" as const, profession: "Finansçı", zodiac: "Oğlak", instagram: "@emrek", status: "approved", joinedAt: "3 hafta önce" },
+  { id: "u1", name: "Elif Şahin", age: 25, city: "İstanbul", gender: "woman" as const, profession: "Doktor", zodiac: "Terazi", instagram: "@elif.s", linkedin: "linkedin.com/in/elifsahin", status: "approved", joinedAt: "1 gün önce" },
+  { id: "u2", name: "Zeynep Kaya", age: 29, city: "Ankara", gender: "woman" as const, profession: "Mühendis", zodiac: "Boğa", instagram: "@zeynep.k", linkedin: "linkedin.com/in/zeynepkaya", status: "approved", joinedAt: "3 gün önce" },
+  { id: "u3", name: "Mert Demir", age: 31, city: "İzmir", gender: "man" as const, profession: "Avukat", zodiac: "Aslan", instagram: "@mertd", linkedin: "", status: "approved", joinedAt: "5 gün önce" },
+  { id: "u4", name: "Ayşe Yıldız", age: 24, city: "Bursa", gender: "woman" as const, profession: "Girişimci", zodiac: "Kova", instagram: "@ayse.y", linkedin: "linkedin.com/in/ayseyildiz", status: "approved", joinedAt: "1 hafta önce" },
+  { id: "u5", name: "Can Öztürk", age: 27, city: "Antalya", gender: "man" as const, profession: "Mimar", zodiac: "Akrep", instagram: "@can.o", linkedin: "", status: "approved", joinedAt: "1 hafta önce" },
+  { id: "u6", name: "Selin Arslan", age: 26, city: "İstanbul", gender: "woman" as const, profession: "Tasarımcı", zodiac: "İkizler", instagram: "@selinar", linkedin: "linkedin.com/in/selinar", status: "pending", joinedAt: "2 gün önce" },
+  { id: "u7", name: "Defne Çelik", age: 28, city: "İzmir", gender: "woman" as const, profession: "Psikolog", zodiac: "Yay", instagram: "@defne.c", linkedin: "linkedin.com/in/defnecelik", status: "approved", joinedAt: "2 hafta önce" },
+  { id: "u8", name: "Emre Koç", age: 33, city: "Ankara", gender: "man" as const, profession: "Finansçı", zodiac: "Oğlak", instagram: "@emrek", linkedin: "linkedin.com/in/emrekoc", status: "approved", joinedAt: "3 hafta önce" },
 ];
