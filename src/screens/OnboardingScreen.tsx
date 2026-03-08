@@ -107,16 +107,19 @@ export const OnboardingScreen = () => {
   const togglePersonality = (val: string) =>
     setPersonality((prev) => prev.includes(val) ? prev.filter((x) => x !== val) : [...prev, val]);
 
+  const toggleMusic = (val: string) =>
+    setSelectedMusic((prev) => prev.includes(val) ? prev.filter((x) => x !== val) : [...prev, val]);
+
   const canProceed = () => {
     if (step === 0) return firstName.trim().length > 0 && city.trim() && height.trim() && profession.trim() && dob;
     if (step === 1) return interestedIn.length > 0;
-    if (step === 4) return photos.length >= 5;
+    if (step === 5) return photos.length >= 5;
     return true;
   };
 
   const btnLabel = () => {
     if (step === steps.length - 1) return "Başvuruyu Gönder";
-    if (step === 4 && photos.length < 5) return `${5 - photos.length} fotoğraf daha ekle`;
+    if (step === 5 && photos.length < 5) return `${5 - photos.length} fotoğraf daha ekle`;
     return "Devam Et →";
   };
 
