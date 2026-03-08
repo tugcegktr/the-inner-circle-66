@@ -227,7 +227,9 @@ export const SwipeCardComponent = ({ card, onSwipeLeft, onSwipeRight, isTop }: S
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Son Görülme Konumu</p>
-                    <p className="text-sm text-foreground font-medium">{card.city}</p>
+                    <p className="text-sm text-foreground font-medium">
+                      {card.district ? `${card.district}, ${card.city}` : card.city}
+                    </p>
                   </div>
                 </div>
               </div>

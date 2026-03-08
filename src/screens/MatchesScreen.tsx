@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useApp } from "@/context/AppContext";
 import { MOCK_MATCHES, MOCK_LIKED_BY, VIBE_TAGS } from "@/data/mockData";
-import { Match, VibeTag } from "@/types/app";
+import { Match, VibeTag, FlaggedReport } from "@/types/app";
 import { StarRating } from "@/components/StarRating";
 
 const BottomNav = ({ active, onNavigate }: { active: string; onNavigate: (s: any) => void }) => {
@@ -135,10 +135,12 @@ const ChatModal = ({
   match,
   onClose,
   onMessageSent,
+  onReport,
 }: {
   match: Match;
   onClose: () => void;
   onMessageSent: (matchId: string) => void;
+  onReport: (report: FlaggedReport) => void;
 }) => {
   const [messages, setMessages] = useState<{ from: "me" | "them"; text: string; time: string }[]>([
     { from: "them", text: "Merhaba! Nasılsın? 😊", time: "10:32" },
@@ -332,7 +334,16 @@ const ChatModal = ({
                 </div>
                 <button
                   disabled={!selectedReason}
-                  onClick={() => setReportSent(true)}
+                  onClick={() => {
+                    onReport({
+                      id: `r-${Date.now()}`,
+                      reportedName: match.name,
+                      reportedBy: "Ben",
+                      reason: selectedReason,
+                      timestamp: new Date().toLocaleString("tr-TR"),
+                    });
+                    setReportSent(true);
+                  }}
                   className="w-full py-3 rounded-xl bg-destructive text-destructive-foreground text-sm font-medium disabled:opacity-40 mb-2"
                 >
                   Şikayeti Gönder
@@ -348,13 +359,12 @@ const ChatModal = ({
 };
 
 export const MatchesScreen = () => {
-  const { currentUser, setScreen } = useApp();
+  const { currentUser, setScreen, addFlaggedReport } = useApp();
   const [activeTab, setActiveTab] = useState<"matches" | "likes">("matches");
   const [matches, setMatches] = useState<Match[]>(MOCK_MATCHES);
   const [vibeTagTarget, setVibeTagTarget] = useState<string | null>(null);
   const [rateTarget, setRateTarget] = useState<Match | null>(null);
   const [chatTarget, setChatTarget] = useState<Match | null>(null);
-  // Track sent message counts per match
   const [sentCounts, setSentCounts] = useState<Record<string, number>>({});
 
   const MIN_MESSAGES_TO_RATE = 5;
@@ -516,6 +526,7 @@ export const MatchesScreen = () => {
           match={chatTarget}
           onClose={() => setChatTarget(null)}
           onMessageSent={handleMessageSent}
+          onReport={addFlaggedReport}
         />
       )}
     </div>
