@@ -6,26 +6,81 @@ type PendingUser = typeof ADMIN_PENDING_USERS[0];
 type FlaggedUser = typeof ADMIN_FLAGGED_PROFILES[0];
 type Member = typeof ADMIN_ALL_MEMBERS[0];
 
-// Full profile modal shown when admin clicks any user
+// ── Photo avatar helper ──
+const MEMBER_PHOTOS: Record<string, string> = {
+  "u1": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&q=80",
+  "u2": "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=300&q=80",
+  "u3": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&q=80",
+  "u4": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=300&q=80",
+  "u5": "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=300&q=80",
+  "u6": "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=300&q=80",
+  "u7": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&q=80",
+  "u8": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&q=80",
+};
+const PENDING_PHOTOS: Record<string, string> = {
+  "p1": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=300&q=80",
+  "p2": "https://images.unsplash.com/photo-1502323703975-b9630fe78d8b?w=300&q=80",
+  "p3": "https://images.unsplash.com/photo-1463453091185-61582044d556?w=300&q=80",
+  "p4": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&q=80",
+};
+const FLAGGED_PHOTOS: Record<string, string> = {
+  "f1": "https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=300&q=80",
+  "f2": "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=300&q=80",
+  "f3": "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=300&q=80",
+};
+
+// Offensive messages for flagged profiles
+const FLAGGED_MESSAGES: Record<string, { sender: string; content: string; timestamp: string }[]> = {
+  "f1": [
+    { sender: "Ahmet D.", content: "Sana özel fotoğraflar atabilirim, neden reddettin?", timestamp: "2 gün önce" },
+    { sender: "Ahmet D.", content: "Cevap vermezsen hesabını şikayet ederim.", timestamp: "1 gün önce" },
+    { sender: "Ahmet D.", content: "Adresini biliyorum.", timestamp: "1 gün önce" },
+  ],
+  "f3": [
+    { sender: "Serkan M.", content: "Seninle görüşmek istiyorum, hayır deme.", timestamp: "6 gün önce" },
+    { sender: "Serkan M.", content: "Neden bloklamak zorunda kaldın, seni bulurum.", timestamp: "5 gün önce" },
+  ],
+};
+
+// Full profile modal
 const ProfileModal = ({
   title,
+  photo,
   profile,
   onClose,
   actions,
+  offensiveMessages,
 }: {
   title: string;
+  photo?: string;
   profile: Record<string, string | number | boolean | string[]>;
   onClose: () => void;
   actions?: React.ReactNode;
+  offensiveMessages?: { sender: string; content: string; timestamp: string }[];
 }) => (
   <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end justify-center" onClick={onClose}>
-    <div className="w-full max-w-sm glass rounded-t-3xl p-5 animate-fade-up max-h-[85vh] overflow-y-auto no-scrollbar" onClick={(e) => e.stopPropagation()}>
+    <div className="w-full max-w-sm glass rounded-t-3xl p-5 animate-fade-up max-h-[90vh] overflow-y-auto no-scrollbar" onClick={(e) => e.stopPropagation()}>
       <div className="w-12 h-1 bg-muted rounded-full mx-auto mb-4" />
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-serif text-xl text-foreground">{title}</h3>
         <button onClick={onClose} className="text-muted-foreground text-xs hover:text-gold transition-colors">✕ Kapat</button>
       </div>
+
+      {/* Photo */}
+      {photo && (
+        <div className="mb-4">
+          <img
+            src={photo}
+            alt={title}
+            className="w-full h-52 object-cover rounded-xl select-none"
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
+          />
+        </div>
+      )}
+
       <div className="luxury-divider mb-4" />
+
       <div className="space-y-2 mb-4">
         {Object.entries(profile).map(([key, val]) => {
           if (val === undefined || val === null || val === "") return null;
@@ -51,6 +106,26 @@ const ProfileModal = ({
           );
         })}
       </div>
+
+      {/* Offensive messages section */}
+      {offensiveMessages && offensiveMessages.length > 0 && (
+        <div className="mb-4">
+          <div className="luxury-divider mb-3" />
+          <p className="text-xs text-destructive uppercase tracking-wider font-medium mb-3">⚠️ Şikayet Edilen Mesajlar</p>
+          <div className="space-y-2">
+            {offensiveMessages.map((msg, i) => (
+              <div key={i} className="bg-destructive/10 border border-destructive/30 rounded-xl p-3">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs font-medium text-destructive">{msg.sender}</span>
+                  <span className="text-xs text-muted-foreground">{msg.timestamp}</span>
+                </div>
+                <p className="text-xs text-foreground leading-relaxed">"{msg.content}"</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {actions}
     </div>
   </div>
@@ -65,7 +140,6 @@ export const AdminScreen = () => {
   const [approvedCount, setApprovedCount] = useState(MOCK_APPROVED_COUNT);
   const [notif, setNotif] = useState<string | null>(null);
 
-  // Modal states
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [selectedPending, setSelectedPending] = useState<PendingUser | null>(null);
   const [selectedFlagged, setSelectedFlagged] = useState<FlaggedUser | null>(null);
@@ -106,7 +180,6 @@ export const AdminScreen = () => {
     setSelectedFlagged(null);
   };
 
-  // Stats
   const genderCounts = members.reduce((acc, m) => {
     const label = GENDER_OPTIONS.find((g) => g.value === m.gender)?.label ?? m.gender;
     acc[label] = (acc[label] || 0) + 1;
@@ -170,6 +243,7 @@ export const AdminScreen = () => {
       {selectedMember && (
         <ProfileModal
           title={selectedMember.name}
+          photo={MEMBER_PHOTOS[selectedMember.id]}
           profile={{
             name: selectedMember.name,
             age: selectedMember.age,
@@ -190,6 +264,7 @@ export const AdminScreen = () => {
       {selectedPending && (
         <ProfileModal
           title={selectedPending.name}
+          photo={PENDING_PHOTOS[selectedPending.id]}
           profile={{
             name: selectedPending.name,
             age: selectedPending.age,
@@ -236,6 +311,7 @@ export const AdminScreen = () => {
       {selectedFlagged && (
         <ProfileModal
           title={selectedFlagged.name}
+          photo={FLAGGED_PHOTOS[selectedFlagged.id]}
           profile={{
             name: selectedFlagged.name,
             age: selectedFlagged.age,
@@ -247,6 +323,7 @@ export const AdminScreen = () => {
             instagram: (selectedFlagged as any).instagram || "—",
             linkedin: (selectedFlagged as any).linkedin || "—",
           }}
+          offensiveMessages={FLAGGED_MESSAGES[selectedFlagged.id]}
           onClose={() => setSelectedFlagged(null)}
           actions={
             <div className="space-y-2">
@@ -394,8 +471,15 @@ export const AdminScreen = () => {
                 onClick={() => setSelectedMember(member)}
                 className="w-full bg-surface rounded-xl p-4 border border-border text-left hover:border-gold transition-colors"
               >
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex items-center gap-3">
+                  <img
+                    src={MEMBER_PHOTOS[member.id]}
+                    alt={member.name}
+                    className="w-12 h-12 rounded-full object-cover flex-shrink-0 border-2 border-border select-none"
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+                  <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <p className="text-foreground font-medium text-sm">{member.name}</p>
                       <span className={`text-xs px-1.5 py-0.5 rounded-full ${
@@ -407,12 +491,12 @@ export const AdminScreen = () => {
                     <p className="text-muted-foreground text-xs mt-0.5">
                       {member.age} · {member.city} · {member.profession}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-0.5">
+                    <p className="text-xs text-muted-foreground mt-0.5 truncate">
                       📸 {member.instagram}
                       {member.linkedin && <span className="ml-2">💼 {member.linkedin}</span>}
                     </p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right flex-shrink-0">
                     <p className="text-xs text-muted-foreground">{GENDER_OPTIONS.find((g) => g.value === member.gender)?.label}</p>
                     <p className="text-xs text-gold">{member.zodiac}</p>
                   </div>
@@ -438,8 +522,15 @@ export const AdminScreen = () => {
                   onClick={() => setSelectedPending(user)}
                   className="w-full bg-surface rounded-xl p-4 border border-border text-left hover:border-gold transition-colors"
                 >
-                  <div className="flex items-start justify-between">
-                    <div>
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={PENDING_PHOTOS[user.id]}
+                      alt={user.name}
+                      className="w-12 h-12 rounded-full object-cover flex-shrink-0 border-2 border-border select-none"
+                      draggable={false}
+                      onContextMenu={(e) => e.preventDefault()}
+                    />
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <p className="text-foreground font-medium text-sm">{user.name}</p>
                         {user.verified && (
@@ -448,12 +539,12 @@ export const AdminScreen = () => {
                       </div>
                       <p className="text-muted-foreground text-xs">{user.age} · {user.city} · {user.profession}</p>
                       <p className="text-muted-foreground text-xs">{user.gender} · Başvurdu: {user.submittedAt}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">
+                      <p className="text-xs text-muted-foreground mt-0.5 truncate">
                         📸 {(user as any).instagram}
                         {(user as any).linkedin && <span className="ml-2">💼 {(user as any).linkedin}</span>}
                       </p>
                     </div>
-                    <div className="flex flex-col items-end gap-1">
+                    <div className="flex flex-col items-end gap-1 flex-shrink-0">
                       <div className={`text-xs px-2 py-1 rounded-full ${user.socialLinked ? "bg-green-500/10 text-green-400" : "bg-destructive/10 text-destructive"}`}>
                         {user.socialLinked ? "✓ Sosyal" : "✕ Sosyal Yok"}
                       </div>
@@ -483,18 +574,25 @@ export const AdminScreen = () => {
                   onClick={() => setSelectedFlagged(user)}
                   className="w-full bg-surface rounded-xl p-4 border border-destructive/30 text-left hover:border-destructive transition-colors"
                 >
-                  <div className="flex items-start justify-between">
-                    <div>
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={FLAGGED_PHOTOS[user.id]}
+                      alt={user.name}
+                      className="w-12 h-12 rounded-full object-cover flex-shrink-0 border-2 border-destructive/40 select-none"
+                      draggable={false}
+                      onContextMenu={(e) => e.preventDefault()}
+                    />
+                    <div className="flex-1 min-w-0">
                       <p className="text-foreground font-medium text-sm">{user.name}</p>
                       <p className="text-muted-foreground text-xs">{user.age} · {user.city}</p>
-                      <div className="flex items-center gap-2 mt-1.5">
+                      <div className="flex items-center gap-2 mt-1">
                         <span className="text-xs bg-destructive/10 text-destructive px-2 py-0.5 rounded-full">{user.reason}</span>
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">
-                        {user.reportCount} şikayet · Şikayet eden: {(user as any).reportedBy}
+                        {user.reportCount} şikayet · {(user as any).reportedBy}
                       </p>
                     </div>
-                    <span className="text-xs text-destructive">→ İncele</span>
+                    <span className="text-xs text-destructive flex-shrink-0">→ İncele</span>
                   </div>
                 </button>
               ))

@@ -119,12 +119,15 @@ export const LoginScreen = () => {
               </div>
 
               <input
-                type="number"
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 maxLength={6}
                 value={otp}
-                onChange={(e) => setOtp(e.target.value.slice(0, 6))}
-                className="w-full bg-muted rounded-xl px-4 py-3 border border-border text-foreground text-center tracking-widest text-lg outline-none focus:border-gold transition-colors"
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                className="w-full bg-muted rounded-xl px-4 py-3 border border-border text-foreground text-center tracking-widest text-lg outline-none focus:border-gold transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 placeholder="6 haneli kodu gir"
+                style={{ MozAppearance: "textfield" } as React.CSSProperties}
               />
 
               <button
