@@ -526,6 +526,7 @@ export const MatchesScreen = () => {
           match={chatTarget}
           onClose={() => setChatTarget(null)}
           onMessageSent={handleMessageSent}
+          onReport={addFlaggedReport}
         />
       )}
     </div>
