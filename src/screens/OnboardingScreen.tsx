@@ -445,8 +445,8 @@ export const OnboardingScreen = () => {
           </div>
         )}
 
-        {/* ── STEP 3: İlgi Alanları ── */}
-        {step === 3 && (
+        {/* ── STEP 4: İlgi Alanları ── */}
+        {step === 4 && (
           <div className="space-y-6 animate-fade-up">
             <div>
               <h2 className="font-serif text-3xl text-foreground mb-1">İlgi Alanların</h2>
