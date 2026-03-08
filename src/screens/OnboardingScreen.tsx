@@ -52,7 +52,10 @@ export const OnboardingScreen = () => {
   const [profession, setProfession] = useState(currentUser.profession || "");
   const [bio, setBio] = useState(currentUser.bio);
 
-  // Step 1 – Gender
+  // Step 1 – Looking For
+  const [lookingFor, setLookingFor] = useState<LookingFor[]>((currentUser.lookingFor as LookingFor[]) || []);
+
+  // Step 2 – Gender
   const [gender, setGender] = useState<UserGender>(currentUser.gender);
   const [interestedIn, setInterestedIn] = useState<UserGender[]>(currentUser.interestedIn);
 
