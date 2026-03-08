@@ -157,6 +157,7 @@ export const MOCK_LIKED_BY: LikedByUser[] = [
     name: "Sophie",
     photo: "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?w=300&q=80",
     isVerified: true,
+    isSuperVibe: true,
   },
   {
     id: "l2",
