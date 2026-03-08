@@ -142,7 +142,7 @@ const ChatModal = ({
   onMessageSent: (matchId: string) => void;
   onReport: (report: FlaggedReport) => void;
 }) => {
-  const [messages, setMessages] = useState<{ from: "me" | "them"; text: string; time: string }[]>([
+  const [messages, setMessages] = useState<{ from: "me" | "them"; text?: string; image?: string; audio?: boolean; time: string }[]>([
     { from: "them", text: "Merhaba! Nasılsın? 😊", time: "10:32" },
   ]);
   const [input, setInput] = useState("");
@@ -152,6 +152,10 @@ const ChatModal = ({
   const [selectedReason, setSelectedReason] = useState("");
   const [unmatched, setUnmatched] = useState(false);
   const [deleted, setDeleted] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordSeconds, setRecordSeconds] = useState(0);
+  const recordTimerRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
+  const photoInputRef = React.useRef<HTMLInputElement>(null);
 
   const nowStr = () => {
     const d = new Date();
