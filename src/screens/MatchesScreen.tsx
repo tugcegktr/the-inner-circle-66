@@ -573,11 +573,11 @@ export const MatchesScreen = () => {
             })}
           </div>
         ) : (
-          <div>
+        <div>
             {!currentUser.isPremium && (
               <div className="glass-gold rounded-xl p-4 mb-4">
-                <p className="text-sm font-medium text-foreground mb-1">🔒 Gizlendi</p>
-                <p className="text-xs text-muted-foreground mb-3">{MOCK_LIKED_BY.length} üye profilini beğendi. Görmek için Premium'a geç.</p>
+                <p className="text-sm font-medium text-foreground mb-1">🔒 Profil fotoğrafları gizlendi</p>
+                <p className="text-xs text-muted-foreground mb-3">{MOCK_LIKED_BY.length} üye ilgi gösterdi. Fotoğrafları görmek için Premium'a geç.</p>
                 <button onClick={() => setScreen("premium")}
                   className="w-full py-2.5 rounded-lg gold-gradient text-primary-foreground text-xs font-medium tracking-wider">
                   Premium Gold ile Aç ✦
@@ -586,16 +586,54 @@ export const MatchesScreen = () => {
             )}
             <div className="space-y-3">
               {MOCK_LIKED_BY.map((user) => (
-                <div key={user.id} className={`bg-surface rounded-xl p-4 border border-border flex items-center gap-4 ${!currentUser.isPremium ? "opacity-70" : ""}`}>
-                  <img src={user.photo} alt="" className={`w-14 h-14 rounded-full object-cover ${!currentUser.isPremium ? "blur-premium" : ""}`} />
-                  <div className="flex-1">
-                    <p className={`font-medium text-sm ${!currentUser.isPremium ? "blur-premium select-none" : "text-foreground"}`}>
-                      {currentUser.isPremium ? user.name : "Gizli"}
-                    </p>
-                    <p className="text-muted-foreground text-xs">Profilini beğendi</p>
+                <div key={user.id} className={`bg-surface rounded-xl p-4 border flex items-center gap-4 ${
+                  user.isSuperVibe ? "border-gold/50" : "border-border"
+                }`}>
+                  {/* Photo – always shown but blurred for non-premium */}
+                  <div className="relative flex-shrink-0">
+                    <img
+                      src={user.photo}
+                      alt=""
+                      className={`w-14 h-14 rounded-full object-cover transition-all ${
+                        !currentUser.isPremium ? "blur-[6px] scale-110" : ""
+                      }`}
+                    />
+                    {user.isSuperVibe && (
+                      <div
+                        className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-[10px] border-2 border-background"
+                        style={{ background: "linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(48,90%,65%) 100%)" }}
+                      >
+                        ⚡
+                      </div>
+                    )}
                   </div>
-                  {user.isVerified && currentUser.isPremium && (
-                    <div className="verified-badge w-5 h-5 rounded-full flex items-center justify-center text-xs text-primary-foreground font-bold">✓</div>
+
+                  <div className="flex-1 min-w-0">
+                    {/* Name – always visible */}
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <p className="font-medium text-sm text-foreground truncate">{user.name}</p>
+                      {user.isVerified && (
+                        <div className="verified-badge w-4 h-4 rounded-full flex items-center justify-center text-[10px] text-primary-foreground font-bold flex-shrink-0">✓</div>
+                      )}
+                    </div>
+                    {/* Action label */}
+                    {user.isSuperVibe ? (
+                      <p className="text-xs font-medium flex items-center gap-1" style={{ color: "hsl(var(--gold))" }}>
+                        <span>⚡</span> Super Vibe gönderdi
+                      </p>
+                    ) : (
+                      <p className="text-muted-foreground text-xs">Profilini beğendi</p>
+                    )}
+                  </div>
+
+                  {/* Premium CTA for blurred photos */}
+                  {!currentUser.isPremium && (
+                    <button
+                      onClick={() => setScreen("premium")}
+                      className="flex-shrink-0 text-xs px-2.5 py-1.5 rounded-lg gold-gradient text-primary-foreground font-medium"
+                    >
+                      Gör ✦
+                    </button>
                   )}
                 </div>
               ))}

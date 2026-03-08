@@ -106,4 +106,5 @@ export interface LikedByUser {
   name: string;
   photo: string;
   isVerified: boolean;
+  isSuperVibe?: boolean;
 }
