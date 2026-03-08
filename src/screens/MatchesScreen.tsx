@@ -359,13 +359,12 @@ const ChatModal = ({
 };
 
 export const MatchesScreen = () => {
-  const { currentUser, setScreen } = useApp();
+  const { currentUser, setScreen, addFlaggedReport } = useApp();
   const [activeTab, setActiveTab] = useState<"matches" | "likes">("matches");
   const [matches, setMatches] = useState<Match[]>(MOCK_MATCHES);
   const [vibeTagTarget, setVibeTagTarget] = useState<string | null>(null);
   const [rateTarget, setRateTarget] = useState<Match | null>(null);
   const [chatTarget, setChatTarget] = useState<Match | null>(null);
-  // Track sent message counts per match
   const [sentCounts, setSentCounts] = useState<Record<string, number>>({});
 
   const MIN_MESSAGES_TO_RATE = 5;
