@@ -71,6 +71,7 @@ export interface SwipeCard {
   gender: UserGender;
   instagramHandle?: string;
   linkedinUrl?: string;
+  musicTaste?: string[];
 }
 
 export interface FlaggedReport {
