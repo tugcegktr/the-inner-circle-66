@@ -141,7 +141,7 @@ export const OnboardingScreen = () => {
       hobbyPreferences: selectedInterests,
       personalityTags: personality,
       interests: selectedInterests.slice(0, 3),
-      musicTaste: [],
+      musicTaste: selectedMusic,
       zodiacSign: zodiac,
       risingSign: rising,
       instagramHandle: instagram,
