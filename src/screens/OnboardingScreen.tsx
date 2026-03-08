@@ -262,8 +262,75 @@ export const OnboardingScreen = () => {
           </div>
         )}
 
-        {/* ── STEP 1: Cinsiyet ── */}
+        {/* ── STEP 1: Ne Arıyorsun ── */}
         {step === 1 && (
+          <div className="space-y-6 animate-fade-up">
+            <div>
+              <h2 className="font-serif text-3xl text-foreground mb-1">Ne Arıyorsun?</h2>
+              <p className="text-muted-foreground text-sm">Birden fazla seçebilirsin — profilinde gösterilir</p>
+            </div>
+
+            {[
+              {
+                value: "dating" as LookingFor,
+                emoji: "💛",
+                title: "Dating",
+                desc: "Anlamlı bir ilişki veya romantik bağ arıyorum.",
+              },
+              {
+                value: "networking" as LookingFor,
+                emoji: "🤝",
+                title: "Networking",
+                desc: "Profesyonel bağlantılar ve iş birliği fırsatları arıyorum.",
+              },
+              {
+                value: "friendship" as LookingFor,
+                emoji: "✨",
+                title: "Friendship",
+                desc: "Kaliteli arkadaşlıklar ve sosyal çevre genişletmek istiyorum.",
+              },
+            ].map(({ value, emoji, title, desc }) => {
+              const isSelected = lookingFor.includes(value);
+              return (
+                <button
+                  key={value}
+                  onClick={() =>
+                    setLookingFor((prev) =>
+                      prev.includes(value) ? prev.filter((x) => x !== value) : [...prev, value]
+                    )
+                  }
+                  className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl border-2 transition-all text-left ${
+                    isSelected ? "glass-gold border-gold" : "bg-surface border-border hover:border-gold/50"
+                  }`}
+                >
+                  <div
+                    className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 transition-all ${
+                      isSelected ? "gold-gradient" : "bg-muted"
+                    }`}
+                  >
+                    {emoji}
+                  </div>
+                  <div className="flex-1">
+                    <p className={`font-semibold text-sm mb-0.5 ${isSelected ? "text-foreground" : "text-muted-foreground"}`}>
+                      {title}
+                    </p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
+                  </div>
+                  <div
+                    className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center flex-shrink-0 ${
+                      isSelected ? "border-gold gold-gradient" : "border-border"
+                    }`}
+                  >
+                    {isSelected && <span className="text-primary-foreground text-xs font-bold">✓</span>}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* ── STEP 2: Cinsiyet ── */}
+        {step === 2 && (
           <div className="space-y-8 animate-fade-up">
             <div>
               <h2 className="font-serif text-3xl text-foreground mb-1">Cinsiyet Bilgileri</h2>
