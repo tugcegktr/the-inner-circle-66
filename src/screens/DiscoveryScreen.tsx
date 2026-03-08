@@ -204,6 +204,7 @@ export const DiscoveryScreen = () => {
   const maxSwipes = isPremium ? 50 : 15;
 
   const [cards, setCards] = useState<SwipeCard[]>(MOCK_SWIPE_CARDS);
+  const [passedCards, setPassedCards] = useState<SwipeCard[]>([]); // sola kaydırılanlar
   const [showSuperVibe, setShowSuperVibe] = useState(false);
   const [showSuperVibePaywall, setShowSuperVibePaywall] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -213,21 +214,22 @@ export const DiscoveryScreen = () => {
 
   const swipesLeft = currentUser.dailySwipesLeft;
 
-  // Apply filters to cards
-  const baseFiltered = cards.filter((card) => {
+  // Filtre uygula — tüm kalan kartlara
+  const applyFilter = (pool: SwipeCard[]) => pool.filter((card) => {
     const userAge = currentUser.age;
     const ageMin = filters.ageMin === 0 ? userAge - 5 : filters.ageMin;
     const ageMax = filters.ageMax === 99 ? userAge + 5 : filters.ageMax;
     if (card.age < ageMin || card.age > ageMax) return false;
     if (isPremium && filters.zodiac && card.zodiacSign !== filters.zodiac) return false;
     if (isPremium && filters.interests.length > 0) {
-      const hasInterest = filters.interests.some((i) => card.interests.includes(i));
-      if (!hasInterest) return false;
+      if (!filters.interests.some((i) => card.interests.includes(i))) return false;
     }
     return true;
   });
 
-  // Networking önceliği: kullanıcı Networking seçtiyse aynı mesleği öne çıkar
+  const baseFiltered = applyFilter(cards);
+
+  // Networking önceliği: aynı mesleği öne çıkar
   const isNetworker = currentUser.lookingFor?.includes("networking");
   const filteredCards = isNetworker && currentUser.profession
     ? [
@@ -252,17 +254,29 @@ export const DiscoveryScreen = () => {
 
   const hasActiveFilters = filters.ageMin !== 0 || filters.ageMax !== 99 || filters.zodiac || filters.interests.length > 0;
 
+  // Tüm kartlar bittiğinde filtreli pasif kartları geri getir
+  const handleRediscoverPassed = () => {
+    const pool = applyFilter(passedCards);
+    const toRestore = pool.length > 0 ? pool : passedCards;
+    setCards(toRestore);
+    setPassedCards([]);
+    setCurrentUser({ ...currentUser, dailySwipesLeft: maxSwipes });
+  };
+
   const handleSwipeLeft = () => {
     if (filteredCards.length === 0 || swipesLeft <= 0) return;
-    setLastSwiped(filteredCards[0]);
-    setCards((c) => c.filter((_, i) => i !== 0));
+    const swiped = filteredCards[0];
+    setLastSwiped(swiped);
+    setPassedCards((p) => [...p, swiped]);
+    setCards((c) => c.filter((card) => card.id !== swiped.id));
     setCurrentUser({ ...currentUser, dailySwipesLeft: Math.max(0, swipesLeft - 1) });
   };
 
   const handleSwipeRight = () => {
     if (filteredCards.length === 0 || swipesLeft <= 0) return;
-    setLastSwiped(filteredCards[0]);
-    setCards((c) => c.filter((_, i) => i !== 0));
+    const swiped = filteredCards[0];
+    setLastSwiped(swiped);
+    setCards((c) => c.filter((card) => card.id !== swiped.id));
     setCurrentUser({ ...currentUser, dailySwipesLeft: Math.max(0, swipesLeft - 1) });
   };
 
@@ -328,15 +342,28 @@ export const DiscoveryScreen = () => {
                 ? `The Club, günde ${maxSwipes} profil sunar. Kalite, niceliğin önünde.`
                 : "Filtrelerini genişleterek daha fazla profil bulabilirsin."}
             </p>
+
+            {/* Filtre varsa temizle */}
             {filteredCards.length === 0 && swipesLeft > 0 && (
               <button onClick={() => setFilters(DEFAULT_FILTERS)}
                 className="py-3 px-6 rounded-xl gold-gradient text-primary-foreground text-sm font-medium mb-3">
                 Filtreleri Temizle
               </button>
             )}
+
+            {/* Reddedilenleri tekrar göster */}
+            {passedCards.length > 0 && (
+              <button
+                onClick={handleRediscoverPassed}
+                className="py-3 px-6 rounded-xl gold-gradient text-primary-foreground text-sm font-medium mb-3 w-full max-w-xs"
+              >
+                ✦ Keşfet ({passedCards.length} profil)
+              </button>
+            )}
+
             <button
               onClick={() => setScreen("matches")}
-              className="py-3 px-6 rounded-xl border border-border text-muted-foreground text-sm font-medium"
+              className="py-3 px-6 rounded-xl border border-border text-muted-foreground text-sm font-medium w-full max-w-xs"
             >
               Eşleşmelerini Gör →
             </button>
