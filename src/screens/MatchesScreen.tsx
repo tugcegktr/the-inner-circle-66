@@ -129,6 +129,8 @@ const RateMatchModal = ({ match, onClose, onRate }: {
 };
 
 // ── Chat Screen ──
+const REPORT_REASONS = ["Sahte hesap", "Taciz içerikli mesaj", "Uygunsuz fotoğraf"];
+
 const ChatModal = ({
   match,
   onClose,
@@ -142,6 +144,12 @@ const ChatModal = ({
     { from: "them", text: "Merhaba! Nasılsın? 😊", time: "10:32" },
   ]);
   const [input, setInput] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
+  const [showReport, setShowReport] = useState(false);
+  const [reportSent, setReportSent] = useState(false);
+  const [selectedReason, setSelectedReason] = useState("");
+  const [unmatched, setUnmatched] = useState(false);
+  const [deleted, setDeleted] = useState(false);
 
   const nowStr = () => {
     const d = new Date();
@@ -172,13 +180,28 @@ const ChatModal = ({
     }, 1200);
   };
 
+  if (unmatched || deleted) {
+    return (
+      <div className="fixed inset-0 bg-background z-50 flex flex-col items-center justify-center max-w-sm mx-auto p-8 text-center">
+        <div className="text-5xl mb-4">{unmatched ? "💔" : "🗑"}</div>
+        <h3 className="font-serif text-2xl mb-2">{unmatched ? "Eşleşme Kaldırıldı" : "Konuşma Silindi"}</h3>
+        <p className="text-muted-foreground text-sm mb-6">
+          {unmatched ? `${match.name} ile eşleşmen kaldırıldı.` : "Konuşma geçmişi silindi."}
+        </p>
+        <button onClick={onClose} className="w-full py-3 rounded-xl gold-gradient text-primary-foreground text-sm font-medium">
+          Geri Dön
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 bg-background z-50 flex flex-col max-w-sm mx-auto">
       {/* Header */}
-      <div className="glass border-b border-border px-5 pt-10 pb-4 flex items-center gap-4 flex-shrink-0">
-        <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors text-xl leading-none">←</button>
-        <img src={match.photo} alt={match.name} className="w-10 h-10 rounded-full object-cover border-2 border-gold/30" />
-        <div className="flex-1">
+      <div className="glass border-b border-border px-5 pt-10 pb-4 flex items-center gap-3 flex-shrink-0">
+        <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors text-xl leading-none flex-shrink-0">←</button>
+        <img src={match.photo} alt={match.name} className="w-10 h-10 rounded-full object-cover border-2 border-gold/30 flex-shrink-0" />
+        <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
             <p className="text-foreground font-medium text-sm">{match.name}</p>
             {match.isVerified && (
@@ -189,9 +212,50 @@ const ChatModal = ({
         </div>
         {sentCount < 5 && (
           <span className="text-xs text-muted-foreground bg-surface border border-border px-2 py-1 rounded-full flex-shrink-0">
-            {sentCount}/5 mesaj
+            {sentCount}/5
           </span>
         )}
+        {/* 3-dot menu */}
+        <div className="relative flex-shrink-0">
+          <button
+            onClick={() => setShowMenu((v) => !v)}
+            className="w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors rounded-full hover:bg-surface"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/>
+            </svg>
+          </button>
+          {showMenu && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} />
+              <div className="absolute right-0 top-10 z-50 glass rounded-xl border border-border shadow-luxury w-48 overflow-hidden animate-scale-in">
+                <button
+                  onClick={() => { setShowMenu(false); setUnmatched(true); }}
+                  className="w-full px-4 py-3 text-left text-sm text-foreground hover:bg-surface transition-colors flex items-center gap-2"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                  Eşleşmeyi Kaldır
+                </button>
+                <div className="h-px bg-border" />
+                <button
+                  onClick={() => { setShowMenu(false); setShowReport(true); }}
+                  className="w-full px-4 py-3 text-left text-sm text-destructive hover:bg-destructive/10 transition-colors flex items-center gap-2"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/></svg>
+                  Şikayet Et
+                </button>
+                <div className="h-px bg-border" />
+                <button
+                  onClick={() => { setShowMenu(false); setDeleted(true); }}
+                  className="w-full px-4 py-3 text-left text-sm text-muted-foreground hover:bg-surface transition-colors flex items-center gap-2"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+                  Konuşmayı Sil
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Messages */}
@@ -234,6 +298,51 @@ const ChatModal = ({
           </svg>
         </button>
       </div>
+
+      {/* Report Sheet */}
+      {showReport && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end justify-center" onClick={() => setShowReport(false)}>
+          <div className="w-full max-w-sm glass rounded-t-3xl p-6 animate-fade-up" onClick={(e) => e.stopPropagation()}>
+            <div className="w-12 h-1 bg-muted rounded-full mx-auto mb-5" />
+            {reportSent ? (
+              <div className="text-center py-4">
+                <div className="text-4xl mb-3">✓</div>
+                <h3 className="font-serif text-xl mb-2">Şikayet Gönderildi</h3>
+                <p className="text-muted-foreground text-sm mb-6">Ekibimiz en kısa sürede inceleyecek.</p>
+                <button onClick={() => { setShowReport(false); setReportSent(false); }} className="w-full py-3 rounded-xl gold-gradient text-primary-foreground text-sm font-medium">Tamam</button>
+              </div>
+            ) : (
+              <>
+                <h3 className="font-serif text-xl mb-1">Şikayet Et</h3>
+                <p className="text-muted-foreground text-sm mb-5">{match.name} hakkında şikayet sebebini seç</p>
+                <div className="space-y-2 mb-5">
+                  {REPORT_REASONS.map((reason) => (
+                    <button
+                      key={reason}
+                      onClick={() => setSelectedReason(reason)}
+                      className={`w-full px-4 py-3 rounded-xl text-sm text-left transition-all border ${
+                        selectedReason === reason
+                          ? "border-destructive bg-destructive/10 text-destructive"
+                          : "border-border bg-surface text-foreground hover:border-destructive/50"
+                      }`}
+                    >
+                      {reason}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  disabled={!selectedReason}
+                  onClick={() => setReportSent(true)}
+                  className="w-full py-3 rounded-xl bg-destructive text-destructive-foreground text-sm font-medium disabled:opacity-40 mb-2"
+                >
+                  Şikayeti Gönder
+                </button>
+                <button onClick={() => setShowReport(false)} className="w-full py-3 text-muted-foreground text-sm">İptal</button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
