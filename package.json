@@ -15,10 +15,9 @@
     "ionic:cap-add-android": "npx cap add android"
   },
   "dependencies": {
-    "@capacitor/android": "^8.2.0",
-    "@capacitor/cli": "^8.2.0",
-    "@capacitor/core": "^8.2.0",
-    "@capacitor/ios": "^8.2.0",
+    "@capacitor/android": "6.1.0",
+    "@capacitor/core": "6.1.0",
+    "@capacitor/ios": "6.1.0",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
