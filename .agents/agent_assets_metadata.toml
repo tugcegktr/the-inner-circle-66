@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "4NcMtEtXASGJGNRYodBSX"
+uri = "file://ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png"
+type = "image"
+title = "The Club App Icon (1024x1024)"

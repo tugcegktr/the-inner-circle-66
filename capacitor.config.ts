@@ -5,7 +5,8 @@ const config: CapacitorConfig = {
   appName: 'The Club',
   webDir: 'dist',
   server: {
-    androidScheme: 'https'
+    androidScheme: 'https',
+    iosScheme: 'https'
   }
 };
 
