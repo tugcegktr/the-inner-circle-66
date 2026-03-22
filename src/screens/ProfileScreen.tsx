@@ -25,9 +25,27 @@ const BottomNav = ({ active, onNavigate }: { active: string; onNavigate: (s: any
 };
 
 export const ProfileScreen = () => {
-  const { currentUser, setCurrentUser, setScreen } = useApp();
+  const { currentUser, setCurrentUser, setScreen, registeredUserId } = useApp();
   const [locationVisible, setLocationVisible] = useState(true);
   const [profileHidden, setProfileHidden] = useState(false);
+  const [showFreezeConfirm, setShowFreezeConfirm] = useState(false);
+  const [freezeLoading, setFreezeLoading] = useState(false);
+
+  const handleFreeze = async () => {
+    setFreezeLoading(true);
+    try {
+      if (registeredUserId) {
+        await fetch("/api/users/freeze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: registeredUserId }),
+        });
+      }
+    } catch { }
+    setShowFreezeConfirm(false);
+    setFreezeLoading(false);
+    setScreen("login");
+  };
 
   const publicRating = currentUser.averageRating ?? 4.3;
   const ratingCount = currentUser.ratingCount ?? 7;
@@ -293,11 +311,51 @@ export const ProfileScreen = () => {
               className="w-full py-3 text-muted-foreground text-sm hover:text-foreground transition-colors">
               Çıkış Yap
             </button>
+            <button
+              data-testid="button-freeze-account"
+              onClick={() => setShowFreezeConfirm(true)}
+              className="w-full py-3 text-destructive/70 text-xs hover:text-destructive transition-colors"
+            >
+              Hesabı Dondur
+            </button>
           </div>
         </div>
       </div>
 
       <BottomNav active="profile" onNavigate={setScreen} />
+
+      {/* Freeze Confirmation Modal */}
+      {showFreezeConfirm && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end justify-center">
+          <div className="w-full max-w-sm glass rounded-t-3xl p-8 animate-fade-up">
+            <div className="w-12 h-1 bg-muted rounded-full mx-auto mb-6" />
+            <div className="text-center mb-6">
+              <div className="w-14 h-14 rounded-full bg-destructive/10 border border-destructive/30 flex items-center justify-center text-2xl mx-auto mb-4">
+                🧊
+              </div>
+              <h3 className="font-serif text-xl text-foreground mb-2">Hesabı Dondur</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                Hesabın dondurulacak. Profilin gizlenecek, üyeliğin pasife alınacak ve otomatik olarak çıkış yapılacak.
+                Tekrar giriş yaptığında yeni üyelik ödemesi yapman gerekecek.
+              </p>
+            </div>
+            <button
+              data-testid="button-confirm-freeze"
+              onClick={handleFreeze}
+              disabled={freezeLoading}
+              className="w-full py-4 rounded-xl bg-destructive text-destructive-foreground text-sm font-medium mb-3 disabled:opacity-50 transition-all active:scale-95"
+            >
+              {freezeLoading ? "İşleniyor…" : "Evet, Hesabı Dondur"}
+            </button>
+            <button
+              onClick={() => setShowFreezeConfirm(false)}
+              className="w-full py-3 text-muted-foreground text-sm"
+            >
+              Vazgeç
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

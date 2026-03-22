@@ -43,14 +43,60 @@ const defaultUser: UserProfile = {
   dailySwipesLeft: 15,
 };
 
+const STORAGE_KEY = "theclub_session";
+
+const loadSession = () => {
+  try {
+    const s = localStorage.getItem(STORAGE_KEY);
+    return s ? JSON.parse(s) : null;
+  } catch { return null; }
+};
+
+const saveSession = (data: object) => {
+  try {
+    const current = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...current, ...data }));
+  } catch { }
+};
+
+const clearSession = () => {
+  try { localStorage.removeItem(STORAGE_KEY); } catch { }
+};
+
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [screen, setScreen] = useState<AppScreen>("login");
-  const [currentUser, setCurrentUser] = useState<UserProfile>(defaultUser);
+  const stored = loadSession();
+
+  const [screen, setScreenState] = useState<AppScreen>(stored?.screen ?? "login");
+  const [currentUser, setCurrentUserState] = useState<UserProfile>(stored?.currentUser ?? defaultUser);
   const [flaggedReports, setFlaggedReports] = useState<FlaggedReport[]>([]);
-  const [registeredPhone, setRegisteredPhone] = useState<string>("");
-  const [registeredUserId, setRegisteredUserId] = useState<number | null>(null);
+  const [registeredPhone, setRegisteredPhoneState] = useState<string>(stored?.registeredPhone ?? "");
+  const [registeredUserId, setRegisteredUserIdState] = useState<number | null>(stored?.registeredUserId ?? null);
+
+  const setScreen = (s: AppScreen) => {
+    setScreenState(s);
+    if (s === "login") {
+      clearSession();
+    } else {
+      saveSession({ screen: s });
+    }
+  };
+
+  const setCurrentUser = (u: UserProfile) => {
+    setCurrentUserState(u);
+    saveSession({ currentUser: u });
+  };
+
+  const setRegisteredPhone = (p: string) => {
+    setRegisteredPhoneState(p);
+    saveSession({ registeredPhone: p });
+  };
+
+  const setRegisteredUserId = (id: number | null) => {
+    setRegisteredUserIdState(id);
+    saveSession({ registeredUserId: id });
+  };
 
   const addFlaggedReport = (r: FlaggedReport) => {
     setFlaggedReports((prev) => [r, ...prev]);

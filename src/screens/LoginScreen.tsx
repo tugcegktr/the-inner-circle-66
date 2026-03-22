@@ -4,8 +4,7 @@ import heroBg from "@/assets/hero-bg.jpg";
 
 const DiamondLogo = () => (
   <svg viewBox="0 0 100 100" className="w-8 h-8" aria-hidden="true">
-    <circle cx="50" cy="50" r="46" fill="none" stroke="#C9A84C" strokeWidth="1.5" />
-    <polygon points="50,32 64,50 50,68 36,50" fill="#C9A84C" />
+    <polygon points="50,28 68,50 50,72 32,50" fill="#C9A84C" />
   </svg>
 );
 
@@ -43,6 +42,9 @@ export const LoginScreen = () => {
 
       if (user.status === "approved") {
         setScreen("onboarding-basic");
+      } else if (user.status === "frozen") {
+        setError("Hesabınız dondurulmuş. Yeniden aktifleştirmek için üyelik seçin.");
+        setTimeout(() => { setError(null); setScreen("premium"); }, 2200);
       } else {
         setScreen("waiting-approval");
       }

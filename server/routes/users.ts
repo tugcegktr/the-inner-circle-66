@@ -49,4 +49,40 @@ router.get('/status', async (req: Request, res: Response) => {
   }
 });
 
+router.post('/freeze', async (req: Request, res: Response) => {
+  const { userId } = req.body ?? {};
+  if (!userId) return res.status(400).json({ error: 'userId gerekli' });
+
+  try {
+    const result = await pool.query(
+      `UPDATE club_users SET status = 'frozen', subscription_status = 'none', updated_at = NOW()
+       WHERE id = $1 RETURNING id, phone, status`,
+      [userId]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
+    return res.json({ success: true, user: result.rows[0] });
+  } catch (err) {
+    console.error('[users] freeze error:', err);
+    return res.status(500).json({ error: 'Sunucu hatası' });
+  }
+});
+
+router.post('/activate', async (req: Request, res: Response) => {
+  const { userId } = req.body ?? {};
+  if (!userId) return res.status(400).json({ error: 'userId gerekli' });
+
+  try {
+    const result = await pool.query(
+      `UPDATE club_users SET status = 'approved', subscription_status = 'active', updated_at = NOW()
+       WHERE id = $1 RETURNING id, phone, status`,
+      [userId]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
+    return res.json({ success: true, user: result.rows[0] });
+  } catch (err) {
+    console.error('[users] activate error:', err);
+    return res.status(500).json({ error: 'Sunucu hatası' });
+  }
+});
+
 export default router;

@@ -26,6 +26,7 @@ export const SwipeCardComponent = ({
   const [dragX, setDragX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [swipeDir, setSwipeDir] = useState<"left" | "right" | null>(null);
+  const [lightboxPhoto, setLightboxPhoto] = useState<string | null>(null);
 
   // Track gesture origin to distinguish horizontal swipe vs vertical scroll
   const startXRef = useRef(0);
@@ -216,37 +217,6 @@ export const SwipeCardComponent = ({
               <span>{ZODIAC_SYMBOLS[card.zodiacSign]} {card.zodiacSign}</span>
             </div>
 
-            {/* Star rating on cover */}
-            {card.averageRating != null && card.ratingCount != null && (
-              <div className="flex items-center gap-1.5 mb-2">
-                <div className="flex gap-0.5">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <span
-                      key={star}
-                      className={`text-sm leading-none ${star <= Math.round(card.averageRating!) ? "text-gold" : "text-white/40"}`}
-                    >
-                      ★
-                    </span>
-                  ))}
-                </div>
-                <span className="text-white/80 text-xs">{card.averageRating.toFixed(1)}</span>
-              </div>
-            )}
-
-            {/* Vibe tags preview */}
-            {card.vibeTags.length > 0 && (
-              <div className="flex flex-wrap gap-1 mb-3">
-                {card.vibeTags.slice(0, 2).map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-[10px] gold-gradient text-primary-foreground px-2 py-0.5 rounded-full font-medium"
-                  >
-                    ✦ {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-
             {/* Scroll hint */}
             <div className="flex items-center gap-1.5">
               <span className="text-white/50 text-[10px] tracking-wider uppercase">Aşağı kaydır</span>
@@ -254,6 +224,28 @@ export const SwipeCardComponent = ({
             </div>
           </div>
         </div>
+
+        {/* ── Star rating + vibe tags (below cover, above bio) ── */}
+        {(card.averageRating != null || card.vibeTags.length > 0) && (
+          <div className="flex flex-wrap items-center gap-2 px-5 py-3 bg-background border-b border-border/50">
+            {card.averageRating != null && card.ratingCount != null && (
+              <div className="flex items-center gap-1.5">
+                <div className="flex gap-0.5">
+                  {[1,2,3,4,5].map((star) => (
+                    <span key={star} className={`text-sm ${star <= Math.round(card.averageRating!) ? "text-gold" : "text-muted-foreground/30"}`}>★</span>
+                  ))}
+                </div>
+                <span className="text-sm text-foreground font-medium">{card.averageRating.toFixed(1)}</span>
+                <span className="text-xs text-muted-foreground">({card.ratingCount})</span>
+              </div>
+            )}
+            {card.vibeTags.slice(0, 3).map((tag) => (
+              <span key={tag} className="text-[10px] gold-gradient text-primary-foreground px-2 py-0.5 rounded-full font-medium">
+                ✦ {tag}
+              </span>
+            ))}
+          </div>
+        )}
 
         {/* ── Detail sections (visible on scroll) ── */}
         <div className="bg-background px-5 py-6 space-y-6">
@@ -323,19 +315,27 @@ export const SwipeCardComponent = ({
             </div>
           )}
 
-          {/* Additional photos */}
+          {/* Additional photos — full-width stacked */}
           {card.photos.length > 1 && (
             <div>
               <p className="text-xs text-gold uppercase tracking-wider mb-3">Fotoğraflar</p>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-2">
                 {card.photos.slice(1).map((photo, i) => (
-                  <div key={i} className="relative rounded-xl overflow-hidden" style={{ aspectRatio: "3/4" }}>
+                  <div
+                    key={i}
+                    className="relative w-full rounded-xl overflow-hidden cursor-pointer active:opacity-90 transition-opacity"
+                    style={{ aspectRatio: "3/4" }}
+                    onClick={() => setLightboxPhoto(photo)}
+                  >
                     <img
                       src={photo}
                       alt=""
                       className="w-full h-full object-cover select-none"
                       draggable={false}
                     />
+                    <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/40 flex items-center justify-center text-white text-xs">
+                      ⤢
+                    </div>
                   </div>
                 ))}
               </div>
@@ -359,6 +359,28 @@ export const SwipeCardComponent = ({
           <div className="h-6" />
         </div>
       </div>
+
+      {/* Lightbox */}
+      {lightboxPhoto && (
+        <div
+          className="fixed inset-0 z-[200] bg-black flex items-center justify-center"
+          onClick={() => setLightboxPhoto(null)}
+        >
+          <img
+            src={lightboxPhoto}
+            alt=""
+            className="w-full h-full object-contain"
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
+          />
+          <button
+            className="absolute top-10 right-4 w-10 h-10 rounded-full bg-black/60 border border-white/20 flex items-center justify-center text-white text-lg"
+            onClick={() => setLightboxPhoto(null)}
+          >
+            ✕
+          </button>
+        </div>
+      )}
     </div>
   );
 };

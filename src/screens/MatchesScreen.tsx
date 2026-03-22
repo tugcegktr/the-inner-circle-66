@@ -228,7 +228,8 @@ const ChatModal = ({
   }
 
   return (
-    <div className="fixed inset-0 bg-background z-50 flex flex-col max-w-sm mx-auto">
+    <div className="fixed inset-0 z-50 flex justify-center bg-black/20">
+    <div className="w-full max-w-sm bg-background flex flex-col h-full">
       {/* Header */}
       <div className="glass border-b border-border px-5 pt-10 pb-4 flex items-center gap-3 flex-shrink-0">
         <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors text-xl leading-none flex-shrink-0">←</button>
@@ -335,7 +336,10 @@ const ChatModal = ({
       </div>
 
       {/* Input */}
-      <div className="glass border-t border-border px-3 py-3 flex items-center gap-2 flex-shrink-0">
+      <div
+        className="glass border-t border-border flex items-center gap-2 flex-shrink-0"
+        style={{ padding: '12px', paddingBottom: 'calc(12px + env(safe-area-inset-bottom, 0px))', paddingRight: 'max(12px, calc(12px + env(safe-area-inset-right, 0px)))' }}
+      >
         {/* Hidden photo input */}
         <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={sendPhoto} />
 
@@ -392,7 +396,7 @@ const ChatModal = ({
 
       {/* Report Sheet */}
       {showReport && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end justify-center" onClick={() => setShowReport(false)}>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-end justify-center" onClick={() => setShowReport(false)}>
           <div className="w-full max-w-sm glass rounded-t-3xl p-6 animate-fade-up" onClick={(e) => e.stopPropagation()}>
             <div className="w-12 h-1 bg-muted rounded-full mx-auto mb-5" />
             {reportSent ? (
@@ -444,6 +448,7 @@ const ChatModal = ({
         </div>
       )}
     </div>
+    </div>
   );
 };
 
@@ -455,6 +460,7 @@ export const MatchesScreen = () => {
   const [rateTarget, setRateTarget] = useState<Match | null>(null);
   const [chatTarget, setChatTarget] = useState<Match | null>(null);
   const [sentCounts, setSentCounts] = useState<Record<string, number>>({});
+  const [likerProfile, setLikerProfile] = useState<typeof MOCK_LIKED_BY[0] | null>(null);
 
   const MIN_MESSAGES_TO_RATE = 5;
 
@@ -590,7 +596,10 @@ export const MatchesScreen = () => {
                   user.isSuperVibe ? "border-gold/50" : "border-border"
                 }`}>
                   {/* Photo – always shown but blurred for non-premium */}
-                  <div className="relative flex-shrink-0">
+                  <div
+                    className={`relative flex-shrink-0 ${currentUser.isPremium ? "cursor-pointer" : ""}`}
+                    onClick={() => currentUser.isPremium && setLikerProfile(user)}
+                  >
                     <img
                       src={user.photo}
                       alt=""
@@ -609,9 +618,15 @@ export const MatchesScreen = () => {
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    {/* Name – always visible */}
+                    {/* Name – always visible, tappable for premium */}
                     <div className="flex items-center gap-1.5 mb-0.5">
-                      <p className="font-medium text-sm text-foreground truncate">{user.name}</p>
+                      <button
+                        className={`font-medium text-sm text-foreground truncate text-left ${currentUser.isPremium ? "hover:text-gold transition-colors" : ""}`}
+                        onClick={() => currentUser.isPremium && setLikerProfile(user)}
+                        disabled={!currentUser.isPremium}
+                      >
+                        {user.name}
+                      </button>
                       {user.isVerified && (
                         <div className="verified-badge w-4 h-4 rounded-full flex items-center justify-center text-[10px] text-primary-foreground font-bold flex-shrink-0">✓</div>
                       )}
@@ -655,6 +670,51 @@ export const MatchesScreen = () => {
           onMessageSent={handleMessageSent}
           onReport={addFlaggedReport}
         />
+      )}
+
+      {/* Liker Profile Modal */}
+      {likerProfile && (
+        <div className="fixed inset-0 z-50 bg-black flex flex-col max-w-sm mx-auto">
+          <button
+            onClick={() => setLikerProfile(null)}
+            className="absolute top-10 left-4 z-10 w-10 h-10 rounded-full bg-black/50 flex items-center justify-center text-white text-xl"
+          >
+            ←
+          </button>
+          <div className="flex-1 relative">
+            <img
+              src={likerProfile.photo}
+              alt={likerProfile.name}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%)" }} />
+            <div className="absolute bottom-0 left-0 right-0 p-6">
+              <div className="flex items-center gap-2 mb-1">
+                <h2 className="font-serif text-3xl text-white">{likerProfile.name}</h2>
+                {likerProfile.isVerified && (
+                  <div className="verified-badge w-6 h-6 rounded-full flex items-center justify-center text-xs text-primary-foreground font-bold">✓</div>
+                )}
+              </div>
+              {likerProfile.isSuperVibe && (
+                <div className="flex items-center gap-1.5 mb-2">
+                  <span className="text-xs font-medium px-2 py-0.5 rounded-full"
+                    style={{ background: "linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(48,90%,65%) 100%)", color: "hsl(var(--background))" }}>
+                    ⚡ Super Vibe gönderdi
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="glass px-6 py-5">
+            <p className="text-muted-foreground text-sm text-center mb-4">Beğeniyi kabul etmek için profiline beğeni gönderin</p>
+            <button
+              onClick={() => setLikerProfile(null)}
+              className="w-full py-3 rounded-xl gold-gradient text-primary-foreground text-sm font-medium"
+            >
+              ✦ Beğen
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

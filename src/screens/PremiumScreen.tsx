@@ -37,7 +37,7 @@ const FALLBACK_PRICES: Record<PlanTier, Record<BillingPeriod, { price: string; o
 };
 
 export const PremiumScreen = () => {
-  const { currentUser, setCurrentUser, setScreen } = useApp();
+  const { currentUser, setCurrentUser, setScreen, registeredUserId } = useApp();
   const { packages, purchase, isPurchasing, isSubscribed } = useSubscription();
   const isUpgradeMode = currentUser.subscriptionStatus !== "none" && !currentUser.isPremium;
   const [selectedTier, setSelectedTier] = useState<PlanTier>(isUpgradeMode ? "premium" : "standard");
@@ -55,9 +55,19 @@ export const PremiumScreen = () => {
       if (rcPackage) {
         await purchase(rcPackage);
       }
+      if (registeredUserId) {
+        try {
+          await fetch("/api/users/activate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: registeredUserId }),
+          });
+        } catch { }
+      }
       setCurrentUser({
         ...currentUser,
         isPremium: selectedTier === "premium",
+        isApproved: true,
         subscriptionStatus: billing,
         dailySwipesLeft: selectedTier === "premium" ? 50 : 15,
       });
