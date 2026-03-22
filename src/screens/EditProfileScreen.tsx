@@ -29,14 +29,14 @@ export const EditProfileScreen = () => {
       interests: hobbies.slice(0, 3),
       instagramHandle: instagram,
     });
-    setScreen("profile");
+    setScreen(currentUser.isApproved ? "profile" : "waiting-approval");
   };
 
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-sm mx-auto">
       {/* Header */}
       <div className="px-6 pt-10 pb-4 flex items-center gap-4">
-        <button onClick={() => setScreen("profile")} className="text-muted-foreground hover:text-foreground transition-colors">←</button>
+        <button onClick={() => setScreen(currentUser.isApproved ? "profile" : "waiting-approval")} className="text-muted-foreground hover:text-foreground transition-colors">←</button>
         <h1 className="font-serif text-2xl flex-1">Profili Düzenle</h1>
         <button onClick={save} className="text-gold text-sm font-medium">Kaydet</button>
       </div>

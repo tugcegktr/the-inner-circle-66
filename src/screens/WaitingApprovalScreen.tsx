@@ -125,7 +125,7 @@ export const WaitingApprovalScreen = () => {
         <div className="bg-[#141414] border border-[#242424] rounded-2xl p-5 text-left">
           <p className="text-gray-600 text-xs tracking-wider uppercase mb-2">Bilgi</p>
           <p className="text-gray-400 text-sm leading-relaxed">
-            Başvurular 24–48 saat içinde sonuçlanır. Onay aldığınızda size bildirim gönderilecektir.
+            Onay aldığınızda size bildirim gönderilecektir.
           </p>
           {registeredPhone && (
             <p className="text-gray-600 text-xs mt-3">
@@ -135,9 +135,17 @@ export const WaitingApprovalScreen = () => {
         </div>
 
         <button
+          data-testid="button-edit-profile"
+          onClick={() => setScreen("edit-profile")}
+          className="mt-6 w-full py-3.5 rounded-xl border border-[#C9A84C]/40 text-[#C9A84C] text-sm font-medium hover:bg-[#C9A84C]/10 transition-all"
+        >
+          Profili Düzenle
+        </button>
+
+        <button
           data-testid="button-back-to-login"
           onClick={() => setScreen("login")}
-          className="mt-8 text-gray-700 text-xs hover:text-gray-500 transition-colors"
+          className="mt-4 text-gray-700 text-xs hover:text-gray-500 transition-colors"
         >
           Farklı bir numara ile giriş yap
         </button>

@@ -9,7 +9,7 @@ const DiamondLogo = () => (
 );
 
 export const LoginScreen = () => {
-  const { setScreen, setRegisteredPhone, setRegisteredUserId } = useApp();
+  const { setScreen, setRegisteredPhone, setRegisteredUserId, currentUser, setCurrentUser } = useApp();
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [step, setStep] = useState<"phone" | "otp">("phone");
@@ -42,15 +42,20 @@ export const LoginScreen = () => {
 
       if (user.status === "frozen") {
         setLoading(false);
+        setCurrentUser({ ...currentUser, isApproved: false, isPremium: false });
         setError("Hesabınız dondurulmuş. Yeniden aktifleştirmek için üyelik seçin.");
         setTimeout(() => { setError(null); setScreen("premium"); }, 2200);
       } else if (user.status === "approved") {
+        const isPremium = user.subscription_status === "active";
+        setCurrentUser({ ...currentUser, isApproved: true, isPremium });
         setScreen("discovery");
       } else if (data.created) {
-        // Brand new user — go through onboarding
+        // Brand new user — mark as not approved and go through onboarding
+        setCurrentUser({ ...currentUser, isApproved: false });
         setScreen("onboarding-basic");
       } else {
         // Existing pending user — already submitted, waiting for approval
+        setCurrentUser({ ...currentUser, isApproved: false });
         setScreen("waiting-approval");
       }
     } catch (err: unknown) {
