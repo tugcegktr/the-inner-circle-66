@@ -20,10 +20,20 @@
 - `vite.config.ts` — Vite config (host: 0.0.0.0, port: 5000)
 
 ## Running the App
-```bash
-npm run dev
-```
-Starts on port 5000. The Replit workflow "Start application" handles this automatically.
+
+Two workflows run in parallel:
+- **Start application** — Vite dev server on port 5000 (frontend)
+- **Admin API** — Express backend on port 3001 (`npx tsx server/index.ts`)
+
+Vite proxies `/api/*` requests to the backend automatically.
+
+## Admin Panel
+
+- URL: `/admin` (login) → `/admin/dashboard` (dashboard)
+- Auth: JWT tokens, 8h expiry, stored in `localStorage`
+- Backend: `server/index.ts` → `server/routes/admin.ts`
+- Env vars: `ADMIN_EMAIL` (shared), `ADMIN_PASSWORD` (secret), `JWT_SECRET` (secret)
+- Production domain: `www.theclubapp.com.tr/admin`
 
 ## Replit Migration Notes
 - Removed `lovable-tagger` from `vite.config.ts` (Lovable-specific dev tool)
