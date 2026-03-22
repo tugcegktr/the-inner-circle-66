@@ -1,6 +1,7 @@
 modules = ["nodejs-20", "web", "postgresql-16"]
 [agent]
 expertMode = true
+integrations = ["revenuecat:1.0.0"]
 
 [nix]
 channel = "stable-25_05"
@@ -67,3 +68,10 @@ externalPort = 3000
 [userenv.shared]
 ADMIN_EMAIL = "admin@theclubapp.com.tr"
 PORT_API = "3001"
+VITE_REVENUECAT_TEST_API_KEY = "test_WHaAKgcjlhnfdKMbFQpMiqpCcey"
+VITE_REVENUECAT_IOS_API_KEY = "appl_JZhhraHeKGuWLWzkTgHxjUZazAD"
+VITE_REVENUECAT_ANDROID_API_KEY = "goog_HWuVWqIZbflSDCBFgrxHGzMGMpe"
+REVENUECAT_PROJECT_ID = "proje4ce3c19"
+REVENUECAT_TEST_STORE_APP_ID = "app38056ff63b"
+REVENUECAT_APPLE_APP_STORE_APP_ID = "app374a610156"
+REVENUECAT_GOOGLE_PLAY_STORE_APP_ID = "app53f6585d98"
