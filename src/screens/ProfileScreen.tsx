@@ -75,6 +75,44 @@ export const ProfileScreen = () => {
         </div>
 
         <div className="px-6 space-y-6 pt-6">
+          {/* Premium Gold upgrade banner — shown only for standard members */}
+          {currentUser.subscriptionStatus !== "none" && !currentUser.isPremium && (
+            <button
+              data-testid="button-upgrade-premium"
+              onClick={() => setScreen("premium")}
+              className="w-full rounded-2xl overflow-hidden border border-[#C9A84C]/40 hover:border-[#C9A84C]/70 transition-all active:scale-95"
+            >
+              <div className="relative">
+                <div className="absolute inset-0 gold-gradient opacity-10" />
+                <div className="relative flex items-center justify-between px-4 py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full gold-gradient flex items-center justify-center text-primary-foreground text-sm shadow-gold">
+                      ✦
+                    </div>
+                    <div className="text-left">
+                      <p className="text-sm font-semibold text-[#C9A84C]">Premium Gold'a Yükselt</p>
+                      <p className="text-xs text-muted-foreground">Seni beğenenleri gör · Sınırsız filtre</p>
+                    </div>
+                  </div>
+                  <span className="text-gold text-lg">›</span>
+                </div>
+              </div>
+            </button>
+          )}
+
+          {/* Premium Gold active badge */}
+          {currentUser.isPremium && (
+            <div className="glass-gold rounded-xl p-4 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full gold-gradient flex items-center justify-center text-primary-foreground text-sm shadow-gold">
+                ✦
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gold">Premium Gold Aktif</p>
+                <p className="text-xs text-muted-foreground">Tüm özellikler açık</p>
+              </div>
+            </div>
+          )}
+
           {/* Public Star Rating */}
           <div className="glass-gold rounded-xl p-4 flex items-center gap-5">
             <StarRating value={publicRating} size="md" />
@@ -232,12 +270,25 @@ export const ProfileScreen = () => {
               className="w-full py-4 rounded-xl bg-surface border border-border text-foreground text-sm font-medium hover:border-gold transition-colors">
               ✏️ Profili Düzenle
             </button>
-            <button onClick={() => setScreen("premium")}
-              className={`w-full py-4 rounded-xl text-sm font-medium tracking-wider transition-all ${
-                currentUser.isPremium ? "bg-surface border border-gold/50 text-gold" : "gold-gradient text-primary-foreground"
-              }`}>
-              {currentUser.isPremium ? "✦ Premium Gold Aktif" : "✦ Premium'a Geç"}
-            </button>
+            {!currentUser.isPremium && currentUser.subscriptionStatus === "none" && (
+              <button
+                data-testid="button-activate-membership"
+                onClick={() => setScreen("premium")}
+                className="w-full py-4 rounded-xl gold-gradient text-primary-foreground text-sm font-medium tracking-wider transition-all hover:opacity-90 active:scale-95 shadow-gold-sm"
+              >
+                ✦ Üyeliği Aktifleştir
+              </button>
+            )}
+            {currentUser.subscriptionStatus !== "none" && !currentUser.isPremium && (
+              <div className="w-full py-4 rounded-xl bg-surface border border-border text-center text-sm text-muted-foreground">
+                ✓ Standart Üyelik Aktif
+              </div>
+            )}
+            {currentUser.isPremium && (
+              <div className="w-full py-4 rounded-xl bg-surface border border-gold/30 text-center text-sm text-gold">
+                ✦ Premium Gold Aktif
+              </div>
+            )}
             <button onClick={() => setScreen("login")}
               className="w-full py-3 text-muted-foreground text-sm hover:text-foreground transition-colors">
               Çıkış Yap

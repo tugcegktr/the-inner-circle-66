@@ -39,12 +39,12 @@ const FALLBACK_PRICES: Record<PlanTier, Record<BillingPeriod, { price: string; o
 export const PremiumScreen = () => {
   const { currentUser, setCurrentUser, setScreen } = useApp();
   const { packages, purchase, isPurchasing, isSubscribed } = useSubscription();
-  const [selectedTier, setSelectedTier] = useState<PlanTier>("premium");
+  const isUpgradeMode = currentUser.subscriptionStatus !== "none" && !currentUser.isPremium;
+  const [selectedTier, setSelectedTier] = useState<PlanTier>(isUpgradeMode ? "premium" : "standard");
   const [billing, setBilling] = useState<BillingPeriod>("monthly");
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const features = PLAN_FEATURES[selectedTier];
   const fallbackPricing = FALLBACK_PRICES[selectedTier][billing];
   const rcPackage = packages[0];
   const displayPrice = rcPackage ? rcPackage.product.priceString : fallbackPricing.price;
@@ -104,11 +104,13 @@ export const PremiumScreen = () => {
             <div className="w-14 h-14 rounded-full gold-gradient flex items-center justify-center text-2xl text-primary-foreground shadow-gold mb-2 animate-float">
               ✦
             </div>
-            <h1 className="font-serif text-2xl text-foreground">Üyelik Planı Seç</h1>
+            <h1 className="font-serif text-2xl text-foreground">
+              {isUpgradeMode ? "Premium Gold'a Yükselt" : "Üyelik Planı Seç"}
+            </h1>
             <p className="text-muted-foreground text-xs tracking-widest uppercase mt-1">The Club Exclusive</p>
           </div>
           <button
-            onClick={() => setScreen("discovery")}
+            onClick={() => setScreen(isUpgradeMode ? "profile" : "discovery")}
             className="absolute top-10 left-6 text-muted-foreground hover:text-foreground transition-colors text-sm"
           >
             ← Geri
@@ -132,11 +134,20 @@ export const PremiumScreen = () => {
             ))}
           </div>
 
+          {isUpgradeMode && (
+            <div className="bg-[#C9A84C]/5 border border-[#C9A84C]/20 rounded-xl px-4 py-3 flex items-center gap-3">
+              <span className="text-gold text-sm">✓</span>
+              <p className="text-sm text-gray-400">
+                Standart üyeliğiniz aktif. Premium Gold ile tüm özelliklere erişin.
+              </p>
+            </div>
+          )}
+
           <div className="space-y-3">
-            {(["standard", "premium"] as PlanTier[]).map((tier) => {
+            {(["standard", "premium"] as PlanTier[]).filter((tier) => !isUpgradeMode || tier === "premium").map((tier) => {
               const pr = FALLBACK_PRICES[tier][billing];
               const isSelected = selectedTier === tier;
-              const badge = tier === "premium" ? "EN POPÜLER" : null;
+              const badge = tier === "premium" ? (isUpgradeMode ? "YÜKSELT" : "EN POPÜLER") : null;
               return (
                 <button
                   key={tier}
