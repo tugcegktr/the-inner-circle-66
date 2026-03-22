@@ -4,15 +4,15 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProvider, useApp } from "@/context/AppContext";
+import { SubscriptionProvider } from "@/lib/purchases";
 import { LoginScreen } from "@/screens/LoginScreen";
 import { OnboardingScreen } from "@/screens/OnboardingScreen";
-import { WaitlistScreen } from "@/screens/WaitlistScreen";
+import { WaitingApprovalScreen } from "@/screens/WaitingApprovalScreen";
 import { DiscoveryScreen } from "@/screens/DiscoveryScreen";
 import { MatchesScreen } from "@/screens/MatchesScreen";
 import { ProfileScreen } from "@/screens/ProfileScreen";
 import { EditProfileScreen } from "@/screens/EditProfileScreen";
 import { PremiumScreen } from "@/screens/PremiumScreen";
-import { PreLaunchScreen } from "@/screens/PreLaunchScreen";
 import { AdminLogin } from "@/pages/admin/AdminLogin";
 import { AdminDashboard } from "@/pages/admin/AdminDashboard";
 import { ProtectedRoute } from "@/pages/admin/ProtectedRoute";
@@ -25,8 +25,7 @@ const MobileRouter = () => {
   const { screen } = useApp();
   if (screen === "login") return <LoginScreen />;
   if (ONBOARDING_SCREENS.includes(screen)) return <OnboardingScreen />;
-  if (screen === "waitlist") return <WaitlistScreen />;
-  if (screen === "pre-launch") return <PreLaunchScreen />;
+  if (screen === "waiting-approval") return <WaitingApprovalScreen />;
   if (screen === "discovery") return <DiscoveryScreen />;
   if (screen === "matches") return <MatchesScreen />;
   if (screen === "profile") return <ProfileScreen />;
@@ -41,7 +40,9 @@ const MobileApp = () => (
       <Toaster />
       <Sonner />
       <AppProvider>
-        <MobileRouter />
+        <SubscriptionProvider>
+          <MobileRouter />
+        </SubscriptionProvider>
       </AppProvider>
     </TooltipProvider>
   </QueryClientProvider>

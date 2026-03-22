@@ -10,21 +10,47 @@ const DiamondLogo = () => (
 );
 
 export const LoginScreen = () => {
-  const { setScreen } = useApp();
+  const { setScreen, setRegisteredPhone, setRegisteredUserId } = useApp();
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSendOtp = () => {
     if (phone.length < 10) return;
+    setError(null);
     setLoading(true);
     setTimeout(() => { setLoading(false); setStep("otp"); }, 1200);
   };
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
+    setError(null);
     setLoading(true);
-    setTimeout(() => { setLoading(false); setScreen("onboarding-basic"); }, 1000);
+    try {
+      const rawPhone = phone.replace(/\s/g, "");
+      const res = await fetch("/api/users/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: rawPhone }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Kayıt başarısız");
+
+      const user = data.user;
+      setRegisteredPhone(rawPhone);
+      setRegisteredUserId(user.id);
+
+      if (user.status === "approved") {
+        setScreen("onboarding-basic");
+      } else {
+        setScreen("waiting-approval");
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Bir hata oluştu";
+      setError(msg);
+      setLoading(false);
+    }
   };
 
   const formatPhone = (val: string) => {
@@ -113,6 +139,9 @@ export const LoginScreen = () => {
                 placeholder="6 haneli kodu gir"
                 style={{ MozAppearance: "textfield" } as React.CSSProperties}
               />
+              {error && (
+                <p data-testid="text-error" className="text-red-400 text-xs text-center">{error}</p>
+              )}
               <button
                 data-testid="button-verify"
                 onClick={handleVerify}

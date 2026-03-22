@@ -8,6 +8,10 @@ interface AppContextType {
   setCurrentUser: (u: UserProfile) => void;
   flaggedReports: FlaggedReport[];
   addFlaggedReport: (r: FlaggedReport) => void;
+  registeredPhone: string;
+  setRegisteredPhone: (p: string) => void;
+  registeredUserId: number | null;
+  setRegisteredUserId: (id: number | null) => void;
 }
 
 const defaultUser: UserProfile = {
@@ -45,13 +49,21 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [screen, setScreen] = useState<AppScreen>("login");
   const [currentUser, setCurrentUser] = useState<UserProfile>(defaultUser);
   const [flaggedReports, setFlaggedReports] = useState<FlaggedReport[]>([]);
+  const [registeredPhone, setRegisteredPhone] = useState<string>("");
+  const [registeredUserId, setRegisteredUserId] = useState<number | null>(null);
 
   const addFlaggedReport = (r: FlaggedReport) => {
     setFlaggedReports((prev) => [r, ...prev]);
   };
 
   return (
-    <AppContext.Provider value={{ screen, setScreen, currentUser, setCurrentUser, flaggedReports, addFlaggedReport }}>
+    <AppContext.Provider value={{
+      screen, setScreen,
+      currentUser, setCurrentUser,
+      flaggedReports, addFlaggedReport,
+      registeredPhone, setRegisteredPhone,
+      registeredUserId, setRegisteredUserId,
+    }}>
       {children}
     </AppContext.Provider>
   );
