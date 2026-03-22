@@ -152,7 +152,7 @@ export const OnboardingScreen = () => {
       linkedinUrl: linkedin,
       lookingFor,
     });
-    setScreen("waitlist");
+    setScreen("waiting-approval");
   };
 
   return (

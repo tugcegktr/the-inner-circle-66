@@ -3,8 +3,7 @@ import { useApp } from "@/context/AppContext";
 
 const DiamondLogo = () => (
   <svg viewBox="0 0 100 100" className="w-8 h-8" aria-hidden="true">
-    <circle cx="50" cy="50" r="46" fill="none" stroke="#C9A84C" strokeWidth="1.5" />
-    <polygon points="50,32 64,50 50,68 36,50" fill="#C9A84C" />
+    <polygon points="50,28 68,50 50,72 32,50" fill="#C9A84C" />
   </svg>
 );
 
@@ -60,7 +59,7 @@ export const WaitingApprovalScreen = () => {
   return (
     <div className="min-h-screen bg-[#0D0D0D] flex flex-col items-center justify-center px-6">
       <div className="w-full max-w-sm text-center">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full border border-[#C9A84C]/30 mb-8 animate-float">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full glass-gold mb-8 animate-float">
           <DiamondLogo />
         </div>
 

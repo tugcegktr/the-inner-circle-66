@@ -40,12 +40,17 @@ export const LoginScreen = () => {
       setRegisteredPhone(rawPhone);
       setRegisteredUserId(user.id);
 
-      if (user.status === "approved") {
-        setScreen("onboarding-basic");
-      } else if (user.status === "frozen") {
+      if (user.status === "frozen") {
+        setLoading(false);
         setError("Hesabınız dondurulmuş. Yeniden aktifleştirmek için üyelik seçin.");
         setTimeout(() => { setError(null); setScreen("premium"); }, 2200);
+      } else if (user.status === "approved") {
+        setScreen("discovery");
+      } else if (data.created) {
+        // Brand new user — go through onboarding
+        setScreen("onboarding-basic");
       } else {
+        // Existing pending user — already submitted, waiting for approval
         setScreen("waiting-approval");
       }
     } catch (err: unknown) {
