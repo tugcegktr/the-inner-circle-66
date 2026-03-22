@@ -37,3 +37,9 @@ outputType = "webview"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[userenv]
+
+[userenv.shared]
+ADMIN_EMAIL = "admin@theclubapp.com.tr"
+PORT_API = "3001"

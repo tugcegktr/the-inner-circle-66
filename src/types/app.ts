@@ -13,8 +13,7 @@ export type AppScreen =
   | "matches"
   | "profile"
   | "edit-profile"
-  | "premium"
-  | "admin";
+  | "premium";
 
 export type UserGender = "woman" | "man" | "bisexual" | "lesbian" | "gay";
 export type LookingFor = "dating" | "networking" | "friendship";

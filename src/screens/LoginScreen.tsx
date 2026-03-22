@@ -2,10 +2,15 @@ import React, { useState } from "react";
 import { useApp } from "@/context/AppContext";
 import heroBg from "@/assets/hero-bg.jpg";
 
-const ADMIN_PHONE = "5058396333";
+const DiamondLogo = () => (
+  <svg viewBox="0 0 100 100" className="w-8 h-8" aria-hidden="true">
+    <circle cx="50" cy="50" r="46" fill="none" stroke="#C9A84C" strokeWidth="1.5" />
+    <polygon points="50,32 64,50 50,68 36,50" fill="#C9A84C" />
+  </svg>
+);
 
 export const LoginScreen = () => {
-  const { setScreen, setIsAdmin } = useApp();
+  const { setScreen } = useApp();
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [step, setStep] = useState<"phone" | "otp">("phone");
@@ -19,10 +24,6 @@ export const LoginScreen = () => {
 
   const handleVerify = () => {
     setLoading(true);
-    if (phone.replace(/\s/g, "") === ADMIN_PHONE) {
-      setTimeout(() => { setLoading(false); setIsAdmin(true); setScreen("admin"); }, 800);
-      return;
-    }
     setTimeout(() => { setLoading(false); setScreen("onboarding-basic"); }, 1000);
   };
 
@@ -38,28 +39,19 @@ export const LoginScreen = () => {
 
   return (
     <div className="min-h-screen relative flex flex-col items-center justify-center overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${heroBg})` }}
-      />
+      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${heroBg})` }} />
       <div className="absolute inset-0 bg-black/60" />
       <div className="absolute top-0 left-0 right-0 h-px luxury-divider" />
 
       <div className="relative z-10 w-full max-w-sm px-6 animate-fade-up">
-        {/* Logo */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full glass-gold mb-6 animate-float">
-            <span className="text-3xl">♦</span>
+            <DiamondLogo />
           </div>
-          <h1 className="font-serif text-5xl font-light tracking-widest gold-text mb-2">
-            THE CLUB
-          </h1>
-          <p className="text-muted-foreground text-xs tracking-[0.3em] uppercase font-sans">
-            Members Only
-          </p>
+          <h1 className="font-serif text-5xl font-light tracking-widest gold-text mb-2">THE CLUB</h1>
+          <p className="text-muted-foreground text-xs tracking-[0.3em] uppercase font-sans">Members Only</p>
         </div>
 
-        {/* Card */}
         <div className="glass rounded-2xl p-8">
           {step === "phone" ? (
             <div className="space-y-6">
@@ -67,45 +59,37 @@ export const LoginScreen = () => {
                 <p className="font-serif text-xl text-foreground mb-1">Hoş Geldin</p>
                 <p className="text-muted-foreground text-sm">Devam etmek için numaranı gir</p>
               </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 bg-muted rounded-xl px-4 py-3 border border-border focus-within:border-gold transition-colors">
-                  <span className="text-muted-foreground text-sm whitespace-nowrap">🇹🇷 +90</span>
-                  <div className="w-px h-5 bg-border" />
-                  <input
-                    type="tel"
-                    placeholder="5XX XXX XX XX"
-                    value={phone}
-                    onChange={(e) => setPhone(formatPhone(e.target.value))}
-                    className="flex-1 bg-transparent text-foreground placeholder-muted-foreground text-sm outline-none"
-                  />
-                </div>
+              <div className="flex items-center gap-3 bg-muted rounded-xl px-4 py-3 border border-border focus-within:border-gold transition-colors">
+                <span className="text-muted-foreground text-sm whitespace-nowrap">🇹🇷 +90</span>
+                <div className="w-px h-5 bg-border" />
+                <input
+                  data-testid="input-phone"
+                  type="tel"
+                  placeholder="5XX XXX XX XX"
+                  value={phone}
+                  onChange={(e) => setPhone(formatPhone(e.target.value))}
+                  className="flex-1 bg-transparent text-foreground placeholder-muted-foreground text-sm outline-none"
+                />
               </div>
-
               <button
+                data-testid="button-send-otp"
                 onClick={handleSendOtp}
                 disabled={rawDigits.length < 10 || loading}
                 className="w-full py-4 rounded-xl gold-gradient text-primary-foreground font-medium text-sm tracking-wider transition-all hover:opacity-90 active:scale-95 disabled:opacity-40 shadow-gold-sm"
               >
                 {loading ? "Gönderiliyor…" : "Doğrulama Kodu Gönder"}
               </button>
-
-              <div className="text-center">
-                <p className="text-muted-foreground text-xs">
-                  Devam ederek{" "}
-                  <span className="text-gold cursor-pointer">Kullanım Koşulları</span>'nı kabul etmiş olursun
-                </p>
-              </div>
+              <p className="text-muted-foreground text-xs text-center">
+                Devam ederek{" "}
+                <span className="text-gold cursor-pointer">Kullanım Koşulları</span>'nı kabul etmiş olursun
+              </p>
             </div>
           ) : (
             <div className="space-y-6">
               <div>
                 <p className="font-serif text-xl text-foreground mb-1">Kimliğini Doğrula</p>
-                <p className="text-muted-foreground text-sm">
-                  +90 {phone} numarasına kod gönderildi
-                </p>
+                <p className="text-muted-foreground text-sm">+90 {phone} numarasına kod gönderildi</p>
               </div>
-
               <div className="flex gap-3 justify-center">
                 {[0, 1, 2, 3, 4, 5].map((i) => (
                   <div
@@ -117,8 +101,8 @@ export const LoginScreen = () => {
                   </div>
                 ))}
               </div>
-
               <input
+                data-testid="input-otp"
                 type="tel"
                 inputMode="numeric"
                 pattern="[0-9]*"
@@ -129,15 +113,14 @@ export const LoginScreen = () => {
                 placeholder="6 haneli kodu gir"
                 style={{ MozAppearance: "textfield" } as React.CSSProperties}
               />
-
               <button
+                data-testid="button-verify"
                 onClick={handleVerify}
                 disabled={otp.length < 4 || loading}
                 className="w-full py-4 rounded-xl gold-gradient text-primary-foreground font-medium text-sm tracking-wider transition-all hover:opacity-90 active:scale-95 disabled:opacity-40"
               >
                 {loading ? "Doğrulanıyor…" : "The Club'a Gir"}
               </button>
-
               <button
                 onClick={() => setStep("phone")}
                 className="w-full text-muted-foreground text-sm hover:text-foreground transition-colors"

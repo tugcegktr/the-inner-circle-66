@@ -1,13 +1,11 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
-import { AppScreen, UserProfile, ZodiacSign, FlaggedReport } from "@/types/app";
+import { createContext, useContext, useState, ReactNode } from "react";
+import { AppScreen, UserProfile, FlaggedReport } from "@/types/app";
 
 interface AppContextType {
   screen: AppScreen;
   setScreen: (s: AppScreen) => void;
   currentUser: UserProfile;
   setCurrentUser: (u: UserProfile) => void;
-  isAdmin: boolean;
-  setIsAdmin: (v: boolean) => void;
   flaggedReports: FlaggedReport[];
   addFlaggedReport: (r: FlaggedReport) => void;
 }
@@ -46,7 +44,6 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [screen, setScreen] = useState<AppScreen>("login");
   const [currentUser, setCurrentUser] = useState<UserProfile>(defaultUser);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [flaggedReports, setFlaggedReports] = useState<FlaggedReport[]>([]);
 
   const addFlaggedReport = (r: FlaggedReport) => {
@@ -54,7 +51,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AppContext.Provider value={{ screen, setScreen, currentUser, setCurrentUser, isAdmin, setIsAdmin, flaggedReports, addFlaggedReport }}>
+    <AppContext.Provider value={{ screen, setScreen, currentUser, setCurrentUser, flaggedReports, addFlaggedReport }}>
       {children}
     </AppContext.Provider>
   );
