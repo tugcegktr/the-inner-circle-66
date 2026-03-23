@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useApp } from "@/context/AppContext";
 import heroBg from "@/assets/hero-bg.jpg";
+import { apiUrl } from "@/lib/api";
 
 const DiamondLogo = () => (
   <svg viewBox="0 0 100 100" className="w-8 h-8" aria-hidden="true">
@@ -28,7 +29,7 @@ export const LoginScreen = () => {
     setLoading(true);
     try {
       const rawPhone = phone.replace(/\s/g, "");
-      const res = await fetch("/api/users/register", {
+      const res = await fetch(apiUrl("/api/users/register"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phone: rawPhone }),

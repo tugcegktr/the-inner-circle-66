@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useApp } from "@/context/AppContext";
 import { ZODIAC_SYMBOLS, GENDER_OPTIONS } from "@/data/mockData";
 import { StarRating } from "@/components/StarRating";
+import { apiUrl } from "@/lib/api";
 
 const BottomNav = ({ active, onNavigate }: { active: string; onNavigate: (s: any) => void }) => {
   const tabs = [
@@ -35,7 +36,7 @@ export const ProfileScreen = () => {
     setFreezeLoading(true);
     try {
       if (registeredUserId) {
-        await fetch("/api/users/freeze", {
+        await fetch(apiUrl("/api/users/freeze"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId: registeredUserId }),

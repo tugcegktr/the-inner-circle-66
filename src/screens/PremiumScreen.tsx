@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useApp } from "@/context/AppContext";
 import { useSubscription } from "@/lib/purchases";
+import { apiUrl } from "@/lib/api";
 
 type PlanTier = "standard" | "premium";
 type BillingPeriod = "monthly" | "yearly";
@@ -57,7 +58,7 @@ export const PremiumScreen = () => {
       }
       if (registeredUserId) {
         try {
-          await fetch("/api/users/activate", {
+          await fetch(apiUrl("/api/users/activate"), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId: registeredUserId }),
