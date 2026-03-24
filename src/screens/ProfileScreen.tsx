@@ -60,7 +60,7 @@ export const ProfileScreen = () => {
   const neighbourhood = "Beşiktaş, İstanbul";
 
   return (
-    <div className="min-h-screen bg-background flex flex-col max-w-sm mx-auto">
+    <div className="min-h-screen bg-background flex flex-col w-full">
       <div className="flex-1 overflow-y-auto no-scrollbar pb-24">
         {/* Hero photo */}
         <div className="relative h-96">

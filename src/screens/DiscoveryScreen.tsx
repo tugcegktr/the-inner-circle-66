@@ -286,7 +286,7 @@ export const DiscoveryScreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col max-w-sm mx-auto">
+    <div className="min-h-screen bg-background flex flex-col w-full">
       {/* Header */}
       <div className="px-6 pt-10 pb-2 flex items-center justify-between">
         <div>

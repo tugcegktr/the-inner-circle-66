@@ -81,7 +81,7 @@ export const PremiumScreen = () => {
 
   if (isSubscribed || success) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 max-w-sm mx-auto">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 w-full">
         <div className="text-center animate-scale-in">
           <div className="w-24 h-24 rounded-full gold-gradient mx-auto mb-6 flex items-center justify-center text-5xl shadow-gold animate-float">
             ✦
@@ -107,7 +107,7 @@ export const PremiumScreen = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col max-w-sm mx-auto">
+    <div className="min-h-screen bg-background flex flex-col w-full">
       <div className="flex-1 overflow-y-auto no-scrollbar">
         <div className="relative h-44 overflow-hidden">
           <div className="absolute inset-0 gold-gradient opacity-20" />
@@ -232,7 +232,7 @@ export const PremiumScreen = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-sm px-6 pb-8 pt-4 glass border-t border-border">
+      <div className="fixed bottom-0 left-0 w-full px-6 pb-8 pt-4 glass border-t border-border">
         <p className="text-center text-xs text-muted-foreground mb-3">
           {rcPackage ? rcPackage.product.priceString : fallbackPricing.total} · Güvenli ödeme
         </p>

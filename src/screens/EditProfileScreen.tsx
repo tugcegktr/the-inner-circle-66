@@ -33,7 +33,7 @@ export const EditProfileScreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col max-w-sm mx-auto">
+    <div className="min-h-screen bg-background flex flex-col w-full">
       {/* Header */}
       <div className="px-6 pt-10 pb-4 flex items-center gap-4">
         <button onClick={() => setScreen(currentUser.isApproved ? "profile" : "waiting-approval")} className="text-muted-foreground hover:text-foreground transition-colors">←</button>
@@ -117,7 +117,7 @@ export const EditProfileScreen = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-sm px-6 pb-8 pt-4 bg-gradient-to-t from-background to-transparent">
+      <div className="fixed bottom-0 left-0 w-full px-6 pb-8 pt-4 bg-gradient-to-t from-background to-transparent">
         <button onClick={save} className="w-full py-4 rounded-xl gold-gradient text-primary-foreground font-medium text-sm tracking-wider hover:opacity-90 active:scale-95 transition-all">
           Değişiklikleri Kaydet
         </button>

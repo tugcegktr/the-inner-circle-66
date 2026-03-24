@@ -156,7 +156,7 @@ export const OnboardingScreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col max-w-sm mx-auto">
+    <div className="min-h-screen bg-background flex flex-col w-full">
       <div className="px-6 pt-12 pb-4">
         <StepIndicator current={step} />
         <div className="flex items-center gap-3 mb-2">
@@ -655,7 +655,7 @@ export const OnboardingScreen = () => {
       </div>
 
       {/* Bottom bar */}
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-sm px-6 pb-8 pt-4 bg-gradient-to-t from-background to-transparent">
+      <div className="fixed bottom-0 left-0 w-full px-6 pb-8 pt-4 bg-gradient-to-t from-background to-transparent">
         <div className="flex gap-3">
           {step > 0 && (
             <button

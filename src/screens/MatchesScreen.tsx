@@ -214,7 +214,7 @@ const ChatModal = ({
 
   if (unmatched || deleted) {
     return (
-      <div className="fixed inset-0 bg-background z-50 flex flex-col items-center justify-center max-w-sm mx-auto p-8 text-center">
+      <div className="fixed inset-0 bg-background z-50 flex flex-col items-center justify-center w-full p-8 text-center">
         <div className="text-5xl mb-4">{unmatched ? "💔" : "🗑"}</div>
         <h3 className="font-serif text-2xl mb-2">{unmatched ? "Eşleşme Kaldırıldı" : "Konuşma Silindi"}</h3>
         <p className="text-muted-foreground text-sm mb-6">
@@ -228,8 +228,7 @@ const ChatModal = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-center bg-black/20">
-    <div className="w-full max-w-sm bg-background flex flex-col h-full">
+    <div className="fixed inset-0 z-50 bg-background flex flex-col w-full">
       {/* Header */}
       <div className="glass border-b border-border px-5 pt-10 pb-4 flex items-center gap-3 flex-shrink-0">
         <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors text-xl leading-none flex-shrink-0">←</button>
@@ -386,9 +385,9 @@ const ChatModal = ({
         <button
           onClick={send}
           disabled={!input.trim() || isRecording}
-          className="w-9 h-9 rounded-full gold-gradient flex items-center justify-center text-primary-foreground disabled:opacity-40 active:scale-95 transition-all flex-shrink-0"
+          className="w-10 h-10 rounded-full gold-gradient flex items-center justify-center disabled:opacity-40 active:scale-95 transition-all flex-shrink-0"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
             <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
           </svg>
         </button>
@@ -448,7 +447,6 @@ const ChatModal = ({
         </div>
       )}
     </div>
-    </div>
   );
 };
 
@@ -475,7 +473,7 @@ export const MatchesScreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col max-w-sm mx-auto">
+    <div className="min-h-screen bg-background flex flex-col w-full">
       <div className="px-6 pt-10 pb-4">
         <h1 className="font-serif text-3xl text-foreground mb-4">Bağlantılar</h1>
         <div className="flex gap-1 bg-surface rounded-xl p-1">
@@ -674,7 +672,7 @@ export const MatchesScreen = () => {
 
       {/* Liker Profile Modal */}
       {likerProfile && (
-        <div className="fixed inset-0 z-50 bg-black flex flex-col max-w-sm mx-auto">
+        <div className="fixed inset-0 z-50 bg-black flex flex-col w-full">
           <button
             onClick={() => setLikerProfile(null)}
             className="absolute top-10 left-4 z-10 w-10 h-10 rounded-full bg-black/50 flex items-center justify-center text-white text-xl"
