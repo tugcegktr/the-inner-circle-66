@@ -217,11 +217,6 @@ export const SwipeCardComponent = ({
               <span>{ZODIAC_SYMBOLS[card.zodiacSign]} {card.zodiacSign}</span>
             </div>
 
-            {/* Scroll hint */}
-            <div className="flex items-center gap-1.5">
-              <span className="text-white/50 text-[10px] tracking-wider uppercase">Aşağı kaydır</span>
-              <span className="text-white/40 text-xs animate-bounce">↓</span>
-            </div>
           </div>
         </div>
 

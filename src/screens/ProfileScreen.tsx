@@ -11,7 +11,8 @@ const BottomNav = ({ active, onNavigate }: { active: string; onNavigate: (s: any
     { id: "profile", icon: "👤", label: "Profil" },
   ];
   return (
-    <div className="glass border-t border-border">
+    <div className="fixed bottom-0 left-0 right-0 z-20 glass border-t border-border"
+      style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
       <div className="flex">
         {tabs.map(({ id, icon, label }) => (
           <button key={id} onClick={() => onNavigate(id === "discovery" ? "discovery" : id === "matches" ? "matches" : "profile")}
