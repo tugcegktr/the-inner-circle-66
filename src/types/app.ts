@@ -105,4 +105,20 @@ export interface LikedByUser {
   photo: string;
   isVerified: boolean;
   isSuperVibe?: boolean;
+  // Full profile fields
+  age?: number;
+  city?: string;
+  district?: string;
+  height?: string;
+  photos?: string[];
+  zodiacSign?: string;
+  interests?: string[];
+  vibeTags?: string[];
+  compatibilityScore?: number;
+  profession?: string;
+  musicTaste?: string[];
+  averageRating?: number;
+  ratingCount?: number;
+  lookingFor?: string[];
+  bio?: string;
 }

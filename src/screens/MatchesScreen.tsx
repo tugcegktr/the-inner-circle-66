@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useApp } from "@/context/AppContext";
-import { MOCK_MATCHES, MOCK_LIKED_BY, VIBE_TAGS } from "@/data/mockData";
+import { MOCK_MATCHES, MOCK_LIKED_BY, VIBE_TAGS, ZODIAC_SYMBOLS } from "@/data/mockData";
 import { Match, VibeTag, FlaggedReport } from "@/types/app";
 import { StarRating } from "@/components/StarRating";
 
@@ -670,44 +670,186 @@ export const MatchesScreen = () => {
         />
       )}
 
-      {/* Liker Profile Modal */}
+      {/* Liker Profile Modal — full Discovery-style scrollable profile */}
       {likerProfile && (
-        <div className="fixed inset-0 z-50 bg-black flex flex-col w-full">
+        <div className="fixed inset-0 z-50 bg-background flex flex-col w-full">
+          {/* Back button */}
           <button
             onClick={() => setLikerProfile(null)}
-            className="absolute top-10 left-4 z-10 w-10 h-10 rounded-full bg-black/50 flex items-center justify-center text-white text-xl"
+            className="absolute top-10 left-4 z-20 w-10 h-10 rounded-full bg-black/50 flex items-center justify-center text-white text-xl"
           >
             ←
           </button>
-          <div className="flex-1 relative">
-            <img
-              src={likerProfile.photo}
-              alt={likerProfile.name}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%)" }} />
-            <div className="absolute bottom-0 left-0 right-0 p-6">
-              <div className="flex items-center gap-2 mb-1">
-                <h2 className="font-serif text-3xl text-white">{likerProfile.name}</h2>
-                {likerProfile.isVerified && (
-                  <div className="verified-badge w-6 h-6 rounded-full flex items-center justify-center text-xs text-primary-foreground font-bold">✓</div>
+
+          {/* Scrollable body */}
+          <div className="flex-1 overflow-y-auto no-scrollbar">
+
+            {/* Cover photo */}
+            <div className="relative w-full flex-shrink-0" style={{ aspectRatio: "3/4" }}>
+              <img
+                src={likerProfile.photos?.[0] ?? likerProfile.photo}
+                alt={likerProfile.name}
+                className="w-full h-full object-cover select-none"
+                draggable={false}
+              />
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.08) 55%, transparent 100%)" }}
+              />
+              <div className="absolute bottom-0 left-0 right-0 p-5 pointer-events-none">
+                {likerProfile.compatibilityScore && likerProfile.zodiacSign && (
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="glass-gold rounded-full px-3 py-1 text-xs flex items-center gap-1.5">
+                      <span>{ZODIAC_SYMBOLS[likerProfile.zodiacSign]}</span>
+                      <span className="text-gold font-medium">{likerProfile.compatibilityScore}% Match</span>
+                    </div>
+                  </div>
+                )}
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="font-serif text-2xl text-white font-medium">
+                    {likerProfile.name}{likerProfile.age ? `, ${likerProfile.age}` : ""}
+                  </h3>
+                  {likerProfile.isVerified && (
+                    <div className="verified-badge w-5 h-5 rounded-full flex items-center justify-center text-xs text-primary-foreground font-bold flex-shrink-0">✓</div>
+                  )}
+                </div>
+                {likerProfile.isSuperVibe && (
+                  <div className="mb-1">
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-full"
+                      style={{ background: "linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(48,90%,65%) 100%)", color: "hsl(var(--background))" }}>
+                      ⚡ Super Vibe gönderdi
+                    </span>
+                  </div>
+                )}
+                {likerProfile.profession && (
+                  <p className="text-white/80 text-xs mb-1">💼 {likerProfile.profession}</p>
+                )}
+                {(likerProfile.city || likerProfile.height || likerProfile.zodiacSign) && (
+                  <div className="flex flex-wrap items-center gap-2 text-white/70 text-xs">
+                    {likerProfile.city && (
+                      <span>📍 {likerProfile.district ? `${likerProfile.district}, ${likerProfile.city}` : likerProfile.city}</span>
+                    )}
+                    {likerProfile.height && <><span>·</span><span>↕ {likerProfile.height}m</span></>}
+                    {likerProfile.zodiacSign && <><span>·</span><span>{ZODIAC_SYMBOLS[likerProfile.zodiacSign]} {likerProfile.zodiacSign}</span></>}
+                  </div>
                 )}
               </div>
-              {likerProfile.isSuperVibe && (
-                <div className="flex items-center gap-1.5 mb-2">
-                  <span className="text-xs font-medium px-2 py-0.5 rounded-full"
-                    style={{ background: "linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(48,90%,65%) 100%)", color: "hsl(var(--background))" }}>
-                    ⚡ Super Vibe gönderdi
+            </div>
+
+            {/* Star rating + vibe tags */}
+            {(likerProfile.averageRating != null || (likerProfile.vibeTags && likerProfile.vibeTags.length > 0)) && (
+              <div className="flex flex-wrap items-center gap-2 px-5 py-3 bg-background border-b border-border/50">
+                {likerProfile.averageRating != null && likerProfile.ratingCount != null && (
+                  <div className="flex items-center gap-1.5">
+                    <div className="flex gap-0.5">
+                      {[1,2,3,4,5].map((star) => (
+                        <span key={star} className={`text-sm ${star <= Math.round(likerProfile.averageRating!) ? "text-gold" : "text-muted-foreground/30"}`}>★</span>
+                      ))}
+                    </div>
+                    <span className="text-sm text-foreground font-medium">{likerProfile.averageRating.toFixed(1)}</span>
+                    <span className="text-xs text-muted-foreground">({likerProfile.ratingCount})</span>
+                  </div>
+                )}
+                {likerProfile.vibeTags?.slice(0, 3).map((tag) => (
+                  <span key={tag} className="text-[10px] gold-gradient text-primary-foreground px-2 py-0.5 rounded-full font-medium">
+                    ✦ {tag}
                   </span>
+                ))}
+              </div>
+            )}
+
+            {/* Detail sections */}
+            <div className="bg-background px-5 py-6 space-y-6">
+              {likerProfile.bio && (
+                <div>
+                  <p className="text-xs text-gold uppercase tracking-wider mb-2">Hakkımda</p>
+                  <p className="text-sm text-foreground leading-relaxed">{likerProfile.bio}</p>
                 </div>
               )}
+
+              {likerProfile.lookingFor && likerProfile.lookingFor.length > 0 && (
+                <div>
+                  <p className="text-xs text-gold uppercase tracking-wider mb-3">Ne Arıyor?</p>
+                  <div className="flex flex-wrap gap-2">
+                    {likerProfile.lookingFor.map((lf) => {
+                      const map: Record<string, { label: string; emoji: string }> = {
+                        dating: { label: "Dating", emoji: "💛" },
+                        networking: { label: "Networking", emoji: "🤝" },
+                        friendship: { label: "Friendship", emoji: "✨" },
+                      };
+                      const item = map[lf];
+                      return item ? (
+                        <span key={lf} className="flex items-center gap-1.5 text-sm bg-surface border border-border text-foreground px-3 py-1.5 rounded-full">
+                          <span>{item.emoji}</span><span>{item.label}</span>
+                        </span>
+                      ) : null;
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {likerProfile.interests && likerProfile.interests.length > 0 && (
+                <div>
+                  <p className="text-xs text-gold uppercase tracking-wider mb-3">İlgi Alanları</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {likerProfile.interests.map((interest) => (
+                      <span key={interest} className="text-xs bg-surface border border-border text-foreground px-2.5 py-1 rounded-full">
+                        {interest}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {likerProfile.musicTaste && likerProfile.musicTaste.length > 0 && (
+                <div>
+                  <p className="text-xs text-gold uppercase tracking-wider mb-3">🎵 Müzik Zevki</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {likerProfile.musicTaste.map((genre) => (
+                      <span key={genre} className="text-xs bg-surface border border-border text-foreground px-2.5 py-1 rounded-full">
+                        {genre}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {likerProfile.photos && likerProfile.photos.length > 1 && (
+                <div>
+                  <p className="text-xs text-gold uppercase tracking-wider mb-3">Fotoğraflar</p>
+                  <div className="space-y-2">
+                    {likerProfile.photos.slice(1).map((photo, i) => (
+                      <div key={i} className="relative w-full rounded-xl overflow-hidden" style={{ aspectRatio: "3/4" }}>
+                        <img src={photo} alt="" className="w-full h-full object-cover select-none" draggable={false} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {likerProfile.city && (
+                <div className="flex items-center gap-3 pt-4 border-t border-border">
+                  <div className="w-10 h-10 rounded-full bg-surface border border-border flex items-center justify-center text-lg flex-shrink-0">📍</div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Konum</p>
+                    <p className="text-sm text-foreground font-medium">
+                      {likerProfile.district ? `${likerProfile.district}, ${likerProfile.city}` : likerProfile.city}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Bottom padding for action button */}
+              <div className="h-24" />
             </div>
           </div>
-          <div className="glass px-6 py-5">
-            <p className="text-muted-foreground text-sm text-center mb-4">Beğeniyi kabul etmek için profiline beğeni gönderin</p>
+
+          {/* Fixed bottom action */}
+          <div className="fixed bottom-0 left-0 w-full px-6 pb-8 pt-4 glass border-t border-border">
+            <p className="text-center text-xs text-muted-foreground mb-3">Beğeniyi kabul etmek için profiline beğeni gönderin</p>
             <button
               onClick={() => setLikerProfile(null)}
-              className="w-full py-3 rounded-xl gold-gradient text-primary-foreground text-sm font-medium"
+              className="w-full py-3.5 rounded-xl gold-gradient text-primary-foreground text-sm font-medium tracking-wide"
             >
               ✦ Beğen
             </button>
