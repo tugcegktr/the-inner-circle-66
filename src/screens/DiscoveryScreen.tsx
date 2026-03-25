@@ -369,7 +369,7 @@ export const DiscoveryScreen = () => {
             </button>
           </div>
         ) : (
-          <div className="relative h-[520px]">
+          <div className="relative h-full">
             {filteredCards.slice(0, 3).map((card, i) => (
               <SwipeCardComponent
                 key={card.id}
