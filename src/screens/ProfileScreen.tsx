@@ -16,7 +16,7 @@ const BottomNav = ({ active, onNavigate }: { active: string; onNavigate: (s: any
       <div className="flex">
         {tabs.map(({ id, icon, label }) => (
           <button key={id} onClick={() => onNavigate(id === "discovery" ? "discovery" : id === "matches" ? "matches" : "profile")}
-            className={`flex-1 py-4 flex flex-col items-center gap-1 transition-colors ${active === id ? "text-gold" : "text-muted-foreground hover:text-foreground"}`}>
+            className={`flex-1 py-4 flex flex-col items-center gap-1 transition-colors ${active === id ? "text-gold" : "text-foreground/35"}`}>
             <span className="text-lg">{icon}</span>
             <span className="text-xs tracking-wider">{label}</span>
           </button>

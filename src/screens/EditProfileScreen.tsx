@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useApp } from "@/context/AppContext";
-import { ZODIAC_SIGNS, ZODIAC_SYMBOLS, INTEREST_CATEGORIES, PERSONALITY_TAGS } from "@/data/mockData";
+import { ZODIAC_SIGNS, ZODIAC_SYMBOLS, INTEREST_CATEGORIES } from "@/data/mockData";
 import { ZodiacSign } from "@/types/app";
 
 export const EditProfileScreen = () => {
@@ -12,7 +12,6 @@ export const EditProfileScreen = () => {
   const [profession, setProfession] = useState(currentUser.profession || "");
   const [zodiac, setZodiac] = useState(currentUser.zodiacSign);
   const [hobbies, setHobbies] = useState(currentUser.hobbyPreferences);
-  const [personality, setPersonality] = useState(currentUser.personalityTags);
   const [instagram, setInstagram] = useState(currentUser.instagramHandle || "");
 
   const toggleTag = (arr: string[], setArr: (v: string[]) => void, val: string) => {
@@ -25,7 +24,6 @@ export const EditProfileScreen = () => {
       name, bio, city, height, profession,
       zodiacSign: zodiac as ZodiacSign,
       hobbyPreferences: hobbies,
-      personalityTags: personality,
       interests: hobbies.slice(0, 3),
       instagramHandle: instagram,
     });
@@ -101,20 +99,6 @@ export const EditProfileScreen = () => {
           </div>
         ))}
 
-        {/* Personality */}
-        <div>
-          <label className="text-xs tracking-wider text-gold uppercase mb-3 block">Kişilik Etiketleri</label>
-          <div className="flex flex-wrap gap-2">
-            {PERSONALITY_TAGS.map((opt) => (
-              <button key={opt} onClick={() => toggleTag(personality, setPersonality, opt)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                  personality.includes(opt) ? "gold-gradient text-primary-foreground" : "bg-muted text-muted-foreground border border-border hover:border-gold"
-                }`}>
-                {opt}
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
 
       <div className="fixed bottom-0 left-0 w-full px-6 pb-8 pt-4 bg-gradient-to-t from-background to-transparent">
