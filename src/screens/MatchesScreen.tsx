@@ -229,7 +229,7 @@ const ChatModal = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-background flex flex-col w-full">
+    <div className="fixed inset-0 z-50 bg-background flex flex-col overflow-hidden">
       {/* Header */}
       <div className="glass border-b border-border px-5 pb-4 flex items-center gap-3 flex-shrink-0" style={{ paddingTop: 'calc(16px + env(safe-area-inset-top, 0px))' }}>
         <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors text-xl leading-none flex-shrink-0">←</button>
@@ -337,8 +337,12 @@ const ChatModal = ({
 
       {/* Input */}
       <div
-        className="glass border-t border-border flex items-center gap-2 flex-shrink-0 px-3 pt-3"
-        style={{ paddingBottom: 'calc(12px + env(safe-area-inset-bottom, 0px))' }}
+        className="glass border-t border-border flex items-center gap-2 flex-shrink-0 pt-3"
+        style={{
+          paddingLeft: 'max(12px, env(safe-area-inset-left, 0px))',
+          paddingRight: 'max(12px, env(safe-area-inset-right, 0px))',
+          paddingBottom: 'max(16px, env(safe-area-inset-bottom, 16px))',
+        }}
       >
         {/* Hidden photo input */}
         <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={sendPhoto} />

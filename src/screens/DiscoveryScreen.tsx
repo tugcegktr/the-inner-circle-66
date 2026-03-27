@@ -286,7 +286,7 @@ export const DiscoveryScreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col w-full">
+    <div className="h-screen bg-background flex flex-col w-full overflow-hidden">
       {/* Header */}
       <div className="px-6 pt-10 pb-2 flex items-center justify-between">
         <div>
@@ -328,7 +328,7 @@ export const DiscoveryScreen = () => {
       </div>
 
       {/* Card stack */}
-      <div className="flex-1 px-4 relative">
+      <div className="flex-1 px-4 relative min-h-0">
         {swipesLeft === 0 || filteredCards.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center px-4">
             <div className="w-20 h-20 rounded-full glass-gold mx-auto mb-6 flex items-center justify-center animate-float">
@@ -369,7 +369,7 @@ export const DiscoveryScreen = () => {
             </button>
           </div>
         ) : (
-          <div className="relative h-full">
+          <div className="absolute inset-0">
             {filteredCards.slice(0, 3).map((card, i) => (
               <SwipeCardComponent
                 key={card.id}
