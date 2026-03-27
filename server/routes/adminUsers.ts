@@ -4,7 +4,7 @@ import pool from '../db.js';
 import { notifyUser } from '../websocket.js';
 
 const router = Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'the-club-dev-secret-change-in-prod';
+const JWT_SECRET = process.env.JWT_SECRET as string;
 
 function requireAdmin(req: Request, res: Response, next: NextFunction) {
   const auth = req.headers.authorization;
